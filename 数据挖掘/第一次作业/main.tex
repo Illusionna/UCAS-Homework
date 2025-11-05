@@ -1,0 +1,353 @@
+% pip install pygments
+% pygmentize -V
+
+\documentclass{article}
+
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{minted}
+\usepackage{setspace}
+\usepackage{datetime}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{tcolorbox}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage[fontsize = 12pt]{fontsize}
+
+\renewcommand{\thesubsection}{(\alph{subsection})}
+\renewcommand{\figurename}{Figure}
+\renewcommand{\tablename}{Table}
+
+\tcbuselibrary{minted}
+\usemintedstyle{paraiso-dark}
+
+\geometry{
+    a4paper,
+    left = 3cm,
+    right = 3cm,
+    top = 3cm,
+    bottom = 3cm
+}
+
+\title{Data Mining: Homework 1}
+\author{Illusionna \quad 2025XXXXXXXXX04 \quad Artificial Intelligence School}
+\date{\currenttime,\ \today}
+
+
+
+\begin{document}
+
+\maketitle
+\begin{spacing}{2}
+    \tableofcontents
+\end{spacing}
+\thispagestyle{empty}
+\clearpage
+\setcounter{page}{1}
+
+\section{Data Warehouse}
+Suppose that a data warehouse consists of four dimensions, date, spectator, location, and game, and two measures, count and charge, where charge is the fare that a spectator pays when watching a game on a given date. Spectators may be students, adults, or seniors, with each category having its own charge rate.
+
+
+
+\subsection{Star schema diagram}
+Draw a star schema diagram for the data warehouse.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale=1, trim=85 355 140 25, clip]{./figs/star-diagram.pdf}
+    \caption{Star Schema Diagram}
+\end{figure}
+
+
+
+\subsection{OLAP operations}
+Starting with the base cuboid [date, spectator, location, game], what specific OLAP operations should one perform in order to list the total charge paid by spectators in Chicago in 1999?
+
+\begin{tcblisting}{
+    listing engine = minted,
+    boxrule = 0.1mm,
+    colback = blue!5!white,
+    colframe = blue!75!black,
+    listing only,
+    left = 5mm,
+    minted language = c,
+    minted style = paraiso-dark,
+    minted options = {bgcolor = black, fontsize = \small, breaklines, autogobble, linenos, numbersep = 3mm}
+}
+slice for location = "Chicago"
+roll-up on location from "stadium" to "city"
+slice for date = "1999"
+roll-up on date from "day" to "year"
+roll-up on spectator from "all"
+roll-up on game from "all"
+\end{tcblisting}
+
+
+
+\subsection{Bitmap indexing}
+Bitmap indexing is a very useful optimization technique. Please present the pros and cons of using bitmap indexing in this given data warehouse.
+
+\paragraph*{Pros}~{}
+\begin{itemize}
+    \item Compared with traditional indexing structure, the bitmap indexing can quickly select multi-dimensional conditions, such as:
+    \[ \tt (location.city\ =\ Chicago)\ \bigoplus\ (spectator.category\ =\ Adult) \]
+    \item Very suitable for low cardinality domains, such as {\tt spectator.category}.
+    \item The storage space of RAM and Disk is very small when the dimension is low.
+    \item It has an advantage in read-only or read-mostly OLAP like data warehouse.
+\end{itemize}
+
+
+
+\paragraph*{Cons}~{}
+\begin{itemize}
+    \item It is inefficient for high cardinality domains such as {\tt date or game}, leading to the storage of RAM and Disk is large because of the sparse bitmap indexing structure.
+    \item High maintenance cost when date warehouse is frequently updated.
+    \item The bitmap indexing structure is not suitable for real-time system like cuboid [date, spectator, location, game].
+\end{itemize}
+
+
+
+\section{Hospital Test Data}
+Suppose a hospital tested the age and body fat data for 18 random selected adults with the following result:
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1}
+    \setlength{\tabcolsep}{75pt}
+    \caption{Age and body fat data}
+    \begin{tabular}{cc}
+        \hline
+        age & \%fat \\
+        \hline
+        23 & 9.59 \\
+        23 & 26.5 \\
+        27 & 7.8 \\
+        27 & 17.8 \\
+        39 & 31.4 \\
+        41 & 25.9 \\
+        47 & 27.4 \\
+        49 & 27.2 \\
+        50 & 31.2 \\
+        52 & 34.6 \\
+        54 & 42.5 \\
+        54 & 28.8 \\
+        56 & 33.4 \\
+        57 & 30.2 \\
+        58 & 34.1 \\
+        58 & 32.9 \\
+        60 & 41.2 \\
+        61 & 35.7 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsection{Statistics}
+Calculate the mean, median, and standard deviation of age and \%fat.
+
+\[ {\rm mean_{age}}=\dfrac{1}{n}\displaystyle\sum_{i=1}^{n}{\rm age}_{i}\approx46.44 \]
+\[ {\rm mean_{fat}}=\dfrac{1}{n}\displaystyle\sum_{i=1}^{n}{\rm fat}_{i}\approx28.78\% \]
+\[ {\rm median_{age}}=51 \]
+\[ {\rm median_{fat}}=30.7\% \]
+\[ {\rm standard_{age}}=\sqrt{\dfrac{\displaystyle\sum_{i=1}^{n}\left({\rm age}_i-\overline{\rm age}\right)^2}{n-1}}\approx13.22 \]
+\[ {\rm standard_{fat}}=\sqrt{\dfrac{\displaystyle\sum_{i=1}^{n}\left({\rm fat}_i-\overline{\rm fat}\right)^2}{n-1}}\approx9.25\% \]
+
+\subsection{Boxplot}
+Draw the boxplots for age and \%fat.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[width=0.48\textwidth]{./figs/boxplot1.pdf}
+    \hfill
+    \includegraphics*[width=0.48\textwidth]{./figs/boxplot2.pdf}
+    \caption{Boxplot}
+\end{figure}
+
+
+
+\subsection{Scatter plot}
+Draw a scatter plot based on these two variables.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale=0.75]{./figs/scatter.pdf}
+    \caption{Scatter Diagram}
+\end{figure}
+
+
+
+\subsection{Normalization}
+Normalize age based on min-max normalization.
+
+\[ f(x)=\dfrac{x-\min(x)}{\max(x)-\min(x)} \]
+
+\begin{tcblisting}{
+    listing engine = minted,
+    boxrule = 0.1mm,
+    colback = blue!5!white,
+    colframe = blue!75!black,
+    listing only,
+    left = 5mm,
+    minted language = python,
+    minted style = paraiso-dark,
+    minted options = {bgcolor = black, fontsize = \small, breaklines, autogobble, linenos, numbersep = 3mm}
+}
+normalizede_age = [
+    0, 0, 0.105, 0.105, 0.421, 0.474, 0.632, 0.684, 0.711,
+    0.763, 0.816, 0.816, 0.868, 0.895, 0.921, 0.921, 0.974, 1
+]
+\end{tcblisting}
+
+
+
+\subsection{Pearson coefficient}
+Calculate the correlation coefficient (Pearson's product moment coefficient). Are these two variables positively or negatively correlated?
+
+\[ \rho({\rm age,\ fat})=\dfrac{\displaystyle\sum_{i=1}^{n}({\rm age}_{i}-{\rm \overline{age}})({\rm fat}_{i}-{\rm \overline{fat}})}{(n-1)\sigma_{\rm age}\sigma_{\rm fat}}\approx0.8176 \]
+
+The variable {\tt age} is positively correlated with the variable {\tt fat}.
+
+
+
+\subsection{Smooth data by mean}
+Smooth the fat data by bin means, using a bin depth of 6.
+
+\begin{tcblisting}{
+    listing engine = minted,
+    boxrule = 0.1mm,
+    colback = blue!5!white,
+    colframe = blue!75!black,
+    listing only,
+    left = 5mm,
+    minted language = python,
+    minted style = paraiso-dark,
+    minted options = {bgcolor = black, fontsize = \small, breaklines, autogobble, linenos, numbersep = 3mm}
+}
+Partition using equal frequency approach:
+    - Bin 1: (7.8, 9.5, 17.8, 25.9, 26.5, 27.2)
+    - Bin 2: (27.4, 28.8, 30.2, 31.2, 31.4, 32.9)
+    - Bin 3: (33.4, 34.1, 34.6, 35.7, 41.2, 42.5)
+\end{tcblisting}
+
+\begin{tcblisting}{
+    listing engine = minted,
+    boxrule = 0.1mm,
+    colback = blue!5!white,
+    colframe = blue!75!black,
+    listing only,
+    left = 5mm,
+    minted language = python,
+    minted style = paraiso-dark,
+    minted options = {bgcolor = black, fontsize = \small, breaklines, autogobble, linenos, numbersep = 3mm}
+}
+Smoothing by bin means:
+    - Bin 1: (19.12, 19.12, 19.12, 19.12, 19.12, 19.12)
+    - Bin 2: (30.32, 30.32, 30.32, 30.32, 30.32, 30.32)
+    - Bin 3: (36.92, 36.92, 36.92, 36.92, 36.92, 36.92)
+\end{tcblisting}
+
+
+
+\subsection{Smooth data by boundary}
+Smooth the fat data by bin boundaries, using a bin depth of 6.
+
+\begin{tcblisting}{
+    listing engine = minted,
+    boxrule = 0.1mm,
+    colback = blue!5!white,
+    colframe = blue!75!black,
+    listing only,
+    left = 5mm,
+    minted language = python,
+    minted style = paraiso-dark,
+    minted options = {bgcolor = black, fontsize = \small, breaklines, autogobble, linenos, numbersep = 3mm}
+}
+Smoothing by bin boundaries:
+    - Bin 1: (7.8, 7.8, 27.2, 27.2, 27.2, 27.2)
+    - Bin 2: (27.4, 27.4, 32.9, 32.9, 32.9, 32.9)
+    - Bin 3: (33.4, 33.4, 33.4, 33.4, 42.5, 42.5)
+\end{tcblisting}
+
+
+
+\section{Design data warehouse}
+Design a data warehouse for a regional weather bureau. The weather bureau has about 1000 probes, which are scattered throughout various land and ocean locations in the region to collect basic weather data, including air pressure, temperature, and precipitation at each hour. All data are sent to the central station, which has collected such data for over 10 years. Your design should facilitate efficient querying and online analytical processing, and derive general weather patterns in multidimensional space. (Note: please present the fact table(s) and the dimension tables with concept hierarchy in star schema, snowflake schema or galaxy schema)
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.25}
+    \setlength{\tabcolsep}{20pt}
+    \caption{Dimension table}
+    \begin{tabular}{cccc}
+        \hline
+        time & region & probe & measure \\
+        \hline
+        hour & type & category & temperature \\
+        day & coordinate & manufacturer & air pressure \\
+        month & country & model & precipitation \\
+        quarter & state & \@ & wind speed \\
+        year & city & \@ & \@ \\
+        \@ & name & \@ & \@ \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale=0.275]{./figs/weather.pdf}
+    \caption{Star Schema Diagram}
+\end{figure}
+
+Cube Definition Syntax in DMQL:
+
+\begin{tcblisting}{
+    listing engine = minted,
+    boxrule = 0.1mm,
+    colback = blue!5!white,
+    colframe = blue!75!black,
+    listing only,
+    left = 5mm,
+    minted language = sql,
+    minted style = paraiso-dark,
+    minted options = {bgcolor = black, fontsize = \small, breaklines, autogobble, linenos, numbersep = 3mm}
+}
+-- Cube Definition (Fact Table)
+define cube weather_bureau [time, region, probe]: [temperature, air pressure, precipitation, wind speed]
+
+-- Dimension Definition (Dimension Table)
+define dimension time_table as [hour, day, month, quarter, year]
+define dimension region_table as [type, coordinate, country, state, city, name]
+define dimension probe_table as [category, manufacturer, model]
+
+-- Special Case (Shared Dimension Table)
+define dimension time_key as time_table.time_key in cube weather_bureau.time_key
+define dimension region_key as region_table.region_key in cube weather_bureau.region_key
+define dimension probe_key as probe_table.probe_key in cube weather_bureau.probe_key
+\end{tcblisting}
+
+Defining Star Schema in DMQL:
+
+\begin{tcblisting}{
+    listing engine = minted,
+    boxrule = 0.1mm,
+    colback = blue!5!white,
+    colframe = blue!75!black,
+    listing only,
+    left = 5mm,
+    minted language = sql,
+    minted style = paraiso-dark,
+    minted options = {bgcolor = black, fontsize = \small, breaklines, autogobble, linenos, numbersep = 3mm}
+}
+define cube weather_bureau [time_key, region_key, probe_key]: temperature, air pressure, precipitation, wind speed
+define dimension time as (time_key, hour, day, month, quarter, year)
+define dimension region as (region_key, type, coordinate, country, state, city, name)
+define dimension probe as (probe_key, category, manufacturer, model)
+\end{tcblisting}
+
+Since the weather bureau has 1000 probes scattered throughout various land and ocean locations, it need to construct a spatial data warehouse so that we can view weather patterns (like temperature, air pressure, precipitation and wind speed etc.) on a map by time, by region and by probe. We can dynamically drill-down, roll-up and slice along any dimension to explore certain patterns.
+
+The OLAP operations (such as roll-up or slice) can be implemented in the data cube if a spatial data cube contains dimensions but not measures. If we need to use spatial measures in a data cube, we can selectively pre-computation some measures. The structure of cube selected for program depends on access frequency, access priority, online computation and so on.
+
+
+
+\end{document}
