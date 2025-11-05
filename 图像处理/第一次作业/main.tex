@@ -1,0 +1,296 @@
+% pip install pygments
+% pygmentize -V
+
+\documentclass{article}
+
+\usepackage{bm}
+\usepackage{ctex}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{minted}
+\usepackage{setspace}
+\usepackage{datetime}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{tcolorbox}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage[fontsize = 12pt]{fontsize}
+
+\renewcommand{\thesubsection}{(\alph{subsection})}
+% \renewcommand{\figurename}{Figure}
+% \renewcommand{\tablename}{Table}
+\newcommand{\diff}[2]{\dfrac{\mathrm{d}#1}{\mathrm{d}#2}}
+\newcommand{\diffn}[3]{\dfrac{\mathrm{d}^{#3}#1}{\mathrm{d}#2^{#3}}}
+\newcommand{\eval}[2]{\left.#1\right|_{#2}}
+
+\tcbuselibrary{minted}
+\usemintedstyle{paraiso-dark}
+
+\geometry{
+    a4paper,
+    left = 3cm,
+    right = 3cm,
+    top = 3cm,
+    bottom = 3cm
+}
+
+\title{图像处理：第一次作业}
+\author{Illusionna \quad 2025xxxxxxx004 \quad 人工智能学院}
+\date{\currenttime,\ \today}
+
+
+
+\begin{document}
+
+\maketitle
+\begin{spacing}{2}
+    \tableofcontents
+\end{spacing}
+\thispagestyle{empty}
+\clearpage
+\setcounter{page}{1}
+
+
+
+\section{灰度级变换函数}
+\subsection{对比度展宽变换连续函数}
+
+\[ s=T(r)=\dfrac{r^E}{r^E+m^E}=\dfrac{1}{1+\left(\dfrac{m}{r}\right)^E} \]
+
+其中，$r$ 的取值范围在 $[0,\ L-1]$ 之内，$m$ 是灰度级数中值 $\dfrac{L}{2}$，$E$ 是控制曲线陡峭程度。对变换函数求导可得：
+
+\[ \diff{s}{r}=\diff{T(r)}{r}=\dfrac{Er^{E-1}m^E}{\left(r^E+m^E\right)^2} \]
+
+则：
+
+\[ \eval{\diff{s}{r}}{r=m}=\dfrac{E}{4m} \]
+
+即在 $r=m$ 的时候，变换函数的斜率达到 $\dfrac{E}{4m}$。
+
+
+
+\subsection{关于参数 $E$ 的变换函数}
+
+\[ T(r;E)=\dfrac{r^E}{r^E+m^E}\qquad E>0 \]
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale=0.5]{./figs/FunctionWith ParameterE.pdf}
+    \caption{不同参数 $E$ 下的变换函数}
+\end{figure}
+
+
+\begin{tcblisting}{
+    listing engine = minted,
+    boxrule = 0.1mm,
+    colback = blue!5!white,
+    colframe = blue!75!black,
+    left = 5mm,
+    listing only,
+    minted language = python,
+    minted style = paraiso-dark,
+    minted options = {bgcolor = black, fontsize = \small, breaklines, autogobble, linenos, numbersep = 3mm}
+}
+import numpy as np
+import matplotlib.pyplot as plt
+plt.rcParams['font.family'] = 'Times New Roman'
+plt.rcParams['text.usetex'] = True
+plt.rcParams['text.latex.preamble'] = r'\usepackage{amsmath}'
+L = 256
+m = L / 2
+T = lambda r, E: 1 / (1 + (m / r) ** E)
+X = np.linspace(1, 300, 1000)
+plt.plot(X, T(X, 5), label = r'$E=5$')
+plt.plot(X, T(X, 10), label = r'$E=10$')
+plt.plot(X, T(X, 20), label = r'$E=20$')
+plt.plot(X, T(X, 30), label = r'$E=30$')
+plt.axvline(x = m, color = 'black', linestyle = '-.', linewidth = 1)
+plt.axhline(y = 0.5, color = 'black', linestyle = '-.', linewidth = 1)
+plt.annotate(
+    r'$T(r)=0.5$',
+    xy = (20, 0.5), xytext = (20, 0.55),
+    arrowprops = dict(arrowstyle = '->', color = 'black'),
+    ha = 'right', fontsize = 12
+)
+plt.annotate(
+    r'$m=L/2$',
+    xy = (L / 2, -0.04), xytext = (L / 2 + 10, 0.025),
+    arrowprops = dict(arrowstyle = '->', color = 'black'),
+    ha = 'left', fontsize = 12
+)
+plt.xlabel(r'$r$', fontsize = 15)
+plt.ylabel(r'$s$', fontsize = 15)
+plt.title(r'$s=T(r)=\dfrac{1}{1+\left(\dfrac{m}{r}\right)^E}$', pad = 30)
+plt.legend()
+plt.show()
+\end{tcblisting}
+
+
+\section{直方图}
+\[ \tt data=\{0:0.17,\ 1:0.25,\ 2:0.21,\ 3:0.16,\ 4:0.07,\ 5:0.08,\ 6:0.04,\ 7:0.02 \} \]
+
+根据累计直方图公式，可得表~\ref{table-histogram} 所示。
+\[ s_n=\sum_{i=0}^{n}\Pr(r_i) \]
+
+其中，灰度均衡化公式：
+\[ g=\lfloor(L-1)\times s_n+0.5\rfloor \]
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.5}
+    \setlength{\tabcolsep}{7pt}
+    \caption{解题步骤}\label{table-histogram}
+    \begin{tabular}{ccccccccc}
+        \hline
+        灰度级 & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\
+        \hline
+        直方图概率 & 0.17 & 0.25 & 0.21 & 0.16 & 0.07 & 0.08 & 0.04 & 0.02 \\
+        \hline
+        累计概率 & 0.17 & 0.42 & 0.63 & 0.79 & 0.86 & 0.94 & 0.98 & 1 \\
+        \hline
+        均衡化 & 1 & 3 & 4 & 6 & 6 & 7 & 7 & 7 \\
+        \hline
+        映射 & $0\to1$ & $1\to3$ & $2\to4$ & $3\to6$ & $4\to6$ & $5\to7$ & $6\to7$ & $7\to7$ \\
+        \hline
+        新直方图 & \@ & 0.17 & \@ & 0.25 & 0.21 & \@ & 0.23 & 0.14 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale=0.6]{./figs/histogram.pdf}
+    \caption{均衡化后的直方图}
+\end{figure}
+
+
+
+\section{高斯概率密度函数均衡化的变换函数}
+概率密度函数的累积是分布函数，高斯概率密度函数取值范围是 $(-\infty,+\infty)$，而灰度值 $r$ 只有正实数，由于正态分布对称轴是 $r=m$，方差是 $\sigma^2$，所以当 $r<0$ 时，面积 $\displaystyle\int_{-\infty}^{0}\Pr(x)\mathrm{d}x\approx0$ 即可被忽略。
+\[ \begin{align}
+    s=T(r)&=\int_{-\infty}^{r}\Pr(x)\mathrm{d}x
+    \\
+    &=\int_{-\infty}^{0}\Pr(x)\mathrm{d}x+\int_{0}^{r}\Pr(x)\mathrm{d}x
+    \\
+    &\approx\dfrac{1}{\sqrt{2\pi}\sigma}\int_{0}^{r}\mathrm{e}^{-\dfrac{(x-m)^2}{2\sigma^2}}\mathrm{d}x
+\end{align} \]
+
+由于高斯概率密度直方图是通过对连续函数采样得到的，为了将累积分布函数应用到图像像素值，需要将它归一化到 $[0,255]$ 范围内，以确保其适配灰度级范围，用于映射原始像素值：
+\[ r_{\rm new}=s_{\rm normalized​}=\lfloor255\times s+0.5\rfloor =\left\lfloor\dfrac{255}{\sqrt{2\pi}\sigma}\int_{0}^{r}\mathrm{e}^{-\dfrac{(x-m)^2}{2\sigma^2}}\mathrm{d}x+0.5\right\rfloor \]
+
+
+
+\section{求解灰度变换表达式}
+\[ \begin{align}
+    \Pr(r)=-2r+2&\Longrightarrow \int_{0}^{r}(-2x+2)\mathrm{d}x=-r^2+2r
+    \\
+    \Pr(z)=2z&\Longrightarrow \int_{0}^{z}2x\mathrm{d}x=z^2
+\end{align} \]
+\[ \begin{align}
+    &\because\quad\int_{0}^{r}(-2x+2)\mathrm{d}x=\int_{0}^{z}2x\mathrm{d}x
+    \\
+    &\therefore\quad z^2=-r^2+2r\qquad(r,z>0)
+    \\
+    &\therefore\quad z=\sqrt{-r^2+2r}
+\end{align} \]
+
+
+
+\section{卷积}
+\paragraph*{定义}~{向量 $f$ 和向量 $g$ 在实数域空间 $\mathbb{R}^n\times\mathbb{R}^n\mapsto\mathbb{R}^n$ 上的卷积运算 $\circledast$}
+\[ (f\circledast g)_k\triangleq\displaystyle\sum_{i=0}^{n-1}f_i\cdot g_{k-i}\qquad k=0,1,2,\ldots,n-1 \]
+
+
+
+\subsection{向量卷积}
+\textbf{step 1：} 卷积序列颠倒。
+
+\textbf{step 2：} 从左向右单位平滑卷积序列，与输入序列进行乘法叠加运算。
+\[ [1,2,3,4,5,4,3,2,1]\circledast[2,0,-2]=\begin{cases}
+    (2,4,4,4,4,0,-4,-4,-4,-4,-2)\quad{\rm full}
+    \\
+    (4,4,4,4,0,-4,-4,-4,-4)\quad{\rm same}
+\end{cases} \]
+
+
+
+\subsection{矩阵卷积}
+\textbf{step 1：} 卷积滤核颠倒。
+
+\textbf{step 2：} 从左向右从上到下单位平滑卷积核，与输入矩阵进行乘法叠加运算。
+\[ \left[\begin{matrix}
+    -1 & 0 & 1 \\
+    -2 & 0 & 2 \\
+    -1 & 0 & 1 \\
+\end{matrix}\right]\circledast\left[\begin{matrix}
+    1 & 3 & 2 & 0 & 4 \\
+    1 & 0 & 3 & 2 & 3 \\
+    0 & 4 & 1 & 0 & 5 \\
+    2 & 3 & 2 & 1 & 4 \\
+    3 & 1 & 0 & 4 & 2 \\
+\end{matrix}\right]=\begin{cases}
+    \left[\begin{matrix}
+        -1 & -3 & -1 & 3 & -2 & 0 & 4 \\
+        -3 & -6 & -4 & 4 & -4 & 2 & 11 \\
+        -3 & -7 & -6 & 3 & -6 & 4 & 15 \\
+        -3 & -11 & -4 & 8 & -10 & 3 & 17 \\
+        -7 & -11 & 2 & 5 & -10 & 6 & 15 \\
+        -8 & -5 & 6 & -4 & -6 & 9 & 8 \\
+        -3 & -1 & 3 & -3 & -2 & 4 & 2 \\
+    \end{matrix}\right]\quad{\rm full}
+    \\
+    \left[\begin{matrix}
+        -6 & -4 & 4 & -4 & 2 \\
+        -7 & -6 & 3 & -6 & 4 \\
+        -11 & -4 & 8 & -10 & 3 \\
+        -11 & 2 & 5 & -10 & 6 \\
+        -5 & 6 & -4 & -6 & 9 \\
+    \end{matrix}\right]\quad{\rm same}
+\end{cases} \]
+
+
+
+\section{证明拉普拉斯算子旋转不变性}
+\paragraph*{定义}~{任意阶微分都是线性操作，所以拉普拉斯变换也是一个线性操作，各向同性微分的拉普拉斯算子可以作用在矩阵上，二元图像函数 $f(x,y)$ 的拉普拉斯变换}
+\[ \bm{\nabla}^2f=\dfrac{\partial^2f}{\partial x^2}+\dfrac{\partial^2f}{\partial y^2} \]
+
+轴旋转 $\theta$ 角坐标方程：
+\[ \begin{cases}
+    x=x^{'}\cos\theta-y^{'}\sin\theta
+    \\
+    y=x^{'}\sin\theta+y^{'}\cos\theta
+\end{cases} \]
+
+其中 $(x,\ y)$ 是非旋转坐标，而 $(x^{'},\ y^{'})$ 是旋转坐标。
+
+\[ \begin{align}
+    \bm{\nabla}^2f&=\dfrac{\partial^2f}{\partial x^{'}^2}+\dfrac{\partial^2f}{\partial y^{'}^2}
+    \\
+    &=\dfrac{\partial}{\partial x^{'}}\left(\dfrac{\partial f}{\partial x^{'}}\right)+\dfrac{\partial}{\partial y^{'}}\left(\dfrac{\partial f}{\partial y^{'}}\right)
+    \\
+    &=\dfrac{\partial}{\partial x^{'}}\left(\dfrac{\partial f}{\partial x}\dfrac{\partial x}{\partial x^{'}}+\dfrac{\partial f}{\partial y}\dfrac{\partial y}{\partial x^{'}}\right)+\dfrac{\partial}{\partial y^{'}}\left(\dfrac{\partial f}{\partial x}\dfrac{\partial x}{\partial y^{'}}+\dfrac{\partial f}{\partial y}\dfrac{\partial y}{\partial y^{'}}\right)
+    \\
+    &=\dfrac{\partial}{\partial x^{'}}\left(\dfrac{\partial f}{\partial x}\cos\theta+\dfrac{\partial f}{\partial y}\sin\theta\right)+\dfrac{\partial}{\partial y^{'}}\left(-\dfrac{\partial f}{\partial x}\sin\theta+\dfrac{\partial f}{\partial y}\cos\theta\right)
+    \\
+    &=\dfrac{\partial}{\partial x}\left(\dfrac{\partial f}{\partial x}\cos\theta+\dfrac{\partial f}{\partial y}\sin\theta\right)\dfrac{\partial x}{\partial x^{'}}+\dfrac{\partial}{\partial y}\left(\dfrac{\partial f}{\partial x}\cos\theta+\dfrac{\partial f}{\partial y}\sin\theta\right)\dfrac{\partial y}{\partial x^{'}}
+    \\
+    &\quad+\dfrac{\partial}{\partial x}\left(-\dfrac{\partial f}{\partial x}\sin\theta+\dfrac{\partial f}{\partial y}\cos\theta\right)\dfrac{\partial x}{\partial y^{'}}+\dfrac{\partial}{\partial y}\left(-\dfrac{\partial f}{\partial x}\sin\theta+\dfrac{\partial f}{\partial y}\cos\theta\right)\dfrac{\partial y}{\partial y^{'}}
+    \\
+    &=\dfrac{\partial}{\partial x}\left(\dfrac{\partial f}{\partial x}\cos\theta+\dfrac{\partial f}{\partial y}\sin\theta\right)\cos\theta+\dfrac{\partial}{\partial y}\left(\dfrac{\partial f}{\partial x}\cos\theta+\dfrac{\partial f}{\partial y}\sin\theta\right)\sin\theta
+    \\
+    &\quad-\dfrac{\partial}{\partial x}\left(-\dfrac{\partial f}{\partial x}\sin\theta+\dfrac{\partial f}{\partial y}\cos\theta\right)\sin\theta+\dfrac{\partial}{\partial y}\left(-\dfrac{\partial f}{\partial x}\sin\theta+\dfrac{\partial f}{\partial y}\cos\theta\right)\cos\theta
+    \\
+    &=\dfrac{\partial}{\partial x}\left(\dfrac{\partial f}{\partial x}\cos^2\theta+\dfrac{\partial f}{\partial y}\sin\theta\cos\theta\right)+\dfrac{\partial}{\partial y}\left(\dfrac{\partial f}{\partial x}\cos\theta\sin\theta+\dfrac{\partial f}{\partial y}\sin^2\theta\right)
+    \\
+    &\quad+\dfrac{\partial}{\partial x}\left(\dfrac{\partial f}{\partial x}\sin^2\theta-\dfrac{\partial f}{\partial y}\cos\theta\sin\theta\right)+\dfrac{\partial}{\partial y}\left(\dfrac{\partial f}{\partial y}\cos^2\theta-\dfrac{\partial f}{\partial x}\sin\theta\cos\theta\right)
+    \\
+    &=\dfrac{\partial^2f}{\partial x^2}\cos^2\theta+\dfrac{\partial^2f}{\partial x^2}\sin^2\theta+\dfrac{\partial^2f}{\partial y^2}\sin^2\theta+\dfrac{\partial^2f}{\partial y^2}\cos^2\theta
+    \\
+    &=\dfrac{\partial^2f}{\partial x^2}+\dfrac{\partial^2f}{\partial y^2}
+    \\
+    &=\bm{\nabla}^2f
+\end{align} \]
+
+
+
+\end{document}
