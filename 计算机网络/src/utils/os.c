@@ -37,8 +37,7 @@ char *os_readfile(char *path, int range_start, int range_end) {
             return NULL;
         }
 
-        fread(buffer, 1, length, f);
-        buffer[length] = '\0';
+        buffer[fread(buffer, 1, length, f)] = '\0';
         fclose(f);
         return buffer;
     } else {
