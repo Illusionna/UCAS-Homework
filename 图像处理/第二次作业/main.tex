@@ -1,0 +1,393 @@
+\documentclass{article}
+
+\usepackage{bm}
+\usepackage{ctex}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{setspace}
+\usepackage{datetime}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{tcolorbox}
+\usepackage{amsmath, amssymb, amsfonts, mathrsfs}
+\usepackage[fontsize = 12pt]{fontsize}
+
+\renewcommand{\thesubsection}{(\alph{subsection})}
+\newcommand{\diff}[2]{\dfrac{\mathrm{d}#1}{\mathrm{d}#2}}
+\newcommand{\diffn}[3]{\dfrac{\mathrm{d}^{#3}#1}{\mathrm{d}#2^{#3}}}
+\newcommand{\eval}[2]{\left.#1\right|_{#2}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\d}{\mathrm{d}}
+
+\geometry{
+    a4paper,
+    left = 2cm,
+    right = 2cm,
+    top = 3cm,
+    bottom = 3cm
+}
+
+\title{图像处理：第二次作业}
+\author{Illusionna \quad 2025xxxxxxxx04 \quad 人工智能学院}
+\date{\currenttime,\ \today}
+
+
+
+\begin{document}
+
+\maketitle
+\begin{spacing}{2}
+    \tableofcontents
+\end{spacing}
+\thispagestyle{empty}
+\clearpage
+\setcounter{page}{1}
+
+
+\section{2D 离散傅立叶变换}
+定义时域到频域的 $\mathcal{DFT}$ 傅立叶变换为 $\mathscr{F}$：
+\[ \mathscr{F}_{\to f(x,\ y)}=\mathcal{DFT}[f(x,\ y)]=F(u,\ v)=\dfrac{1}{MN}\displaystyle\sum_{x=0}^{M-1}\sum_{y=0}^{N-1}f(x,\ y)\e^{-j2\pi\displaystyle\left(\dfrac{ux}{M}+\dfrac{vy}{N}\right)} \]
+
+定义频域到时域的 $\mathcal{DFT}^{-1}$ 傅立叶逆变换 $\mathscr{F}^{-1}$：
+\[ \mathscr{F}^{-1}_{\to F(u,\ v)}=\mathcal{DFT}^{-1}[F(u,\ v)]=f(x,\ y)=\displaystyle\sum_{u=0}^{M-1}\sum_{v=0}^{N-1}F(u,\ v)\e^{j2\pi\displaystyle\left(\dfrac{ux}{M}+\dfrac{vy}{N}\right)} \]
+
+\subsection{平移性质 1}
+\[ f(x,\ y)\e^{j2\pi\displaystyle\left(\dfrac{u_0x}{M}+\dfrac{v_0y}{N}\right)}\Longleftrightarrow F(u-u_0,\ v-v_0) \]
+
+构造 $g(x,\ y)=f(x,\ y)\e^{j2\pi\displaystyle\left(\dfrac{u_0x}{M}+\dfrac{v_0y}{N}\right)}$，则：
+\begin{align*}
+    G(u,\ v)=\mathcal{DFT}[g(x,\ y)]&=\dfrac{1}{MN}\sum_{x=0}^{M-1}\sum_{y=0}^{N-1}g(x,\ y)\e^{-j2\pi\displaystyle\left(\dfrac{ux}{M}+\dfrac{vy}{N}\right)}
+    \\
+    &=\dfrac{1}{MN}\sum_{x=0}^{M-1}\sum_{y=0}^{N-1}f(x,\ y)\e^{j2\pi\displaystyle\left(\dfrac{u_0x}{M}+\dfrac{v_0y}{N}\right)}\e^{-j2\pi\displaystyle\left(\dfrac{ux}{M}+\dfrac{vy}{N}\right)}
+    \\
+    &=\dfrac{1}{MN}\sum_{x=0}^{M-1}\sum_{y=0}^{N-1}f(x,\ y)\e^{-j2\pi\displaystyle\left[\dfrac{(u-u_0)x}{M}+\dfrac{(v-v_0)y}{N}\right]}
+    \\
+    &=F(u-u_0,\ v-v_0)
+\end{align*}
+
+
+
+\subsection{平移性质 2}
+\[ f(x-x_0,\ y-y_0)\Longleftrightarrow F(u,\ v)\e^{-j2\pi\displaystyle\left(\dfrac{ux_0}{M}+\dfrac{vy_0}{N}\right)} \]
+
+构造 $G(u,\ v)=F(u,\ v)\e^{-j2\pi\displaystyle\left(\dfrac{ux_0}{M}+\dfrac{vy_0}{N}\right)}$，则：
+\begin{align*}
+    g(x,\ y)=\mathcal{DFT}^{-1}[G(u,\ v)]&=\displaystyle\sum_{u=0}^{M-1}\sum_{v=0}^{N-1}G(u,\ v)\e^{j2\pi\displaystyle\left(\dfrac{ux}{M}+\dfrac{vy}{N}\right)}
+    \\
+    &=\sum_{u=0}^{M-1}\sum_{v=0}^{N-1}F(u,\ v)\e^{-j2\pi\displaystyle\left(\dfrac{ux_0}{M}+\dfrac{vy_0}{N}\right)}\e^{j2\pi\displaystyle\left(\dfrac{ux}{M}+\dfrac{vy}{N}\right)}
+    \\
+    &=\sum_{u=0}^{M-1}\sum_{v=0}^{N-1}F(u,\ v)\e^{j2\pi\displaystyle\left[\dfrac{(x-x_0)u}{M}+\dfrac{(y-y_0)v}{N}\right]}
+    \\
+    &=f(x-x_0,\ y-y_0)
+\end{align*}
+
+
+
+\subsection{平移性质 3}
+当 $x_0=u_0=\dfrac{M}{2},\ y_0=v_0=\dfrac{N}{2}$ 时：
+\[ f(x,\ y)(-1)^{x+y}\Longleftrightarrow F(u-\dfrac{M}{2},\ v-\dfrac{N}{2}) \]
+
+证明：
+\begin{align*}
+    F(u-\dfrac{M}{2},\ v-\dfrac{N}{2})&=\dfrac{1}{MN}\sum_{x=0}^{M-1}\sum_{y=0}^{N-1}f(x,\ y)\e^{-j2\pi\displaystyle\left(\dfrac{ux}{M}-\dfrac{x}{2}+\dfrac{vy}{N}-\dfrac{y}{2}\right)}
+    \\
+    &=\dfrac{1}{MN}\sum_{x=0}^{M-1}\sum_{y=0}^{N-1}f(x,\ y)\e^{-j2\pi\displaystyle\left(\dfrac{ux}{M}+\dfrac{vy}{N}\right)}\e^{j\pi\left(x+y\right)}
+    \\
+    &=\dfrac{1}{MN}\sum_{x=0}^{M-1}\sum_{y=0}^{N-1}f(x,\ y)\left(\cos\pi+j\sin\pi\right)^{x+y}\e^{-j2\pi\displaystyle\left(\dfrac{ux}{M}+\dfrac{vy}{N}\right)}
+    \\
+    &=\mathcal{DFT}[f(x,\ y)(-1)^{x+y}]
+\end{align*}
+
+
+
+\subsection{平移性质 4}
+当 $x_0=u_0=\dfrac{M}{2},\ y_0=v_0=\dfrac{N}{2}$ 时：
+\[ f(x-\dfrac{M}{2},\ y-\dfrac{N}{2})\Longleftrightarrow F(u,\ v)(-1)^{u+v} \]
+
+证明：
+\begin{align*}
+    f(x-\dfrac{M}{2},\ y-\dfrac{N}{2})&=\sum_{u=0}^{M-1}\sum_{v=0}^{N-1}F(u,\ v)\e^{j2\pi\displaystyle\left(\dfrac{ux}{M}-\dfrac{u}{2}+\dfrac{vy}{N}-\dfrac{v}{2}\right)}
+    \\
+    &=\sum_{u=0}^{M-1}\sum_{v=0}^{N-1}F(u,\ v)\e^{j2\pi\displaystyle\left(\dfrac{ux}{M}+\dfrac{vy}{N}\right)}\e^{-j\pi(u+v)}
+    \\
+    &=\sum_{u=0}^{M-1}\sum_{v=0}^{N-1}F(u,\ v)\left[\cos(-\pi)+j\sin(-\pi)\right]^{u+v}\e^{j2\pi\displaystyle\left(\dfrac{ux}{M}+\dfrac{vy}{N}\right)}
+    \\
+    &=\mathcal{DFT}^{-1}[F(u,\ v)(-1)^{u+v}]
+\end{align*}
+
+
+
+\section{图像 180 度旋转}
+定义原始图像为 $f(x,\ y)$：
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale=1]{./rotate.png}
+    \caption{灰度图像中心对称}
+\end{figure}
+
+\paragraph*{(a)}~{原始图像左边乘以 $(-1)^{x+y}$}
+\[ f(x,\ y)(-1)^{x+y} \]
+
+\paragraph*{(b)}~{计算离散傅立叶变换 $\mathcal{DFT}$}
+\begin{align*}
+    \mathscr{F}_{\to f(x,\ y)(-1)^{x+y}}&=\mathcal{DFT}\left[f(x,\ y)(-1)^{x+y}\right]=F(u-\dfrac{M}{2},\ v-\dfrac{N}{2})
+    \\
+    &=\dfrac{1}{MN}\sum_{x=0}^{M-1}\sum_{y=0}^{N-1}f(x,\ y)(-1)^{x+y}\e^{-j2\pi\displaystyle\left(\dfrac{ux}{M}+\dfrac{vy}{N}\right)}
+\end{align*}
+
+\paragraph*{(c)}~{复共轭化}
+\begin{align*}
+    \mathscr{F}_{\to f(x,\ y)(-1)^{x+y}}^{\bm{\dagger}}&=F^{\bm{\dagger}}(u-\dfrac{M}{2},\ v-\dfrac{N}{2})
+    \\
+    &=\dfrac{1}{MN}\sum_{x=0}^{M-1}\sum_{y=0}^{N-1}f^{\bm{\dagger}}(x,\ y)(-1)^{x+y}\e^{j2\pi\displaystyle\left(\dfrac{ux}{M}+\dfrac{vy}{N}\right)}
+\end{align*}
+
+由于原始图像 $f(x,\ y)$ 在实数域 $\mathbb{R}$，所以 $f^{\bm{\dagger}}(x,\ y)=f(x,\ y)$，即：
+\[ F^{\bm{\dagger}}(u-\dfrac{M}{2},\ v-\dfrac{N}{2})=\dfrac{1}{MN}\sum_{x=0}^{M-1}\sum_{y=0}^{N-1}f(x,\ y)(-1)^{x+y}\e^{j2\pi\displaystyle\left(\dfrac{ux}{M}+\dfrac{vy}{N}\right)}=F(\dfrac{M}{2}-u,\ \dfrac{N}{2}-v) \]
+
+\paragraph*{(d)}~{计算离散傅立叶逆变换 $\mathcal{DFT}^{-1}$}
+
+由于：
+\[ \mathcal{DFT}\left[f(x,\ y)(-1)^{x+y}\right]=F(u-\dfrac{M}{2},\ v-\dfrac{N}{2}) \]
+
+所以：
+\begin{align*}
+    \mathscr{F}^{-1}_{\to\mathscr{F}_{\to f(x,\ y)(-1)^{x+y}}^{\bm{\dagger}}}&=\sum_{u=0}^{M-1}\sum_{v=0}^{N-1}\left[\dfrac{1}{MN}\sum_{x=0}^{M-1}\sum_{y=0}^{N-1}f(x,\ y)(-1)^{x+y}\e^{j2\pi\displaystyle\left(\dfrac{ux}{M}+\dfrac{vy}{N}\right)}\right]\e^{j2\pi\displaystyle\left(\dfrac{ux}{M}+\dfrac{vy}{N}\right)}
+    \\
+    &=\mathcal{DFT}^{-1}\left[F(\dfrac{M}{2}-u,\ \dfrac{N}{2}-v)\right]
+    \\
+    &=\mathcal{DFT}^{-1}\left[F^{\bm{\dagger}}(u-\dfrac{M}{2},\ v-\dfrac{N}{2})\right]
+    \\
+    &=\mathcal{DFT}^{-1}\left\{\mathcal{DFT}\left[f(-x,\ -y)(-1)^{-x-y}\right]\right\}
+    \\
+    &=f(-x,\ -y)(-1)^{x+y}
+\end{align*}
+
+\paragraph*{(e)}~{实部再乘以 $(-1)^{x+y}$}
+\[ f(-x,\ -y) \]
+
+
+
+\section{高斯低通滤波器频域传递函数在空域相应形式}
+高斯型低通滤波器在频域中的传递函数：
+\[ H(u,\ v)=A\e^{\displaystyle-\dfrac{u^2+v^2}{2\sigma^2}} \]
+
+\paragraph*{引理}~{高斯函数积分 $\displaystyle\int_{-\infty}^{\infty}\e^{-x^2}\d x=\sqrt{\pi} $}
+
+记 $I=\displaystyle\int_{-\infty}^{\infty}\e^{-x^2}\d x$，则：
+\[ I^2=\displaystyle\iint_{-\infty}^{\infty}\e^{-(x^2+y^2)}\d x\d y \]
+
+令：
+\begin{align*}
+    \begin{cases}
+        x=r\cos\theta
+        \\[10pt]
+        y=r\sin\theta
+    \end{cases}\qquad 0\leqslant r,\quad0\leqslant\theta\leqslant2\pi
+\end{align*}
+
+根据雅可比行列式可得：
+\[ J=\left|\begin{matrix}
+    \dfrac{\partial x}{\partial r} & \dfrac{\partial x}{\partial \theta} \\[10pt]
+    \dfrac{\partial y}{\partial r} & \dfrac{\partial y}{\partial \theta}
+\end{matrix}\right|=\left|\begin{matrix}
+    \cos\theta & -r\sin\theta \\
+    \sin\theta & r\cos\theta
+\end{matrix}\right|=r\implies\d x\d y=\left|J\right|\d r\d\theta \]
+
+则：
+\begin{align*}
+    I^2=\int_{0}^{2\pi}\int_{0}^{\infty}\e^{-r^2}r\d r\d\theta
+\end{align*}
+
+记 $u=r^2$ 则微分：
+\[ \d u=\d r^2=2r\d r\implies r\d r=\dfrac{1}{2}\d u \]
+
+则：
+\[ I^2=\int_{0}^{2\pi}\int_{0}^{\infty}\e^{-u}\cdot\dfrac{1}{2}\d u\d \theta=\int_{0}^{2\pi}\left[\eval{\dfrac{1}{2}(-\e^{-u})}{0}^{\infty}\right]\d \theta=\int_{0}^{2\pi}\dfrac{1}{2}\d\theta=\pi \]
+
+即：
+\[ I=\sqrt{\pi} \]
+
+类推：
+\[ \int_{-\infty}^{\infty}\e^{-ax^2}\d x=\int_{-\infty}^{\infty}\e^{-y^2}\d\dfrac{y}{\sqrt{a}}=\dfrac{1}{\sqrt{a}}\int_{-\infty}^{\infty}\e^{-y^2}\d y=\sqrt{\dfrac{\pi}{a}} \]
+
+
+
+\paragraph*{证明}~{$A\e^{\displaystyle-\dfrac{u^2+v^2}{2\sigma^2}}\implies A2\pi\sigma^2\e^{-2\pi^2\sigma^2(x^2+y^2)}$}
+
+
+\begin{align*}
+    h(x,\ y)&=\displaystyle\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}H(u,\ v)\e^{j2\pi(ux+vy)}\d u\d v
+    \\
+    &=\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}A\e^{-\tfrac{u^2+v^2}{2\sigma^2}}\e^{j2\pi(ux+vy)}\d u\d v
+    \\
+    &=\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}A\e^{-\tfrac{u^2}{2\sigma^2}+j2\pi ux-\tfrac{v^2}{2\sigma^2}+j2\pi vy}\d u\d v
+    \\
+    &=\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}A\e^{-\pi\left[\left(\tfrac{u}{\sqrt{2\pi}\sigma}\right)^2-j2ux\right]}\e^{-\pi\left[\left(\tfrac{v}{\sqrt{2\pi}\sigma}\right)^2-j2vy\right]}\d u\d v
+    \\
+    &=\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}A\e^{-\pi\left[\left(\tfrac{u}{\sqrt{2\pi}\sigma}\right)^2-j2ux-2\pi\sigma^2x^2+2\pi\sigma^2x^2\right]}\e^{-\pi\left[\left(\tfrac{v}{\sqrt{2\pi}\sigma}\right)^2-j2vy-2\pi\sigma^2y^2+2\pi\sigma^2y^2\right]}\d u\d v
+    \\
+    &=\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}A\e^{-\pi\left[\left(\tfrac{u}{\sqrt{2\pi}\sigma}-j\sqrt{2\pi}\sigma x\right)^2+2\pi\sigma^2 x^2\right]}\e^{-\pi\left[\left(\tfrac{v}{\sqrt{2\pi}\sigma}-j\sqrt{2\pi}\sigma y\right)^2+2\pi\sigma^2 y^2\right]}\d u\d v
+\end{align*}
+
+令：
+\begin{align*}
+    \begin{cases}
+        s=\dfrac{u}{\sqrt{2\pi}\sigma}-j\sqrt{2\pi}\sigma x\implies \d u=\sqrt{2\pi}\sigma\d s
+        \\[10pt]
+        t=\dfrac{v}{\sqrt{2\pi}\sigma}-j\sqrt{2\pi}\sigma y\implies \d v=\sqrt{2\pi}\sigma\d t
+    \end{cases}
+\end{align*}
+
+则：
+\begin{align*}
+    &=\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}A2\pi\sigma^2\e^{-\pi(s^2+2\pi\sigma^2x^2)}\e^{-\pi(t^2+2\pi\sigma^2y^2)}\d s\d t
+    \\
+    &=\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}A2\pi\sigma^2\e^{-2\pi^2\sigma^2(x^2+y^2)}\e^{-\pi(s^2+t^2)}\d s\d t
+    \\
+    &=A2\pi\sigma^2\e^{-2\pi^2\sigma^2(x^2+y^2)}
+\end{align*}
+
+
+
+\section{零比特填充}
+在图像行列末尾填充 0 值，和把图像放到中心再填充 0 值，但保持 0 值总个数，在数学意义下，这两种形式的结果是相同的，只需要确保填充适当的间距步长，在工程实践中，倾向于移动到中心位置。
+
+数学意义下，灰度图像 $f(x,\ y)$ 平移到 $f(x-x_0,\ y-y_0)$ 位置，其傅立叶变换等价于 $F(u,\ v)\e^{-j2\pi\displaystyle\left(\dfrac{ux_0}{M}+\dfrac{vy_0}{N}\right)}$，无论平移到哪个位置，其傅里叶变换的幅度谱 $\left\vert F(u,\ v)\right\vert$ 总是保持不变。
+
+\paragraph*{证明}~{}
+\[ F(u,\ v)=\mathcal{DFT}\left[f(x,\ y)\right] \]
+\[ F(u^{'},\ v^{'})=\mathcal{DFT}\left[f(x^{'},\ y^{'})\right]=\mathcal{DFT}\left[f(x-x_0,\ y-y_0)\right]=F(u,\ v)\e^{-j2\pi\displaystyle\left(\dfrac{ux_0}{M}+\dfrac{vy_0}{N}\right)} \]
+\[ \left\vert F(u^{'},\ v^{'}) \right\vert=\left\vert F(u,\ v)\e^{-j2\pi\displaystyle\left(\dfrac{ux_0}{M}+\dfrac{vy_0}{N}\right)} \right\vert=\left\vert F(u,\ v) \right\vert \cdot\left\vert \e^{-j2\pi\displaystyle\left(\dfrac{ux_0}{M}+\dfrac{vy_0}{N}\right)} \right\vert \]
+\[ \left\vert F(u^{'},\ v^{'}) \right\vert=\left\vert F(u,\ v) \right\vert \cdot\left\vert \e^{j\theta} \right\vert=\left\vert F(u,\ v) \right\vert\cdot1=\left\vert F(u,\ v) \right\vert \qquad \theta=-2\pi\left(\dfrac{ux_0}{M}+\dfrac{vy_0}{N}\right) \]
+
+工程实践中，一般选择中心填充，最大程度平滑了图像周期延拓时的不连续性，减少了人为高频失真，并且确保滤波后结果图像保持在画布中心，方便剪裁等进一步处理。
+
+
+
+\section{频域内高斯高通滤波器和高斯低通滤波器传递函数代数和}
+\subsection{代数和恒等于 1}
+设原始图像为 $f(x,\ y)$，则可拆解成低频信号和高频信号代数和：
+\[ f(x,\ y)=f_{\rm lp}(x,\ y)+f_{\rm hp}(x,\ y) \]
+
+定义空域内卷积高斯低通滤波器核 $h_{\rm lp}(x,\ y)$ 和高斯高通滤波器核 $h_{\rm hp}(x,\ y)$，则：
+\begin{align*}
+    \begin{cases}
+        f_{\rm lp}(x,\ y)=f(x,\ y)h_{\rm lp}(x,\ y)
+        \\[10pt]
+        f_{\rm hp}(x,\ y)=f(x,\ y)h_{\rm hp}(x,\ y)
+    \end{cases}
+\end{align*}
+
+傅立叶变换得到：
+\begin{align*}
+    \begin{cases}
+        \mathscr{F}_{\to f_{\rm lp}(x,\ y)}=\mathscr{F}_{\to f(x,\ y)}\mathscr{F}_{\to h_{\rm lp}(x,\ y)}
+        \\[10pt]
+        \mathscr{F}_{\to f_{\rm hp}(x,\ y)}=\mathscr{F}_{\to f(x,\ y)}\mathscr{F}_{\to h_{\rm hp}(x,\ y)}
+    \end{cases}
+\end{align*}
+
+即：
+\begin{align*}
+    \begin{cases}
+        \mathcal{DFT}\left[f_{\rm lp}(x,\ y)\right]=\mathcal{DFT}\left[f(x,\ y)\right]\mathcal{DFT}\left[h_{\rm lp}(x,\ y)\right]
+        \\[10pt]
+        \mathcal{DFT}\left[f_{\rm hp}(x,\ y)\right]=\mathcal{DFT}\left[f(x,\ y)\right]\mathcal{DFT}\left[h_{\rm hp}(x,\ y)\right]
+    \end{cases}
+\end{align*}
+
+得到：
+\begin{align*}
+    \begin{cases}
+        F_{\rm lp}(u,\ v)=F(u,\ v)H_{\rm lp}(u,\ v)
+        \\[10pt]
+        F_{\rm hp}(u,\ v)=F(u,\ v)H_{\rm hp}(u,\ v)
+    \end{cases}
+\end{align*}
+
+由于：
+\[ \mathscr{F}_{\to f(x,\ y)}=\mathcal{DFT}\left[f(x,\ y)\right]=\mathcal{DFT}\left[f_{\rm lp}(x,\ y)+f_{\rm hp}(x,\ y)\right] \]
+
+则：
+\begin{align*}
+    F(u,\ v)&=\mathcal{DFT}\left[f_{\rm lp}(x,\ y)\right]+\mathcal{DFT}\left[f_{\rm hp}(x,\ y)\right]=F_{\rm lp}(u,\ v)+F_{\rm hp}(u,\ v)
+    \\
+    F(u,\ v)&=F(u,\ v)H_{\rm lp}(u,\ v)+F(u,\ v)H_{\rm hp}(u,\ v)
+    \\
+    1&\equiv H_{\rm lp}(u,\ v)+H_{\rm hp}(u,\ v)
+\end{align*}
+
+即：
+\[ H_{\rm hp}(u,\ v)=1-H_{\rm lp}(u,\ v) \]
+
+
+
+\subsection{空域高斯高通滤波器函数}
+由于高斯低通滤波器在频域的传递函数为：
+\[ H_{\rm lp}(u,\ v)=A\e^{\displaystyle-\dfrac{u^2+v^2}{2\sigma^2}} \]
+
+所以高斯低通滤波器在空域的核函数为：
+\[ h_{\rm lp}(x,\ y)=A2\pi\sigma^2\e^{-2\pi^2\sigma^2(x^2+y^2)} \]
+
+根据：
+\[ H_{\rm hp}(u,\ v)=1-H_{\rm lp}(u,\ v) \]
+
+进行傅立叶逆变换：
+\begin{align*}
+    \mathscr{F}^{-1}_{\to H_{\rm hp}(u,\ v)}&=\mathscr{F}^{-1}_{\to 1-H_{\rm lp}(u,\ v)}
+    \\
+    \mathcal{DFT}^{-1}\left[H_{\rm hp}(u,\ v)\right]&=\mathcal{DFT}^{-1}\left[1-H_{\rm lp}(u,\ v)\right]
+    \\
+    h_{\rm hp}(x,\ y)&=\mathcal{DFT}^{-1}(1)-h_{\rm lp}(x,\ y)
+\end{align*}
+
+\paragraph*{引理}~{一维冲激函数 $\delta(x)$ 的采样性质}
+
+对于任意定义在 $x=x_0$ 处连续的函数 $f(x)$，冲激函数 $\delta(x-x_0)$ 作为积分核的定义是：
+\[ f(x_0)=\int_{-\infty}^{\infty}f(x)\delta(x-x_0)\d x\implies f(x)=\int_{-\infty}^{\infty}f(t)\delta(t-x)\d t \]
+
+由于冲激函数 $\delta(x)$ 是偶函数：
+\[ f(x)=\int_{-\infty}^{\infty}f(t)\delta(t-x)\d t\implies f(x)=\int_{-\infty}^{\infty}f(t)\delta(x-t)\d t \]
+
+因为傅立叶变换的逆变换是图像本身：
+\begin{align*}
+    f(x)&=\mathcal{DFT}^{-1}\left\{\mathcal{DFT}\left[f(x)\right]\right\}
+    \\
+    &=\int_{-\infty}^{\infty}\left[\int_{-\infty}^{\infty}f(t)\e^{-j2\pi st}\d t\right]\e^{j2\pi sx}\d s
+    \\
+    &=\int_{-\infty}^{\infty}f(t)\left[\int_{-\infty}^{\infty}\e^{j2\pi sx-j2\pi st}\d s\right]\d t
+    \\
+    &=\int_{-\infty}^{\infty}f(t)\left[\int_{-\infty}^{\infty}\e^{j2\pi s(x-t)}\d s\right]\d t
+\end{align*}
+
+则：
+\[ \int_{-\infty}^{\infty}f(t)\left[\int_{-\infty}^{\infty}\e^{j2\pi s(x-t)}\d s\right]\d t=\int_{-\infty}^{\infty}f(t)\delta(x-t)\d t \]
+
+即：
+\[ \delta(x-t)=\int_{-\infty}^{\infty}\e^{j2\pi s(x-t)}\d s\implies\delta(x)=\int_{-\infty}^{\infty}\e^{j2\pi x\xi}\d\xi \]
+
+因为：
+\begin{align*}
+    \mathcal{DFT}^{-1}(1)&=\iint_{-\infty}^{\infty}1\cdot\e^{j2\pi(ux+vy)}\d u\d v
+    \\
+    &=\int_{-\infty}^{\infty}\e^{j2\pi ux}\d u\int_{-\infty}^{\infty}\e^{j2\pi vy}\d v
+    \\
+    &=\delta(x)\cdot\delta(y)
+\end{align*}
+
+所以：
+\[ \mathcal{DFT}^{-1}(1)=\delta(x,\ y) \]
+
+综上：
+\begin{align*}
+    h_{\rm hp}(x,\ y)&=\delta(x,\ y)-h_{\rm lp}(x,\ y)
+    \\
+    &=\iint_{-\infty}^{\infty}\e^{j2\pi(ux+vy)}\d u\d v-A2\pi\sigma^2\e^{-2\pi^2\sigma^2(x^2+y^2)}
+\end{align*}
+
+
+
+\end{document}
