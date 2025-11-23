@@ -1,6 +1,15 @@
 #include "log.h"
 
 
+struct {
+    void *ctx;
+    int level;
+    int mode;
+    _LogLockFunc lock;
+    _LogCallback callback[MAX_CALLBACKS];
+} _LogLock;
+
+
 const char *COLOURS[] = {"\x1b[94m", "\x1b[36m", "\x1b[32m", "\x1b[33m", "\x1b[31m", "\x1b[35m"};
 const char *TIPS[6] = {"TRACE", "DEBUG", "INFO", "WARNING", "ERROR", "FATAL"};
 
