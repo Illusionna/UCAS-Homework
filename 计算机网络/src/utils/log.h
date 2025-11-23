@@ -7,7 +7,7 @@
 #include <stdarg.h>
 
 
-const char *TIPS[6];
+extern const char *TIPS[6];
 enum {LOG_TRACE, LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR, LOG_FATAL};
 
 
@@ -41,15 +41,6 @@ typedef struct {
     _LogCallbackFunc func;
     void *ctx;
 } _LogCallback;
-
-
-struct {
-    void *ctx;
-    int level;
-    int mode;
-    _LogLockFunc lock;
-    _LogCallback callback[MAX_CALLBACKS];
-} _LogLock;
 
 
 /**
