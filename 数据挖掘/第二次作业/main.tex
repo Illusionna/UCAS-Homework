@@ -1,0 +1,905 @@
+\documentclass{article}
+
+\usepackage{bm}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{pifont}
+\usepackage{booktabs}
+\usepackage{setspace}
+\usepackage{datetime}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{mathrsfs}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage[fontsize = 12pt]{fontsize}
+
+\renewcommand{\thesection}{\Roman{section}}
+\renewcommand{\thesubsection}{\arabic{subsection}}
+\renewcommand{\thesubsubsection}{(\alph{subsubsection})}
+\newcommand{\diff}[2]{\dfrac{\mathrm{d}#1}{\mathrm{d}#2}}
+\newcommand{\diffn}[3]{\dfrac{\mathrm{d}^{#3}#1}{\mathrm{d}#2^{#3}}}
+\newcommand{\piff}[2]{\dfrac{\partial#1}{\partial#2}}
+\newcommand{\piffn}[3]{\dfrac{\partial^{#3}#1}{\partial#2^{#3}}}
+\newcommand{\eval}[2]{\left.#1\right|_{#2}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\d}{\mathrm{d}}
+
+\definecolor{gray}{RGB}{128, 128, 128}
+
+\geometry{
+    a4paper,
+    left = 2cm,
+    right = 2cm,
+    top = 2cm,
+    bottom = 2cm
+}
+
+\title{Data Mining: Homework 2}
+\author{Illusionna \quad 2025.............4 \quad Artificial Intelligence School}
+\date{\currenttime,\ \today}
+
+
+
+\begin{document}
+
+\maketitle
+\begin{spacing}{1.5}
+    \tableofcontents
+\end{spacing}
+\thispagestyle{empty}
+\clearpage
+\setcounter{page}{1}
+
+
+\section{Written Assignment}
+\subsection{ID3 Algorithm}
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1}
+    \setlength{\tabcolsep}{12pt}
+    \color{gray}{
+        \caption{The customer data overview (Q1)}
+        \begin{tabular}{|c|c|c|c|c|}
+            \hline
+            Customer ID & Gender & Car Type & Shirt Size & Class \\
+            \hline
+            1  & M & Family & Small & C0 \\
+            2  & M & Sports & Medium & C0 \\
+            3  & M & Sports & Medium & C0 \\
+            4  & M & Sports & Large & C0 \\
+            5  & M & Sports & Extra Large & C0 \\
+            6  & M & Sports & Extra Large & C0 \\
+            7  & F & Sports & Small & C0 \\
+            8  & F & Sports & Small & C0 \\
+            9  & F & Sports & Medium & C0 \\
+            10 & F & Luxury & Large & C0 \\
+            11 & M & Family & Large & C1 \\
+            12 & M & Family & Extra Large & C1 \\
+            13 & M & Family & Medium & C1 \\
+            14 & M & Luxury & Extra Large & C1 \\
+            15 & F & Luxury & Small & C1 \\
+            16 & F & Luxury & Small & C1 \\
+            17 & F & Luxury & Medium & C1 \\
+            18 & F & Luxury & Medium & C1 \\
+            19 & F & Luxury & Medium & C1 \\
+            20 & F & Luxury & Large & C1 \\
+            \hline
+        \end{tabular}
+    }
+\end{table}
+
+
+
+\subsubsection{Compute the information gain}
+\textcolor{gray}{\it Compute the Information Gain for Gender, Car Type and Shirt Size.}
+
+\[ IG(S)={\rm Entropy}(D)-\sum_{n\in S}\dfrac{\vert D_n\vert}{\vert D\vert}\cdot{\rm Entropy}(D_n) \]
+
+\[ {\rm Entropy}(X)=-\sum_{n=1}^Np_n\log_2p_n \]
+
+Among: $D$ denotes the class of dataset, $D_n$ denotes a certain attribute of sub-dataset. $|\sim|$ denotes the element count.
+
+\[ {\rm C0=C1=10}\implies p({\rm C0})=p({\rm C1})=0.5\implies {\rm Entropy}({\rm Class})=-0.5\log_20.5\times2=1 \]
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \setlength{\tabcolsep}{36pt}
+    \caption{Gender Attribute}
+    \begin{tabular}{cccc}
+        \bottomrule[1.5pt]
+        Gender & C0 & C1 & Entropy \\
+        \midrule[0.75pt]
+        M & 6 & 4 & 0.9709505944546686 \\
+        F & 4 & 6 & 0.9709505944546686 \\
+        \toprule[1.5pt]
+    \end{tabular}
+\end{table}
+
+\[ IG({\rm Gender})=1-\dfrac{6+4}{20}\times0.9709505944546686\times2=\color{red}0.02904940554533142 \]
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \setlength{\tabcolsep}{36pt}
+    \caption{Car Type Attribute}
+    \begin{tabular}{cccc}
+        \bottomrule[1.5pt]
+        Gender & C0 & C1 & Entropy \\
+        \midrule[0.75pt]
+        Family & 1 & 3 & 0.8112781244591328 \\
+        Sports & 8 & 0 & 0 \\
+        Luxury & 1 & 7 & 0.5435644431995964 \\
+        \toprule[1.5pt]
+    \end{tabular}
+\end{table}
+
+\[ IG({\rm Car\ Type})=1-\dfrac{4}{20}\times0.8112781244591328-\dfrac{8}{20}\times0.5435644431995964=\color{red}0.620318597828335 \]
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \setlength{\tabcolsep}{5pt}
+    \caption{Shirt Size Attribute}
+    \begin{tabular}{cccc}
+        \bottomrule[1.5pt]
+        Shirt Size & C0 & C1 & Entropy \\
+        \midrule[0.75pt]
+        Small & 3 & 2 & $-\dfrac{3}{3+2}\log_2\left(\dfrac{3}{3+2}\right)-\dfrac{2}{3+2}\log_2\left(\dfrac{2}{3+2}\right)\approx0.9709505944546686$ \\
+        Medium & 3 & 4 & $-\dfrac{3}{3+4}\log_2\left(\dfrac{3}{3+4}\right)-\dfrac{4}{3+4}\log_2\left(\dfrac{4}{3+4}\right)\approx0.9852281360342515$ \\
+        Large & 2 & 2 & $-\dfrac{2}{2+2}\log_2\left(\dfrac{2}{2+2}\right)-\dfrac{2}{2+2}\log_2\left(\dfrac{2}{2+2}\right)=1$ \\
+        Extra Large & 2 & 2 & $-\dfrac{2}{2+2}\log_2\left(\dfrac{2}{2+2}\right)-\dfrac{2}{2+2}\log_2\left(\dfrac{2}{2+2}\right)=1$ \\
+        \toprule[1.5pt]
+    \end{tabular}
+\end{table}
+
+\begin{align*}
+    IG({\rm Shirt\ Size})&={\rm Entropy}({\rm Class})-\sum_{n\in{\rm Shirt\ Size}}\dfrac{\vert D_n\vert}{\vert\rm Class\vert}\cdot{\rm Entropy}(D_n)
+    \\
+    &=E({\rm Class})-\dfrac{\vert\rm Small\vert}{\vert\rm Class\vert}E({\rm Small})-\dfrac{\vert\rm Medium\vert}{\vert\rm Class\vert}E({\rm Medium})
+    \\
+    &\quad-\dfrac{\vert\rm Large\vert}{\vert\rm Class\vert}E({\rm Large})-\dfrac{\vert\rm Extra\ Large\vert}{\vert\rm Class\vert}E({\rm Extra\ Large})
+    \\
+    &=1-\dfrac{3+2}{20}\times0.9709505944546686-\dfrac{3+4}{20}\times0.9852281360342515
+    \\
+    &\quad-\dfrac{2+2}{20}\times1-\dfrac{2+2}{20}\times1
+    \\
+    &=\color{red}0.012432503774344739
+\end{align*}
+
+
+
+\subsubsection{Construct a decision tree}
+\textcolor{gray}{\it Construct a decision tree with Information Gain.}
+\paragraph*{Step 1}~{}
+
+Use ``Car Type'' as the selection attribute to partition the current dataset.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale=0.45]{./figs/step1.pdf}
+    \caption{Decision tree step 1}
+\end{figure}
+
+\paragraph*{Step 2}~{}
+
+\textbf{For the dataset partitioned by ``Car Type = Family'', we calculate the information gain in this subset as follows:}
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1}
+    \setlength{\tabcolsep}{12pt}
+    \caption{Car Type = Family}
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        Customer ID & Gender & Car Type & Shirt Size & Class \\
+        \hline
+        1  & M & Family & Small & C0 \\
+        11 & M & Family & Large & C1 \\
+        12 & M & Family & Extra Large & C1 \\
+        13 & M & Family & Medium & C1 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\[ {\rm Entropy}({\rm Class})=-\dfrac{1}{4}\log_2\left(\dfrac{1}{4}\right)-\dfrac{3}{4}\log_2\left(\dfrac{3}{4}\right)\approx0.8112781244591328 \]
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \setlength{\tabcolsep}{36pt}
+    \caption{Gender Attribute (Car Type = Family)}
+    \begin{tabular}{cccc}
+        \bottomrule[1.5pt]
+        Gender & C0 & C1 & Entropy \\
+        \midrule[0.75pt]
+        M & 1 & 3 & 0.8112781244591328 \\
+        F & 0 & 0 & 0 \\
+        \toprule[1.5pt]
+    \end{tabular}
+\end{table}
+
+\[ IG({\rm Gender})=0.8112781244591328-\dfrac{1+3}{4}\times(0.8112781244591328)=\color{red}0 \]
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \setlength{\tabcolsep}{40pt}
+    \caption{Shirt Size Attribute (Car Type = Family)}
+    \begin{tabular}{cccc}
+        \bottomrule[1.5pt]
+        Shirt Size & C0 & C1 & Entropy \\
+        \midrule[0.75pt]
+        Small & 1 & 0 & 0 \\
+        Medium & 0 & 1 & 0 \\
+        Large & 0 & 1 & 0 \\
+        Extra Large & 0 & 1 & 0 \\
+        \toprule[1.5pt]
+    \end{tabular}
+\end{table}
+
+\[ IG({\rm Shirt\ Size})=0.8112781244591328-\dfrac{1+0}{4}\times0-\dfrac{0+1}{4}\times0\times3=\color{red}0.8112781244591328 \]
+\[ IG({\rm Shirt\ Size})>IG({\rm Gender}) \]
+
+Select ``Shirt Size'' as partition attribute. \textcolor{red}{Note that all information entropy in ``Shirt Size'' is 0 and no branching is required.}
+
+\textbf{For the dataset partitioned by ``Car Type = Luxury'', we calculate the information gain in this subset as follows:}
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1}
+    \setlength{\tabcolsep}{12pt}
+    \caption{Car Type = Luxury}
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        Customer ID & Gender & Car Type & Shirt Size & Class \\
+        \hline
+        10 & F & Luxury & Large & C0 \\
+        14 & M & Luxury & Extra Large & C1 \\
+        15 & F & Luxury & Small & C1 \\
+        16 & F & Luxury & Small & C1 \\
+        17 & F & Luxury & Medium & C1 \\
+        18 & F & Luxury & Medium & C1 \\
+        19 & F & Luxury & Medium & C1 \\
+        20 & F & Luxury & Large & C1 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\[ {\rm Entropy}({\rm Class})=-\dfrac{1}{8}\log_2\left(\dfrac{1}{8}\right)-\dfrac{7}{8}\log_2\left(\dfrac{7}{8}\right)\approx0.5435644431995964 \]
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \setlength{\tabcolsep}{36pt}
+    \caption{Gender Attribute (Car Type = Luxury)}
+    \begin{tabular}{cccc}
+        \bottomrule[1.5pt]
+        Gender & C0 & C1 & Entropy \\
+        \midrule[0.75pt]
+        M & 0 & 1 & 0 \\
+        F & 1 & 6 & 0.5916727785823275 \\
+        \toprule[1.5pt]
+    \end{tabular}
+\end{table}
+
+\begin{align*}
+    IG({\rm Gender})&=0.5435644431995964-\dfrac{0+1}{8}\times0-\dfrac{1+6}{8}\times0.5916727785823275
+    \\
+    &\approx\color{red}0.025850761940059863
+\end{align*}
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \setlength{\tabcolsep}{40pt}
+    \caption{Shirt Size Attribute (Car Type = Luxury)}
+    \begin{tabular}{cccc}
+        \bottomrule[1.5pt]
+        Shirt Size & C0 & C1 & Entropy \\
+        \midrule[0.75pt]
+        Small & 0 & 2 & 0 \\
+        Medium & 0 & 3 & 0 \\
+        Large & 1 & 1 & $\color{green}1^{\dagger}$ \\
+        Extra Large & 0 & 1 & 0 \\
+        \toprule[1.5pt]
+    \end{tabular}
+\end{table}
+
+\begin{align*}
+    IG({\rm Shirt\ Size})&=0.5435644431995964-\dfrac{0+2}{8}\times0-\dfrac{0+3}{8}\times0-\dfrac{1+1}{8}\times1-\dfrac{0+1}{8}\times0
+    \\
+    &=\color{red}0.2935644431995964
+\end{align*}
+
+\[ IG({\rm Shirt\ Size})>IG({\rm Gender}) \]
+
+Select ``Shirt Size'' as partition attribute. \textcolor{red}{Note that ``Large'' information entropy in ``Shirt Size'' is $\color{green}1^{\dagger}$ and branching is still required.}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale=0.7]{./figs/step2.pdf}
+    \caption{Decision tree step 2}
+\end{figure}
+
+\paragraph*{Step 3}~{}
+
+\textbf{For the dataset partitioned by ``Car Type = Family'' \& ``Shirt Size = Large'', the ``Gender'' attribute is only available here:}
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1}
+    \setlength{\tabcolsep}{12pt}
+    \caption{Car Type = Luxury \& Shirt Size = Large}
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        Customer ID & Gender & Car Type & Shirt Size & Class \\
+        \hline
+        10 & F & Luxury & Large & C0 \\
+        20 & F & Luxury & Large & C1 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Since in the ``Gender'' attribute, one belongs to C0 and the other to C1, it is a tie. The phenomenon of branch conflicts caused by data inconsistency has emerged. The \textcolor{red}{majority voting strategy} is applied to determine the node. It is important to trace back to the parent node. The prior probability of parent node (Car Type = Luxury) is:
+\[ {\rm C0=1\quad C1=7} \]
+
+Because C1 in parent node has an absolute advantage, the key of tie-breaking is \textcolor{red}{choosing C1 when the child node} (Car Type = Luxury \& Shirt Size = Large) is tie.
+
+After pruning, the final decision tree is given:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale=0.7]{./figs/step3.pdf}
+    \caption{Decision tree step 3}
+\end{figure}
+
+
+
+\subsection{Neural Network}
+\subsubsection{Design a multilayer feed-forward neural network}
+\textcolor{gray}{\it Design a multilayer feed-forward neural network (one hidden layer) for the data set in Q1 (customer data overview). Label the nodes in the input and output layers.}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale=0.35]{./figs/neural-network.pdf}
+    \caption{Multilayer feed-forward neural network}
+\end{figure}
+\vspace*{-2em}
+\begin{align*}
+    {\rm Gender}\begin{cases}
+        {\rm M}=0
+        \\[10pt]
+        {\rm F}=1
+    \end{cases}
+    \qquad
+    {\rm Car\ Type}\begin{cases}
+        {\rm Family}=0
+        \\[10pt]
+        {\rm Sports}=1
+        \\[10pt]
+        {\rm Luxury}=2
+    \end{cases}
+    \qquad
+    {\rm Shirt\ Size}\begin{cases}
+        {\rm Small}=0
+        \\[10pt]
+        {\rm Medium}=1
+        \\[10pt]
+        {\rm Large}=2
+        \\[10pt]
+        {\rm Extra\ Large}=3
+    \end{cases}
+\end{align*}
+
+The output of neural network is Class, denoting C0 or C1.
+
+
+
+\subsubsection{Update the weight values after one iteration of the back propagation}
+\textcolor{gray}{\it Using the neural network obtained above, show the weight values after one iteration of the back propagation algorithm, given the training instance ``(M, Family, Small, C0)''. Indicate your initial weight values and biases and the learning rate used.}
+
+Initialize hyper-parameter $\eta=0.5$ and random parameters as follows:
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.5}
+    \setlength{\tabcolsep}{64pt}
+    \caption{Random initialized parameters}
+    \begin{tabular}{cc}
+        \bottomrule[1.5pt]
+        Parameter & Value \\
+        \midrule[0.75pt]
+        $\omega_{14}$ & 0.1 \\
+        $\omega_{24}$ & 0.2 \\
+        $\omega_{34}$ & $-0.1$ \\
+        $\omega_{15}$ & $-0.1$ \\
+        $\omega_{25}$ & 0.1 \\
+        $\omega_{35}$ & 0.05 \\
+        $\omega_{46}$ & 0.4 \\
+        $\omega_{56}$ & $-0.3$ \\
+        $b_4$ & 0.35 \\
+        $b_5$ & $-0.35$ \\
+        $b_6$ & 0.1 \\
+        \toprule[1.5pt]
+    \end{tabular}
+\end{table}
+
+\paragraph*{Feed forward}~{}
+
+\begin{align*}
+    z_4&=[\omega_{14},\ \omega_{24},\ \omega_{34}]\left[\begin{matrix}
+        x_{1} \\
+        x_{2} \\
+        x_{3} \\
+    \end{matrix}\right]+b_4=[0.1,\ 0.2,\ -0.1]\left[\begin{matrix}
+        0 \\
+        0 \\
+        0 \\
+    \end{matrix}\right]+0.35=0.35
+    \\
+    a_4&=\sigma(z_4)=\dfrac{1}{1+\e^{-z_4}}\approx0.5866175789173301
+    \\
+    z_5&=[\omega_{15},\ \omega_{25},\ \omega_{35}]\left[\begin{matrix}
+        x_{1} \\
+        x_{2} \\
+        x_{3} \\
+    \end{matrix}\right]+b_5=[-0.1,\ 0.1,\ 0.05]\left[\begin{matrix}
+        0 \\
+        0 \\
+        0 \\
+    \end{matrix}\right]-0.35=-0.35
+    \\
+    a_5&=\sigma(z_5)=\dfrac{1}{1+\e^{-z_5}}=\approx0.41338242108267
+    \\
+    z_6&=[\omega_{46},\ \omega_{56}]\left[\begin{matrix}
+        a_4 \\
+        a_5 \\
+    \end{matrix}\right]+b_6=[0.4,\ -0.3]\left[\begin{matrix}
+        0.5866175789173301 \\
+        0.41338242108267 \\
+    \end{matrix}\right]+0.1=0.21063230524213108
+    \\
+    a_6&=\sigma(z_6)=\dfrac{1}{1+\e^{-z_6}}\approx0.5524642506473584
+\end{align*}
+\[ E=\dfrac{1}{2}(y-\hat{y})^2=\dfrac{1}{2}(0-a_6)^2=\dfrac{1}{2}(0-0.5524642506473584)^2\approx0.1526083741216736 \]
+
+\paragraph*{Back-propagation}~{}
+
+\begin{align*}
+    \mathcal{L}_6&=\piff{E}{z_6}=\piff{E}{a_6}\cdot\piff{a_6}{z_6}=\eval{\diff{\left[\dfrac{1}{2}(y-\hat{y})^2\right]}{\hat{y}}}{\displaystyle\hat{y}=a_6}\cdot\eval{\diff{\left[\dfrac{1}{1+\e^{-x}}\right]}{x}}{\displaystyle x=z_6}=(a_6-y)a_6(1-a_6)
+    \\
+    &=(0.5524642506473584-0)\times0.5524642506473584\times(1-0.5524642506473584)
+    \\
+    &\approx0.13659540614006296
+\end{align*}
+
+According to:
+\begin{align*}
+    z_6=[\omega_{46},\ \omega_{56}]\left[\begin{matrix}
+        a_4 \\
+        a_5 \\
+    \end{matrix}\right]+b_6\simeq\begin{cases}
+        f(\bm{x})=\sum\bm{\omega}\bm{x}+b\implies f'(x)=\omega
+        \\[10pt]
+        f(\bm{\omega})=\sum\bm{x}\bm{\omega}+b\implies f'(\omega)=x
+        \\[10pt]
+        f(b)=b+\sum\bm{\omega}\bm{x}\implies f'(b)\equiv1
+    \end{cases}
+\end{align*}
+
+Then:
+\begin{align*}
+    \mathcal{L}_5&=\piff{E}{z_5}=\piff{E}{z_6}\cdot\piff{z_6}{a_5}\cdot\piff{a_5}{z_5}=\mathcal{L}_6\times\omega_{56}\times a_5(1-a_5)
+    \\
+    &=0.13659540614006296\times(-0.3)\times0.41338242108267\times(1-0.41338242108267)
+    \\
+    &\approx-0.009937209048301705
+\end{align*}
+\begin{align*}
+    \mathcal{L}_4&=\piff{E}{z_4}=\piff{E}{z_6}\cdot\piff{z_6}{a_4}\cdot\piff{a_4}{z_4}=\mathcal{L}_6\times\omega_{46}\times a_4(1-a_4)
+    \\
+    &=0.13659540614006296\times0.4\times0.5866175789173301\times(1-0.5866175789173301)
+    \\
+    &\approx0.013249612064402273
+\end{align*}
+
+Therefore:
+\begin{align*}
+    \omega'_{46}&=\omega_{46}-\eta\piff{E}{\omega_{46}}=\omega_{46}-\eta\cdot\piff{E}{z_6}\cdot\piff{z_6}{\omega_{46}}=\omega_{46}-\eta\mathcal{L}_6a_4
+    \\
+    &=0.4-0.5\times0.13659540614006296\times0.5866175789173301
+    \\
+    &=0.35993536677944343
+\end{align*}
+\begin{align*}
+    \omega'_{56}&=\omega_{56}-\eta\piff{E}{\omega_{56}}=\omega_{56}-\eta\cdot\piff{E}{z_6}\cdot\piff{z_6}{\omega_{56}}=\omega_{56}-\eta\mathcal{L}_6a_5
+    \\
+    &=-0.3-0.5\times0.13659540614006296\times0.41338242108267
+    \\
+    &=-0.3282330698494749
+\end{align*}
+\begin{align*}
+    \omega'_{14}&=\omega_{14}-\eta\piff{E}{\omega_{14}}=\omega_{14}-\eta\cdot\piff{E}{z_4}\cdot\piff{z_4}{\omega_{14}}=\omega_{14}-\eta\mathcal{L}_4x_1=\omega_{14}
+    \\
+    \omega'_{24}&=\omega_{24}-\eta\piff{E}{\omega_{24}}=\omega_{24}-\eta\cdot\piff{E}{z_4}\cdot\piff{z_4}{\omega_{24}}=\omega_{24}-\eta\mathcal{L}_4x_2=\omega_{24}
+    \\
+    \omega'_{34}&=\omega_{34}-\eta\piff{E}{\omega_{34}}=\omega_{34}-\eta\cdot\piff{E}{z_4}\cdot\piff{z_4}{\omega_{34}}=\omega_{34}-\eta\mathcal{L}_4x_3=\omega_{34}
+\end{align*}
+\begin{align*}
+    \omega'_{15}&=\omega_{15}-\eta\piff{E}{\omega_{15}}=\omega_{15}-\eta\cdot\piff{E}{z_5}\cdot\piff{z_5}{\omega_{15}}=\omega_{15}-\eta\mathcal{L}_5x_1=\omega_{15}
+    \\
+    \omega'_{25}&=\omega_{25}-\eta\piff{E}{\omega_{25}}=\omega_{25}-\eta\cdot\piff{E}{z_5}\cdot\piff{z_5}{\omega_{25}}=\omega_{25}-\eta\mathcal{L}_5x_2=\omega_{25}
+    \\
+    \omega'_{35}&=\omega_{35}-\eta\piff{E}{\omega_{35}}=\omega_{35}-\eta\cdot\piff{E}{z_5}\cdot\piff{z_5}{\omega_{35}}=\omega_{35}-\eta\mathcal{L}_5x_3=\omega_{35}
+\end{align*}
+
+And these biases:
+\begin{align*}
+    b'_6&=b_6-\eta\piff{E}{b_6}=b_6-\eta\cdot\piff{E}{z_6}\cdot\piff{z_6}{b_6}=b_6-\eta\mathcal{L}_6
+    \\
+    &=0.1-0.5\times0.13659540614006296
+    \\
+    &\approx0.031702296929968524
+\end{align*}
+\begin{align*}
+    b'_5&=b_5-\eta\piff{E}{b_5}=b_5-\eta\cdot\piff{E}{z_5}\cdot\piff{z_5}{b_5}=b_5-\eta\mathcal{L}_5
+    \\
+    &=-0.35-0.5\times(-0.009937209048301705)
+    \\
+    &\approx-0.3450313954758491
+\end{align*}
+\begin{align*}
+    b'_4&=b_4-\eta\piff{E}{b_4}=b_4-\eta\cdot\piff{E}{z_4}\cdot\piff{z_4}{b_4}=b_4-\eta\mathcal{L}_4
+    \\
+    &=0.35-0.5\times0.013249612064402273
+    \\
+    &\approx0.34337519396779886
+\end{align*}
+
+Summarize:
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.5}
+    \setlength{\tabcolsep}{48pt}
+    \caption{Parameters of one iteration of BP algorithm}
+    \begin{tabular}{cc}
+        \bottomrule[1.5pt]
+        Parameter & Update \\
+        \midrule[0.75pt]
+        $\omega_{14}$ & $0.1\to\color{red}0.1$ \\
+        $\omega_{24}$ & $0.2\to\color{red}0.2$ \\
+        $\omega_{34}$ & $-0.1\to\color{red}-0.1$ \\
+        $\omega_{15}$ & $-0.1\to\color{red}-0.1$ \\
+        $\omega_{25}$ & $0.1\to\color{red}0.1$ \\
+        $\omega_{35}$ & $0.05\to\color{red}0.05$ \\
+        $\omega_{46}$ & $0.4\to\color{red}0.35993536677944343$ \\
+        $\omega_{56}$ & $-0.3\to\color{red}-0.3282330698494749$ \\
+        $b_4$ & $0.35\to\color{red}0.34337519396779886$ \\
+        $b_5$ & $-0.35\to\color{red}-0.3450313954758491$ \\
+        $b_6$ & $0.1\to\color{red}0.031702296929968524$ \\
+        \toprule[1.5pt]
+    \end{tabular}
+\end{table}
+
+
+
+\subsection{Na\"ve Bayesian Classifier}
+\textcolor{gray}{\it Classify the unknown sample Z based on the training data set in Q1 (customer data overview): Z = (Gender = M, Car Type = Sports, Shirt Size = Small). What would a na\"ve Bayesian classifier classify Z?}
+
+\[ p({\rm Class=C0})=p({\rm Class=C1})=\dfrac{10}{20}=\dfrac{1}{2} \]
+\[ p({\rm Gender=M|Class=C0})=\dfrac{6}{6+4}=\dfrac{3}{5} \]
+\[ p({\rm Gender=M|Class=C1})=\dfrac{4}{6+4}=\dfrac{2}{5} \]
+\[ p({\rm Car\ Type=Sports|Class=C0})=\dfrac{8}{1+8+1}=\dfrac{4}{5} \]
+\[ p({\rm Car\ Type=Sports|Class=C1})=\dfrac{0}{3+0+7}=0 \]
+\[ p({\rm Shirt\ Size=Small|Class=C0})=\dfrac{3}{3+3+2+2}=\dfrac{3}{10} \]
+\[ p({\rm Shirt\ Size=Small|Class=C1})=\dfrac{2}{3+3+2+2}=\dfrac{1}{5} \]
+\begin{align*}
+    p({\rm Z|Class=C0})&=p({\rm Gender=M|Class=C0})
+    \\
+    &\quad\times p({\rm Car\ Type=Sports|Class=C0})\times p({\rm Shirt\ Size=Small|Class=C0})
+    \\
+    &=\dfrac{3}{5}\times\dfrac{4}{5}\times\dfrac{3}{10}
+\end{align*}
+\begin{align*}
+    p({\rm Z|Class=C1})&=p({\rm Gender=M|Class=C1})
+    \\
+    &\quad\times p({\rm Car\ Type=Sports|Class=C1})\times p({\rm Shirt\ Size=Small|Class=C1})
+    \\
+    &=\dfrac{2}{5}\times0\times\dfrac{1}{5}
+\end{align*}
+\begin{align*}
+    p({\rm Z|Class=C0})p({\rm Class=C0})>p({\rm Z|Class=C1})p({\rm Class=C1})\implies \color{red}{\rm Z}\in{\rm C0}
+\end{align*}
+
+
+
+\subsection{Apriori Algorithm}
+\textcolor{gray}{\it Consider the data set shown in table (min\_sup = 60\%, min\_conf=70\%).}
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1}
+    \setlength{\tabcolsep}{48pt}
+    \color{gray}{
+        \caption{Example of market basket transactions}
+        \begin{tabular}{|c|c|}
+            \hline
+            TID & Items-bought \\
+            \hline
+            T1 & \{A, D, B, C\} \\
+            \hline
+            T2 & \{D, A, C, E, B\} \\
+            \hline
+            T3 & \{A, B, E\} \\
+            \hline
+            T4 & \{A, B, D\} \\
+            \hline
+        \end{tabular}
+    }
+\end{table}
+
+
+
+\subsubsection{Find all frequent itemsets}
+\textcolor{gray}{\it Find all frequent itemsets using Apriori by treating each transaction ID as a market basket.}
+
+\[ {\rm min\_count}=\lceil {\rm min\_sup}\times n\rceil =\lceil 60\%\times 4\rceil=3 \]
+
+1st scan:
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \setlength{\tabcolsep}{30pt}
+    \caption{Frequent itemset 1}
+    \begin{tabular}{cccc}
+        \bottomrule[1.5pt]
+        Itemset & TID & Count & Pass \\
+        \midrule[0.75pt]
+        \{A\} & T1, T2, T3, T4 & 4 & $\checkmark$ \\
+        \{B\} & T1, T2, T3, T4 & 4 & $\checkmark$ \\
+        \{C\} & T1, T2 & 2 & \ding{55} \\
+        \{D\} & T1, T2, T4 & 3 & $\checkmark$ \\
+        \{E\} & T2, T3 & 2 & \ding{55} \\
+        \toprule[1.5pt]
+    \end{tabular}
+\end{table}
+
+2nd scan:
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \setlength{\tabcolsep}{30pt}
+    \caption{Frequent itemset 2}
+    \begin{tabular}{cccc}
+        \bottomrule[1.5pt]
+        Itemset & TID & Count & Pass \\
+        \midrule[0.75pt]
+        \{A, B\} & T1, T2, T3, T4 & 4 & $\checkmark$ \\
+        \{A, D\} & T1, T2, T4 & 3 & $\checkmark$ \\
+        \{B, D\} & T1, T2, T4 & 3 & $\checkmark$ \\
+        \toprule[1.5pt]
+    \end{tabular}
+\end{table}
+
+1rd scan:
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \setlength{\tabcolsep}{30pt}
+    \caption{Frequent itemset 3}
+    \begin{tabular}{cccc}
+        \bottomrule[1.5pt]
+        Itemset & TID & Count & Pass \\
+        \midrule[0.75pt]
+        \{A, B, D\} & T1, T2, T4 & 3 & $\checkmark$ \\
+        \toprule[1.5pt]
+    \end{tabular}
+\end{table}
+
+All the frequent itemsets are: \textcolor{red}{\{A\}, \{B\}, \{D\}, \{A, B\}, \{A, D\}, \{B, D\}, \{A, B, D\}}.
+
+
+
+\subsubsection{Compute the confidence for the association rules}
+\textcolor{gray}{\it Use the results in part (a) to compute the confidence for the association rules \{a, b\}$\to$\{c\} and \{c\}$\to$\{a, b\}. Is confidence a symmetric measure?}
+\[ {\rm Suppor}(X\to Y)={\rm Suppor}(X\bigcup Y) \]
+\[ {\rm Confidence}\left(\{A,\ B\}\to\{C\}\right)=\dfrac{{\rm Support}\left(\{A,\ B\}\bigcup\{C\}\right)}{{\rm Support}\left(\{A,\ B\}\right)}=\dfrac{\dfrac{2}{n}}{\dfrac{4}{n}}=50\% \]
+\[ {\rm Confidence}\left(\{C\}\to\{A,\ B\}\right)=\dfrac{{\rm Support}\left(\{C\}\bigcup\{A,\ B\}\right)}{{\rm Support}\left(\{C\}\right)}=\dfrac{\dfrac{2}{n}}{\dfrac{2}{n}}=100\% \]
+\[ {\rm Confidence}\left(\{A,\ B\}\to\{C\}\right)\neq{\rm Confidence}\left(\{C\}\to\{A,\ B\}\right) \]
+
+Since here we have, the confidence is an \textcolor{red}{asymmetric} measure which depends on precondition.
+
+
+
+\subsubsection{List all of the strong association rules}
+\textcolor{gray}{\it List all of the strong association rules (with support s and confidence c) matching the following metarule, where $X$ is a variable representing customers, and ${\rm item}_i$ denotes variables representing items (e.g. ``A'', ``B'', etc.):}
+\[ \color{gray}\forall x\in{\rm transactions},\quad {\rm buys}(X,\ {\rm item_1})\wedge{\rm buys}(X,\ {\rm item_2})=>{\rm buys}(X,\ {\rm item_3}),\quad [s,\ c] \]
+
+Construct 3 association rules with ``\{A, B, D\}'':
+\begin{align*}
+    {\rm rule\ 1:}\quad \{A,\ B\}\to\{D\}
+    \\
+    {\rm rule\ 2:}\quad \{A,\ D\}\to\{B\}
+    \\
+    {\rm rule\ 3:}\quad \{B,\ D\}\to\{A\}
+\end{align*}
+\[ {\rm Suppor}(\{A,\ B\}\to\{D\})={\rm Suppor}(\{A,\ D\}\to\{B\})={\rm Suppor}(\{B,\ D\}\to\{A\})=75\% \]
+\begin{align*}
+    {\rm Confidence}\left(\{A,\ B\}\to\{D\}\right)&=\dfrac{{\rm Support}\left(\{A,\ B\}\bigcup\{D\}\right)}{{\rm Support}\left(\{A,\ B\}\right)}=\dfrac{3}{4}=75\%
+    \\
+    {\rm Confidence}\left(\{A,\ D\}\to\{B\}\right)&=\dfrac{{\rm Support}\left(\{A,\ D\}\bigcup\{B\}\right)}{{\rm Support}\left(\{A,\ D\}\right)}=\dfrac{3}{3}=100\%
+    \\
+    {\rm Confidence}\left(\{B,\ D\}\to\{A\}\right)&=\dfrac{{\rm Support}\left(\{B,\ D\}\bigcup\{A\}\right)}{{\rm Support}\left(\{B,\ D\}\right)}=\dfrac{3}{3}=100\%
+\end{align*}
+
+Since all the confidence values of association rule are higher than those of min\_conf, the 3 rules ($\{A,\ B\}\to\{D\}$, $\{A,\ D\}\to\{B\}$, $\{B,\ D\}\to\{A\}$) are \textcolor{red}{strong association rules}.
+
+
+
+\section{Lab Assignment}
+\subsection{C5.0 Algorithm for Transactions}
+\textcolor{gray}{\it Assume this supermarket would like to promote milk. Use the data in ``transactions'' as training data to build a decision tree (C5.0 algorithm) model to predict whether the customer would buy pasta or not.}
+
+
+
+\subsubsection{A figure showing decision tree}
+\textcolor{gray}{\it Build a decision tree using data set ``transactions'' that predicts milk as a function of the other fields. Set the ``type'' of each field to ``Flag'', set the ``direction'' of ``pasta'' as ``out'', set the ``type'' of COD as ``Typeless'', select ``Expert'' and set the ``pruning severity'' to 65, and set the ``minimum records per child branch'' to be 95.}
+
+\textcolor{gray}{\it\bfseries Hand-in: a figure showing your tree.}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale=0.28]{./figs/DecisionTree.png}
+    \caption{C5.0 decision tree}
+\end{figure}
+
+
+
+\subsubsection{Prediction for each of the 20 customers}
+\textcolor{gray}{\it Use the model (the full tree generated by Clementine in step 1 above) to make a prediction for each of the 20 customers in the ``rollout'' data to determine whether the customer would buy pasta.}
+
+\textcolor{gray}{\it\bfseries Hand-in: your prediction for each of the 20 customers.}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale=0.5]{./figs/20.png}
+    \caption{Prediction for each of the 20 customersr}
+\end{figure}
+
+
+
+\subsubsection{Rules for positive prediction of pasta purchase}
+\textcolor{gray}{\it\bfseries Hand-in: rules for positive (yes) prediction of pasta purchase identified from the decision tree (up to the fifth level. The root is considered as level 1).}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale=0.85]{./figs/5.png}
+    \caption{Rules for positive prediction of pasta purchase}
+\end{figure}
+
+\begin{lstlisting}[
+    basicstyle = \ttfamily,
+    columns = flexible,
+    breaklines = true,
+    escapeinside = {!@}{@!}
+]
+Rules for 1 - contains !@\textcolor{red}{7}@! rule(s)
+    Rule 1 for  1
+        if tomato souce = 1
+        and tunny = 1
+        then 1
+    Rule 2 for  1
+        if tomato souce = 1
+        and tunny = 0
+        and rice = 1
+        then 1
+    Rule 3 for  1
+        if tomato souce = 1
+        and tunny = 0
+        and rice = 0
+        and brioches = 1
+        then 1
+    Rule 4 for  1
+        if tomato souce = 1
+        and tunny = 0
+        and rice = 0
+        and brioches = 0
+        and frozen vegetables = 1
+        then 1
+    Rule 6 for  1
+        if tomato souce = 0
+        and rice = 1
+        and coffee = 1
+        then 1
+    Rule 7 for  1
+        if tomato souce = 0
+        and rice = 1
+        and coffee = 0
+        and biscuits = 1
+        then 1
+    Rule 8 for  1
+        if tomato souce = 0
+        and rice = 1
+        and coffee = 0
+        and biscuits = 0
+        and coke = 1
+        then 1
+\end{lstlisting}
+
+
+
+\subsection{C5.0 Algorithm for Bank PEP}
+\textcolor{gray}{\it Each record is a customer description where the ``pep'' field indicates whether or not that customer bought a PEP. For other existing customers in the database, we would like to see if PEP should be RECOMMENDED to the customers in the roll-out data.}
+
+\textcolor{gray}{\it The firm decides to use decision tree to build the models for PEP recommendation. Develop a decision tree model using the estimation data. For building this model, you are expected to use the following steps.}
+
+\textcolor{gray}{\it Using the ``bank-estimation-data'', estimate the decision tree that predicts pep as a function of the other variables. Select ``Expert'' and set ``pruning severity'' at 70. Set the ``Type'' of pep as ``Flag'' and the ``Direction'' as ``out''. Build decision trees using three options ``Minimum records per child branch'' values being (a) 56, (b) 15 and (c) 10, not selecting ``use global pruning''.}
+
+
+
+\subsubsection{Confusion matrix for different strategies}
+\textcolor{gray}{\it\bfseries Hand in: the confusion matrix for (a), (b) and (c) on the validation data.}
+
+\begin{figure}[H]
+	\centering
+	\begin{minipage}{0.32\linewidth}
+		\centering
+		\includegraphics[width=0.95\linewidth]{./figs/56.png}
+		\caption{Minimum records per child branch (a) 56}
+	\end{minipage}
+	\begin{minipage}{0.32\linewidth}
+		\centering
+		\includegraphics[width=0.95\linewidth]{./figs/15.png}
+		\caption{Minimum records per child branch (b) 15}
+	\end{minipage}
+    \begin{minipage}{0.32\linewidth}
+		\centering
+		\includegraphics[width=1\linewidth]{./figs/10.png}
+		\caption{Minimum records per child branch (c) 10}
+	\end{minipage}
+\end{figure}
+
+
+
+\subsubsection{Select the optimal decision tree}
+\textcolor{gray}{\it\bfseries Hand in: which of the three trees will you use to score the data in a holdout data list and why? 2-3 lines.}
+
+\paragraph*{Confusion matrix for (a)}~{}
+\begin{align*}
+    {\rm precision}&=0.7352941176470589 \\
+    {\rm recall}&=0.78125 \\
+    {\rm F1}&=0.7575757575757576 \\
+\end{align*}
+
+\paragraph*{Confusion matrix for (b)}~{}
+\begin{align*}
+    {\rm precision}&=0.8780487804878049 \\
+    {\rm recall}&=0.75 \\
+    {\rm F1}&=0.8089887640449439 \\
+\end{align*}
+
+\paragraph*{Confusion matrix for (c)}~{}
+\begin{align*}
+    {\rm precision}&=0.8809523809523809 \\
+    {\rm recall}&=0.7708333333333334 \\
+    {\rm F1}&=0.8222222222222222 \\
+\end{align*}
+
+\textcolor{red}{The optimal decision tree is tree (c)}. Because the tree (c) F1 score is the highest, the tree (a) underfits the data, resulting in a lower metrics. The tree (b) and tree (c) gradually refine the branches of the tree, which helps to achieve consistent performance improvements without overfitting the data.
+
+
+\subsubsection{Predict the appendix data with the optimal decision tree}
+\textcolor{gray}{\it\bfseries Hand in: for the following data appendix, using the rules from the best decision tree, fill in the recommendation.}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale=0.75]{./figs/appendix.png}
+    \caption{Prediction of the recommendation with the optimal decision tree (c)}
+\end{figure}
+
+
+
+\end{document}
