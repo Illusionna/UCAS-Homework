@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Profile</title>
+        <style>
+            body {
+                margin: 0;
+                min-height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: #f0f2f5;
+                font-family: 'Segoe UI', Arial, sans-serif;
+            }
+            h1 {
+                color: #2c3e50;
+                margin: 0 0 10px;
+                font-size: 24px;
+            }
+            h2 {
+                color: #7f8c8d;
+                margin-bottom: 20px;
+                font-size: 16px;
+            }
+            .profile-card {
+                background: white;
+                border-radius: 15px;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+                padding: 30px;
+                max-width: 400px;
+                width: 90%;
+                transition: transform 0.3s ease;
+            }
+            .avatar {
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                display: block;
+                margin: 0 auto 20px;
+                border: 3px solid #fff;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+            .content {
+                text-align: left;
+                margin: 20px 0;
+                padding: 15px;
+                background: #f8f9fa;
+                border-radius: 8px;
+            }
+            .link a {
+                color: #2c3e50;
+                text-decoration: none;
+                transition: color 0.3s ease;
+            }
+            .link a:visited {
+                color: #7f8c8d;
+            }
+            .link a:hover {
+                color: #3498db;
+                text-decoration: underline;
+            }
+            .link a:active {
+                color: #2980b9;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="profile-card">
+            <img src="https://www.orzzz.net/assets/avatar.jpg" alt="Oops?" class="avatar">
+
+            <div style="text-align: center;">
+                <h1>Illusionna</h1>
+
+                <h2>I will destroy the earth!</h2>
+
+                <div class="content">
+                    <p>Email: www@orzzz.net</p>
+                    <p>Name: zoliomarling</p>
+                    <p>Location: Beijing, China</p>
+                </div>
+
+                <div class="link">
+                    <a href="https://www.orzzz.net" target="_blank">Blog</a>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
