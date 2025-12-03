@@ -1,0 +1,170 @@
+% 1. 模型要求：作业的基本要求为采用神经网络+条件随机场模型实现，例如Bi-LSTM+CRF模型，其他细节可自己设计或参考相关论文。
+% 2. 完成作业方式： 使用任意一种深度学习框架（推荐pytorch），利用目录 data 中的数据训练模型来完成序列标注任务。
+% 3. 作业提交要求：需提交代码部分（去掉数据和训练好的模型），同时写一个实验报告来说明自己所使用的模型结构以及最终测评结果等。如果愿意提交训练好的模型，可以将其用百度云分享链接的形式放在报告中。
+
+
+% pip install pygments
+% pygmentize -V
+
+\documentclass{article}
+
+\usepackage{ctex}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{setspace}
+\usepackage{datetime}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{tcolorbox}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage[fontsize = 12pt]{fontsize}
+
+\geometry{
+    a4paper,
+    left = 3cm,
+    right = 3cm,
+    top = 2cm,
+    bottom = 2cm
+}
+
+\hypersetup{
+    colorlinks = true,
+    linkcolor = red,
+    urlcolor = magenta
+}
+
+
+\title{序列标注报告}
+\author{Illusionna \quad 2025xxxxxxxxxxx04 \quad 人工智能学院}
+\date{\currenttime,\ \today}
+
+
+
+\begin{document}\maketitle
+
+\section{模型结构参数}
+使用 BiLSTM 双向长短期记忆网络，其中输入层维度为词嵌入向量的维度，隐藏层维度是词嵌入向量维度的两倍，中间只有一层 LSTM 块，且左右均可传递参数，即双向性。隐藏层到输出层之间有一层线性变化块，最后输出层映射采用 CRF 条件随机场计算，训练时最大化真实路径的似然概率，预测时使用 Viterbi 算法解码最优路径。预训练权重可通过百度网盘下载~\footnote[1]{\href{https://pan.baidu.com/s/1l3vS5UttUR3Ps-sWtqqREQ?pwd=yura}{https://pan.baidu.com/s/1l3vS5UttUR3Ps-sWtqqREQ?pwd=yura}}。
+
+\begin{lstlisting}[
+    basicstyle = \ttfamily,
+    columns = flexible,
+    breaklines = true,
+    language = python,
+    escapeinside = {!@}{@!}
+]
+hyperparameter_configuration = {
+    'proportion_trainset': 0.8,
+    'embedding_dim': 2048,
+    'hidden_dim': 4096,
+    'batch_size': 1024,
+    'epochs': 100,
+    'learning_rate': 0.001,
+    'max_len': 256,
+    'train_corpus': os.path.join('data', 'train_corpus.txt'),
+    'train_label': os.path.join('data', 'train_label.txt'),
+    'test_corpus': os.path.join('data', 'test_corpus.txt'),
+    'test_label': os.path.join('data', 'test_label.txt'),
+    'device': torch.device(
+        'mps' if platform.system() == 'Darwin'
+        else 'cuda' if torch.cuda.is_available() else 'cpu'
+    )
+}
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale=0.15]{./figs/arch.png}
+    \caption{BiLSTM + CRF}
+\end{figure}
+
+注意：训练集与验证集按照 $8:2$ 划分，约 40000 条训练样本和 10000 条验证样本，训练好的结果用于测试集，约 4600 个样本。最佳预训练权重模型采用去除“O”标签后的 F1 度量指标决定。Python 推荐 3.12.0 版本。
+
+
+
+\section{训练过程}
+训练 100 轮迭代，计算训练数据的损失值，记录包含“O”标签与去除“O”标签的结果，计算精确率、召回率、F1 指标。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale=0.78]{./figs/loss.pdf}
+    \caption{训练损失值变化}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale=0.45]{./figs/overview.pdf}
+    \caption{前 30 轮迭代的度量指标整体预览}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale=0.6]{./figs/train-all-tags.pdf}
+    \caption{包含标签“O”的训练集度量}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale=0.6]{./figs/train-without-O.pdf}
+    \caption{去除标签“O”的训练集度量}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale=0.6]{./figs/valid-all-tags.pdf}
+    \caption{包含标签“O”的验证集度量}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale=0.6]{./figs/valid-without-O.pdf}
+    \caption{去除标签“O”的验证集度量}
+\end{figure}
+
+
+
+\section{测评结果}
+在测试集上进行测评，结果优异，并进行预测，结果正确。
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.5}
+    \setlength{\tabcolsep}{48pt}
+    \caption{100 轮迭代后的测试集度量结果}
+    \begin{tabular}{cc}
+        \hline
+        precision & 0.9803132839642896 \\
+        \hline
+        recall & 0.9807532980689567 \\
+        \hline
+        F1 & 0.9803700800617295 \\
+        \hline
+        precision (without O) & 0.9231505102040817 \\
+        \hline
+        recall (without O) & 0.8643511146496815 \\
+        \hline
+        F1 (without O) & 0.8927837171052632 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{lstlisting}[
+    basicstyle = \ttfamily,
+    columns = flexible,
+    breaklines = true,
+    language = python,
+    escapeinside = {!@}{@!}
+]
+2025年秋季入学的硕士研究生叶炳辉是人工智能学院计算机科学与技术专业.
+
+O O O O O O O O O O O O O O O B-PER I-PER I-PER O
+B-ORG I-ORG I-ORG I-ORG O O O O O O O O O O O O O
+
+叶 --> B-PER 炳 --> I-PER 辉 --> I-PER 是 --> O
+人 --> B-ORG 工 --> I-ORG 智 --> I-ORG 能 --> I-ORG
+\end{lstlisting}
+
+
+
+\end{document}
