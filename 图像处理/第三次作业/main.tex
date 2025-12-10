@@ -1,0 +1,423 @@
+\documentclass{article}
+
+\usepackage{bm}
+\usepackage{ctex}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{setspace}
+\usepackage{datetime}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{nicematrix}
+\usepackage{amsmath, amssymb, amsfonts, mathrsfs}
+\usepackage[fontsize = 12pt]{fontsize}
+
+\renewcommand{\thesubsection}{(\alph{subsection})}
+\newcommand{\diff}[2]{\dfrac{\mathrm{d}#1}{\mathrm{d}#2}}
+\newcommand{\diffn}[3]{\dfrac{\mathrm{d}^{#3}#1}{\mathrm{d}#2^{#3}}}
+\newcommand{\piff}[2]{\dfrac{\partial{#1}}{\partial{#2}}}
+\newcommand{\eval}[2]{\left.#1\right|_{#2}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\barline}[1]{\overline{#1\rule{0pt}{1.5ex}}}
+
+\geometry{
+    a4paper,
+    left = 1.75cm,
+    right = 1.75cm,
+    top = 2cm,
+    bottom = 2cm
+}
+
+\setitemize[1]{
+    itemsep = 0pt,
+    partopsep = 0pt,
+    parsep = \parskip,
+    topsep = 5pt
+}
+
+\title{图像处理：第三次作业}
+\author{Illusionna \quad 2025...........04 \quad 人工智能学院}
+\date{\currenttime,\ \today}
+
+
+
+\begin{document}
+
+\maketitle
+\vspace*{2em}
+\begin{spacing}{2}
+    \tableofcontents
+\end{spacing}
+\thispagestyle{empty}
+\clearpage
+\setcounter{page}{1}
+
+
+
+\section{均匀分布的随机数发生器与生成方程}
+\paragraph*{指数分布的随机数生成方程}~{}
+
+指数分布的概率密度函数的 PDF 为：
+\begin{align*}
+    f(x)=\begin{cases}
+        \lambda\e^{-\lambda x}\qquad x\geqslant0;\ \lambda\geqslant0
+        \\[10pt]
+        0\qquad\qquad\quad\ \ x<0
+    \end{cases}
+\end{align*}
+
+对应的累积分布函数 CDF 为：
+\begin{align*}
+    F(x)=\int_{-\infty}^{x}\lambda\e^{-\lambda t}\d t=\begin{cases}
+        1-\e^{-\lambda x}\qquad x\geqslant0
+        \\[10pt]
+        0\qquad\qquad\quad x<0
+    \end{cases}
+\end{align*}
+
+由于累积分布函数 $F(x)$ 的值域是 $[0,\ 1]$，根据逆变换采样原理，令 CDF 等于一个均匀分布的随机数 $U$：
+\begin{align*}
+    F(x)=U(0,\ 1)\implies 1-\e^{-\lambda x}=U(0,\ 1)
+\end{align*}
+
+则指数分布的随机数生成方程：
+\begin{align*}
+    x=-\dfrac{1}{\lambda}\ln\left[1-U(0,\ 1)\right]
+\end{align*}
+
+\textbf{补充：}由于 $U(0,\ 1)$ 均匀分布，所以 $1-U$ 也是 $[0,\ 1]$ 上的均匀分布，实际统计模拟等工程应用中，可为了减少运算，直接代换为：
+\begin{align*}
+    x=-\dfrac{1}{\lambda}\ln U(0,\ 1)
+\end{align*}
+
+\paragraph*{对数正态分布的随机数生成方程}~{}
+
+对数正态分布概率密度函数为：
+\begin{align*}
+    p(x)=\dfrac{1}{\displaystyle x\sigma\sqrt{2\pi}}\e^{\displaystyle-\dfrac{\displaystyle(\ln x-\mu)^2}{2\sigma^2}}
+\end{align*}
+
+设随机变量 $A$ 服从对数正态分布：
+\begin{align*}
+    A\sim N(\mu,\ \sigma^2)
+\end{align*}
+
+设随机变量 $B$ 服从正态分布：
+\begin{align*}
+    B\sim N(0,\ 1)
+\end{align*}
+
+对随机变量 $B$ 进行线性变换得到随机变量 $C$：
+\begin{align*}
+    C=\sigma B+\mu\sim N(\mu,\ \sigma^2)
+\end{align*}
+
+令 $A=C$ 可得：
+\begin{align*}
+    \ln a = N(\mu,\ \sigma^2)=\sigma N(0,\ 1)+\mu
+\end{align*}
+
+则对数正态分布的随机数生成方程为：
+\begin{align*}
+    a=\e^{\displaystyle\sigma N(0,\ 1)+\mu}
+\end{align*}
+
+
+
+\section{逆谐波滤波}
+\[ \widehat{f}(x,\ y)=\dfrac{\displaystyle\sum\limits_{(s,\ t)\in S_{xy}}g(s,\ t)^{Q+1}}{\displaystyle\sum\limits_{(s,\ t)\in S_{xy}}g(s,\ t)^{Q}}=\sum_{(s,\ t)\in S_{xy}}\omega\cdot g(s,\ t) \]
+\[ \omega=\dfrac{\displaystyle g(s,\ t)^Q}{\displaystyle\sum\limits_{(s,\ t)\in S_{xy}}g(s,\ t)^Q} \]
+
+\subsection{Q 为正值滤波对“胡椒”噪声有效}
+胡椒噪声指图像中出现的黑色噪点，在灰度图中，其像素接近于 0 的非常小值。在滤波器窗口 $S_{xy}$ 内，这个特定窗口领域的每个像素点权重 $\omega$ 是固定的，权重分母 $\displaystyle\sum\limits_{(s,\ t)\in S_{xy}}g(s,\ t)^Q$ 代数和在局部都是常数，权重分子 $g(s,\ t)^Q$ 代表像素点亮度能量，变量 $g(s,\ t)$ 代表核心像素值，当 $Q>0$ 时，胡椒噪声像素值接近于 0，因此被分配的权重极小，最终结果由亮像素决定，胡椒噪声被忽略。
+
+
+
+\subsection{Q 为负值滤波对“盐”噪声有效}
+盐噪声指图像中出现白色噪点，在灰度图中，其像素接近 255 的非常大值。在滤波器窗口 $S_{xy}$ 内，这个特定窗口领域的每个像素点权重 $\omega$ 是固定的，权重分母 $\displaystyle\sum\limits_{(s,\ t)\in S_{xy}}g(s,\ t)^Q$ 代数和在局部都是常数，权重分子 $g(s,\ t)^Q$ 代表像素点亮度能量，变量 $g(s,\ t)$ 代表核心像素值，当 $Q<0$ 时，盐噪声像素值接近于 0，因此被分配的权重极小，最终结果由暗像素决定，盐噪声被忽略。
+
+
+
+\section{最佳陷波滤波器图像恢复的计算过程}
+\begin{footnotesize}
+    \begin{align*}
+        \sigma^2(x,y)&=\dfrac{1}{(2a+1)(2b+1)}\sum_{s=-a}^{a}\sum_{t=-b}^{b}\left\{\left[g(x+s,y+t)-w(x,y)\eta(x+s,y+t)\right]-\left[\barline{g}(x,y)-w(x,y)\barline{\eta}(x,y)\right]\right\}^2
+        \\
+        \piff{\sigma^2(x,y)}{w(x,y)}&=\piff{}{w(x,y)}\dfrac{\displaystyle\sum_{s=-a}^{a}\sum_{t=-b}^{b}\left\{\left[g(x+s,y+t)-w(x,y)\eta(x+s,y+t)\right]-\left[\barline{g}(x,y)-w(x,y)\barline{\eta}(x,y)\right]\right\}^2}{(2a+1)(2b+1)}
+    \end{align*}
+    \[ 0=\dfrac{\displaystyle\sum_{s=-a}^{a}\sum_{t=-b}^{b}}{(2a+1)(2b+1)}\cdot2\left\{g(x+s,y+t)+w(x,y)\left[\barline{\eta}(x,y)-\eta(x+s,y+t)\right]-\barline{g}(x,y)\right\}\left[\barline{\eta}(x,y)-\eta(x+s,y+t)\right] \]
+\end{footnotesize}\vspace*{-1em}
+
+整理得到加权调制函数为：
+\begin{align*}
+    w(x,y)=\dfrac{\displaystyle\sum_{s=-a}^{a}\sum_{t=-b}^{b}\left[g(x+s,y+t)-\barline{g}(x,y)\right]\left[\eta(x+s,y+t)-\barline{\eta}(x,y)\right]}{\displaystyle\sum_{s=-a}^{a}\sum_{t=-b}^{b}\left[\eta(x+s,y+t)-\barline{\eta}(x,y)\right]^2}
+\end{align*}
+
+展开：
+\begin{footnotesize}
+    \begin{align*}
+        w(x,y)=\dfrac{\displaystyle\sum_{s=-a}^{a}\sum_{t=-b}^{b}\left[g(x+s,y+t)\eta(x+s,y+t)-g(x+s,y+t)\barline{\eta}(x,y)-\barline{g}(x,y)\eta(x+s,y+t)+\barline{g}(x,y)\barline{\eta}(x,y)\right]}{\displaystyle\sum_{s=-a}^{a}\sum_{t=-b}^{b}\left[\eta^2(x+s,y+t)+\barline{\eta}^2(x,y)-2\eta(x+s,y+t)\barline{\eta}(x,y)\right]}
+    \end{align*}
+\end{footnotesize}
+
+由平均值定义：
+\begin{align*}
+    \begin{cases}
+        \barline{f}(x,y)=\dfrac{1}{(2a+1)(2b+1)}\displaystyle\sum_{s=-a}^{a}\sum_{t=-b}^{b}f(x+s,y+t)
+        \\[10pt]
+        \barline{f}(x,y)\equiv\barline{f}(x,y)\cdot\dfrac{1}{(2a+1)(2b+1)}\displaystyle\sum_{s=-a}^{a}\sum_{t=-b}^{b}1=\dfrac{1}{(2a+1)(2b+1)}\displaystyle\sum_{s=-a}^{a}\sum_{t=-b}^{b}\barline{f}(x,y)
+    \end{cases}
+\end{align*}
+
+则：
+\begin{align*}
+    w(x,y)=\dfrac{(2a+1)(2b+1)}{(2a+1)(2b+1)}\cdot\dfrac{\barline{g(x,y)\eta(x,y)}-\barline{g}(x,y)\barline{\eta}(x,y)-\barline{g}(x,y)\barline{\eta}(x,y)+\barline{g}(x,y)\barline{\eta}(x,y)}{\barline{\eta^2(x,y)}+\barline{\eta}^2(x,y)-2\barline{\eta}^2(x,y)}
+\end{align*}
+
+综上：
+\begin{align*}
+    w(x,y)=\dfrac{\barline{g(x,y)\eta(x,y)}-\barline{g}(x,y)\barline{\eta}(x,y)}{\barline{\eta^2(x,y)}-\barline{\eta}^2(x,y)}
+\end{align*}
+
+
+
+\section{线性移不变系统与卷积信号}
+\paragraph*{引理}~{线性系统满足叠加性与齐次性}
+\begin{align*}
+    \mathbb{S}(\bm{x}+\bm{y})&=\mathbb{S}(\bm{x})+\mathbb{S}(\bm{y})
+    \\
+    \mathbb{S}(k\bm{x})&=k\mathbb{S}(\bm{x})
+\end{align*}
+
+因此对于任意两幅图像，两个输入之和的响应等于两个响应之和：
+\begin{align*}
+    \mathbb{S}\left[\alpha f_1(x,y)+\beta f_2(x,y)\right]=\alpha\mathbb{S}[f_1(x,y)]+\beta\mathbb{S}[f_2(x,y)]
+\end{align*}
+
+\paragraph*{引理}~{平移不变系统}
+\begin{align*}
+    t(\bm{x})=\mathbb{T}(\bm{x})\implies t(\bm{x}-\bm{\vartheta})=\mathbb{T}(\bm{x}-\bm{\vartheta})
+\end{align*}
+
+因此对于一幅图像，任意一个像素点的响应只取决于在该点的输入值，而与该点位置无关：
+\begin{align*}
+    t(x-a,y-b)=\mathbb{T}\left[f(x-a,y-b)\right]
+\end{align*}
+
+\paragraph*{定义}~{线性移不变系统 $\mathcal{L}$ 是满足叠加性、齐次性、平移不变性的系统}
+\begin{align*}
+    \mathcal{L}(\bm{x}+\bm{y})&=\mathcal{L}(\bm{x})+\mathcal{L}(\bm{y})
+    \\
+    \mathcal{L}(k\bm{x})&=k\mathcal{L}(\bm{x})
+    \\
+    t(\bm{x}-\bm{\vartheta})&=\mathcal{L}(\bm{x}-\bm{\vartheta})
+\end{align*}
+
+\paragraph*{定义}~{根据离散脉冲函数可得连续冲激函数}
+\begin{align*}
+    f(x,y)=\mathop{\iint}_{-\infty}^{+\infty}f(m,n)\delta(x-m,y-n)\d m\d n
+\end{align*}
+
+则任意一个经过线性移不变系统的图像：
+\begin{align*}
+    g(x,y)=\mathcal{L}\left[f(x,y)\right]=\mathcal{L}\left[\mathop{\iint}_{-\infty}^{+\infty}f(m,n)\delta(x-m,y-n)\d m\d n\right]
+\end{align*}
+
+由于 $\mathcal{L}$ 算子可线性叠加：
+\begin{align*}
+    g(x,y)=\mathop{\iint}_{-\infty}^{+\infty}\mathcal{L}\left[f(m,n)\delta(x-m,y-n)\right]\d m\d n=\mathop{\iint}_{-\infty}^{+\infty}f(m,n)\mathcal{L}\left[\delta(x-m,y-n)\right]\d m\d n
+\end{align*}
+
+其中 $\mathcal{I}(x,y|m,n)$ 称为线性移不变系统 $\mathcal{L}$ 的冲激响应（点扩散函数）：
+\begin{align*}
+    \mathcal{I}(x,y|m,n)=\mathcal{L}\left[\delta(x-m,y-n)\right]
+\end{align*}
+
+即 $\mathcal{I}(x,y|m,n)$ 是线性移不变系统 $\mathcal{L}$ 对坐标 $(x,y)$ 处强度为 1 的冲激响应。因此，如果线性移不变系统 $\mathcal{L}$ 对冲激函数的响应已知，则对任意输入 $f(m,n)$ 的响应可表示为：
+\begin{align*}
+    g(x,y)=\mathop{\iint}_{-\infty}^{+\infty}f(m,n)\mathcal{I}(x,y|m,n)\d m\d n
+\end{align*}
+
+由此可知线性移不变系统 $\mathcal{L}$ 完全可通过其冲激响应来表达，根据平移不变性：
+\begin{align*}
+    \mathcal{L}\left[\delta(x-m,y-n)\right]=\mathcal{I}(x-m,y-n)
+\end{align*}
+
+化简得到连续卷积积分：
+\begin{align*}
+    g(x,y)=\mathop{\iint}_{-\infty}^{+\infty}f(m,n)\mathcal{I}(x-m,y-n)\d m\d n=f(x,y)\circledast\mathcal{I}(x,y)
+\end{align*}
+
+对于任意输入 $f$，已知线性移不变系统的冲激响应，就可以计算出它的响应 $g$，其结果是冲激响应和输入函数的卷积运算。
+
+
+
+\section{约束最小二乘法计算原始图像的估计}
+频域中退化模型为：
+\begin{align*}
+    \bm{g}=\bm{H}\bm{f}+\bm{\eta}\implies G(u,v)=H(u,v)F(u,v)+N(u,v)
+\end{align*}
+
+原始图像在频域的估计函数，即约束最小二乘方滤波器的传递函数为：
+\begin{align*}
+    \widehat{F}(u,v)=\left[\dfrac{\displaystyle H^{\bm{\dagger}}(u,v)}{\displaystyle\left|H(u,v)\right|^2+\gamma\left|P(u,v)\right|^2}\right]G(u,v)
+\end{align*}
+
+其中，$H^{\bm{\dagger}}(u,v)$ 是退化函数的复共轭，$P(u,v)$ 是拉普拉斯算子的傅立叶变换，$\gamma$ 是一个通过迭代求解的核心参数拉格朗日乘数。
+
+\paragraph*{step 1}~{准备 $P(u,v)$ 算子}
+
+$P(u,v)$ 通常是拉普拉斯算子的频域表示，即空域函数 $p(x,y)$ 的傅立叶变换，注意在变换之前需要进行零填充延拓至与图像相同大小：
+\begin{align*}
+    p(x,y)=\begin{bNiceMatrix}[first-row, first-col, last-row, last-col]
+        ~ & ~ & ~ & ~ \\
+        ~ & 0 & -1 & 0 \\
+        ~ & -1 & 4 & -1 & \color{blue}\leftarrow{i=0} \\
+        ~ & 0 & -1 & 0 \\
+        ~ & ~ & \color{blue}\overset{\uparrow}{j=0} & ~ \\
+        \CodeAfter
+        \tikz \draw[red, dashed] (2-1.west) -- (2-3.east);
+        \tikz \draw[red, dashed] (1-2.north) -- (3-2.south);
+        \tikz \draw[green, thick] (2-2) circle (0.75em);
+    \end{bNiceMatrix}
+\end{align*}
+
+$p(x,y)$ 模版用于计算像素与其领域的二阶微分，图像越平滑，该值越接近于 0，图像边缘或噪点越强，该值越大。由傅立叶变换：
+\begin{align*}
+    P(u,v)&=\displaystyle\sum\sum p(x,y)\e^{\displaystyle-j2\pi\left(\dfrac{ux}{M}+\dfrac{vy}{N}\right)}
+    \\
+    &=p(0,0)\e^{\displaystyle-j2\pi\left(\dfrac{0\cdot u}{M}+\dfrac{0\cdot v}{N}\right)}+p(-1,0)\e^{\displaystyle-j2\pi\left(\dfrac{-1\cdot u}{M}+\dfrac{0\cdot v}{N}\right)}
+    \\
+    &\quad+p(1,0)\e^{\displaystyle-j2\pi\left(\dfrac{1\cdot u}{M}+\dfrac{0\cdot v}{N}\right)}+p(0,-1)\e^{\displaystyle-j2\pi\left(\dfrac{0\cdot u}{M}+\dfrac{-1\cdot v}{N}\right)}
+    \\
+    &\quad+p(0,1)\e^{\displaystyle-j2\pi\left(\dfrac{0\cdot u}{M}+\dfrac{1\cdot v}{N}\right)}+4\times0
+    \\
+    &=4-\left(\e^{\displaystyle j2\pi\dfrac{u}{M}}+\e^{\displaystyle-j2\pi\dfrac{u}{M}}\right)-\left(\e^{\displaystyle j2\pi\dfrac{v}{N}}+\e^{\displaystyle-j2\pi\dfrac{v}{N}}\right)
+\end{align*}
+
+根据欧拉公式：
+\begin{align*}
+    \cos\theta=\dfrac{\e^{\displaystyle j\theta}+\e^{\displaystyle-j\theta}}{2}
+\end{align*}
+
+可得：
+\begin{align*}
+    P(u,v)=4-2\cos\dfrac{2\pi u}{M}-2\cos\dfrac{2\pi v}{N}
+\end{align*}
+
+$P(u,v)$ 能作为平滑度约束，由于 $p(x,y)$ 是中心对称的偶函数，所以它的傅立叶变换结果完全是实数，没有虚部，当 $u,v\to0$ 时，有 $P(u,v)\to0$，说明算子会完全抑制直流分量，当 $u,v$ 增大，形成高频响应，当频率增加，$P(u,v)$ 值迅速增大，意味着越是高频噪点、高频边缘，算子输出值越大，惩罚力度越强。
+
+\paragraph*{step 2}~{计算噪声能量约束}
+
+噪声总能量 $\lVert\bm{\eta}\rVert^2$ 本质上就是所有噪声像素的平方和，根据统计学大数定理，约等于总像素数乘以平方的期望：
+\begin{align*}
+    \lVert\bm{\eta}\rVert^2\approx MN\cdot E(\bm{\eta}^2)=MN\cdot\left[\sigma^2+E^2(\bm{\eta})\right]=MN(\sigma^2+\mu^2)
+\end{align*}
+
+其中：
+\begin{align*}
+    \mu&=\dfrac{1}{MN}\sum_{x=0}^{M-1}\sum_{y=0}^{N-1}\eta(x,y)
+    \\
+    \sigma^2&=\dfrac{1}{MN}\sum_{x=0}^{M-1}\sum_{y=0}^{N-1}\left[\eta(x,y)-\mu\right]^2
+\end{align*}
+
+噪声总能量 $\lVert\bm{\eta}\rVert^2$ 值将作为迭代优化时的目标阈值。
+
+\paragraph*{step 3}~{定义残差函数}
+
+根据残差向量定义：
+\begin{align*}
+    \bm{r}=\bm{g}-\bm{H}\widehat{\bm{f}}
+\end{align*}
+
+由于 $\widehat{\bm{f}}$ 是关于 $\gamma$ 的函数，所以 $\bm{r}$ 也是关于 $\gamma$ 的函数，则残差函数可表示成二次型：
+\begin{align*}
+    \varPhi(\gamma)&=\bm{r}^{\top}\bm{E}\bm{r}=\lVert\bm{r}\rVert^2=\left\lVert G(u,v)-H(u,v)\widehat{F}(u,v)\right\rVert^2
+    \\
+    &=\left\lVert G(u,v)-H(u,v)\left[\dfrac{\displaystyle H^{\bm{\dagger}}(u,v)}{\displaystyle\left|H(u,v)\right|^2+\gamma\left|P(u,v)\right|^2}\right]G(u,v)\right\rVert^2
+    \\
+    &=\left\lVert G(u,v)-\dfrac{\displaystyle \left|H(u,v)\right|^2G(u,v)}{\displaystyle\left|H(u,v)\right|^2+\gamma\left|P(u,v)\right|^2} \right\rVert^2
+    \\
+    &=\left\lVert \dfrac{\displaystyle \gamma\left|P(u,v)\right|^2G(u,v)}{\displaystyle\left|H(u,v)\right|^2+\gamma\left|P(u,v)\right|^2} \right\rVert^2
+    \\
+    &=\sum_{u=0}^{M-1}\sum_{v=0}^{N-1}\left| \dfrac{\displaystyle \gamma\left|P(u,v)\right|^2G(u,v)}{\displaystyle\left|H(u,v)\right|^2+\gamma\left|P(u,v)\right|^2} \right|^2
+\end{align*}
+
+其中，矩阵 $\bm{E}$ 是单位阵，注意到 $\gamma\uparrow\implies\widehat{F}(u,v)\downarrow\implies\widehat{\bm{f}}\downarrow$，所以 $\bm{r}=\bm{g}-\bm{H}\widehat{\bm{f}}$ 可得到 $\varPhi(\gamma)$ 是关于 $\gamma$ 的单调递增函数。
+
+\paragraph*{step 4}~{迭代求解 $\gamma$}
+
+由于 $\varPhi(\gamma)$ 是关于 $\gamma$ 的单调递增函数，因此可以通过数值方法（譬如牛顿-拉弗森算法）来寻找最优解 $\gamma$：
+
+\begin{itemize}
+    \item 设定一个 $\gamma$ 的初始值；
+    \item 计算 $\varPhi(\gamma)=\lVert\bm{r}\rVert^2$ 值；
+    \item 由于 $\bm{g}=\bm{H}\bm{f}+\bm{\eta}$，因此 $\lVert\bm{\eta}\rVert^2=\left\lVert\bm{g}-\bm{H}\widehat{\bm{f}}\right\rVert^2$ 约束完全满足条件是让精确因数 $\varepsilon$ 为零：
+    \[ s.t.\begin{cases}
+        \lVert\bm{r}\rVert^2=\lVert\bm{\eta}\rVert^2\pm\varepsilon
+        \\[10pt]
+        \varepsilon=0
+    \end{cases} \]
+    \item 如果满足 $\lVert\bm{r}\rVert^2=\lVert\bm{\eta}\rVert^2\pm\varepsilon$，即 $\displaystyle\left|\varPhi(\gamma)-\lVert\bm{\eta}\rVert^2\right|\leqslant\varepsilon$，停止迭代；否则如果 $\varPhi(\gamma)<\lVert\bm{\eta}\rVert^2-\varepsilon$，则增加 $\gamma$ 值；否则 $\varPhi(\gamma)>\lVert\bm{\eta}\rVert^2+\varepsilon$，则减小 $\gamma$ 值；反复迭代，计算最佳估计函数 $\widehat{F}(u,v)$，不断更新 $\varPhi(\gamma)=\lVert\bm{r}\rVert^2$ 值。
+\end{itemize}
+
+\paragraph*{step 5}~{傅立叶逆变换复原}
+
+当满足收敛条件 $\varepsilon$ 后，对最终 $\widehat{F}(u,v)$ 进行傅立叶逆变换，并取实部，即可得到 $\widehat{f}(x,y)$ 复原图像。
+
+
+
+\section{几何校正坐标映射下双线性插值算法}
+\paragraph*{step 1}~{构建原始图像与退化图像对应点列}
+\[ \{(x_k,y_k)\to(x'_k,y'_k)\left.\right|k=1,2,\ldots,n\} \]
+
+\paragraph*{step 2}~{建立映射模型}
+\[ \begin{cases}
+    x'=c_1x+c_2y+c_3xy+c_4
+    \\[10pt]
+    y'=c_5x+c_6y+c_7xy+c_8
+\end{cases} \]
+
+\paragraph*{step 3}~{求解系数}
+
+利用最小二乘法求解线性方程组 $\bm{c}^*$ 最优系数。
+\begin{align*}
+    \left[\begin{matrix}
+        x_1 & y_1 & x_1y_1 & 1 \\
+        x_2 & y_2 & x_2y_2 & 1 \\
+        \vdots & \vdots & \vdots & \vdots \\
+        x_n & y_n & x_ny_n & 1 \\
+    \end{matrix}\right]_{n\times4}\left[\begin{matrix}
+        k_1 \\
+        k_2 \\
+        k_3 \\
+        k_4 \\
+    \end{matrix}\right]_{4\times1}=\left[\begin{matrix}
+        x'_1 \\
+        x'_2 \\
+        \vdots \\
+        x'_n \\
+    \end{matrix}\right]_{n\times1}\Longleftrightarrow \bm{X}\bm{k}=\bm{x}'
+\end{align*}
+\[ \implies\bm{k}^*=(\bm{X}^{\top}\bm{X})^{-1}\bm{X}^{\top}\bm{x}' \]
+
+\paragraph*{step 4}~{利用双线性插值完成灰度估计}
+
+使用双线性插值估计校正后图像，考虑 $(x',y')$ 像素周围最近的四个邻接像素点：
+\[ (\lfloor x'\rfloor,\lfloor y'\rfloor)\quad (\lfloor x'\rfloor+1,\lfloor y'\rfloor)\quad (\lfloor x'\rfloor,\lfloor y'\rfloor+1)\quad (\lfloor x'\rfloor+1,\lfloor y'\rfloor+1) \]
+
+计算偏移量：
+\[ a=x'-\lfloor x'\rfloor\qquad b=y'-\lfloor y'\rfloor \]
+
+计算校正后位置的像素值：
+\begin{footnotesize}
+    \[ \widehat{f}(x,y)=(1-a)(1-b)\cdot g(\lfloor x'\rfloor,\lfloor y'\rfloor)+a(1-b)\cdot g(\lfloor x'\rfloor+1,\lfloor y'\rfloor)+(1-a)b\cdot g(\lfloor x'\rfloor,\lfloor y'\rfloor+1)+ab\cdot g(\lfloor x'\rfloor+1,\lfloor y'\rfloor+1) \]
+\end{footnotesize}
+
+
+
+\end{document}
