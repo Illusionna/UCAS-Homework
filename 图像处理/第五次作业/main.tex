@@ -1,0 +1,607 @@
+\documentclass{article}
+
+\usepackage{bm}
+\usepackage{ctex}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{setspace}
+\usepackage{datetime}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{nicematrix}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage[fontsize = 12pt]{fontsize}
+
+\renewcommand{\thesubsection}{(\alph{subsection})}
+\newcommand{\diff}[2]{\dfrac{\mathrm{d}#1}{\mathrm{d}#2}}
+\newcommand{\diffn}[3]{\dfrac{\mathrm{d}^{#3}#1}{\mathrm{d}#2^{#3}}}
+\newcommand{\piff}[2]{\dfrac{\partial{#1}}{\partial{#2}}}
+\newcommand{\eval}[2]{\left.#1\right|_{#2}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\barline}[1]{\overline{#1\rule{0pt}{1.5ex}}}
+\newcommand{\mathsize}{\fontsize{6.5pt}{10pt}\selectfont}
+
+\setcounter{MaxMatrixCols}{20}
+
+\geometry{
+    a4paper,
+    left = 2cm,
+    right = 2cm,
+    top = 2cm,
+    bottom = 2cm
+}
+
+\setitemize[1]{
+    itemsep = 0pt,
+    partopsep = 0pt,
+    parsep = \parskip,
+    topsep = 5pt
+}
+
+\title{图像处理：第五次作业}
+\author{Illusionna \quad 2025..............4 \quad 人工智能学院}
+\date{\currenttime,\ \today}
+
+
+
+\begin{document}
+
+\maketitle
+\begin{spacing}{1.75}
+    \tableofcontents
+\end{spacing}
+\thispagestyle{empty}
+\clearpage
+\setcounter{page}{1}
+
+
+
+\section{$Z$ 变换性质}
+\subsection{若 $x(n)$ 的 $Z$ 变换为 $X(z)$，则 $(-1)^{n}x(n)$ 的 $Z$ 变换为 $X(-z)$}
+由于 $x(n)$ 的 $Z$ 变换为：
+\begin{align*}
+    X(z)=\sum_{-\infty}^{\infty}x(n)z^{-n}
+\end{align*}
+
+因为对称性质：
+\begin{align*}
+    (-1)^n=(-1)^{-n}
+\end{align*}
+
+所以 $(-1)^nx(n)$ 的 $Z$ 变换为：
+\begin{align*}
+    \sum_{-\infty}^{\infty}(-1)^nx(n)z^{-n}=\sum_{-\infty}^{\infty}(-1)^{-n}x(n)z^{-n}=\sum_{-\infty}^{\infty}x(n)(-z)^{-n}=X(-z)
+\end{align*}
+
+
+
+\subsection{若 $x(n)$ 的 $Z$ 变换为 $X(z)$，则 $x(-n)$ 的 $Z$ 变换为 $X\left(\dfrac{1}{z}\right)$}
+由于：
+\begin{align*}
+    X(z)=\sum_{-\infty}^{\infty}x(n)z^{-n}
+\end{align*}
+
+令 $k=-n$，则：
+\begin{align*}
+    \sum_{-\infty}^{\infty}x(-n)z^{-n}=\sum_{-\infty}^{\infty}x(k)z^k
+\end{align*}
+
+因此：
+\begin{align*}
+    \sum_{-\infty}^{\infty}x(k)z^k=\sum_{-\infty}^{\infty}x(k)(z^{-1})^{-k}=X\left(\dfrac{1}{z}\right)
+\end{align*}
+
+
+
+\subsection{若 $x(n)$ 的 $Z$ 变换为 $X(z)$，则有信号“抽取”在 $Z$ 域的性质}
+若 $x(n)$ 的 $Z$ 变换为 $X(z)$，则 $x_{\rm down}(n)=x(2n)\Leftrightarrow X_{\rm down}(z)=\dfrac{1}{2}\left[X(\sqrt{z})+X(-\sqrt{z})\right]$
+\begin{align*}
+    X_{\rm down}(z)=\sum_{-\infty}^{\infty}x_{\rm down}(n)z^{-n}=\sum_{-\infty}^{\infty}x(2n)z^{-n}
+\end{align*}
+
+由于：
+\begin{align*}
+    X(\sqrt{z})&=\sum_{-\infty}^{\infty}x(k)(\sqrt{z})^{-k}=\sum_{-\infty}^{\infty}x(k)z^{-k/2}
+    \\
+    X(-\sqrt{z})&=\sum_{-\infty}^{\infty}x(k)(-\sqrt{z})^{-k}=\sum_{-\infty}^{\infty}x(k)(-1)^{-k}z^{-k/2}=\sum_{-\infty}^{\infty}x(k)(-1)^{k}z^{-k/2}
+\end{align*}
+
+叠加后得到：
+\begin{align*}
+    X(\sqrt{z})+X(-\sqrt{z})&=\sum_{-\infty}^{\infty}x(k)z^{-k/2}+\sum_{-\infty}^{\infty}x(k)(-1)^{k}z^{-k/2}
+    \\
+    &=\sum_{-\infty}^{\infty}x(k)\left[1+(-1)^k\right]z^{-k/2}
+\end{align*}
+
+当 $k$ 为偶数，$1+(-1)^k=2$；当 $k$ 为奇数，$1+(-1)^k=0$，所以：
+\begin{align*}
+    X(\sqrt{z})+X(-\sqrt{z})=\sum_{k\in\rm even}x(k)\cdot2\cdot z^{-k/2}
+\end{align*}
+
+令 $k=2m$，其中 $m\in\mathbb{Z}$，则：
+\begin{align*}
+    X(\sqrt{z})+X(-\sqrt{z})=2\cdot\sum_{-\infty}^{\infty}x(2m)z^{-m}
+\end{align*}
+
+因此：
+\begin{align*}
+    X_{\rm down}(z)=\sum_{-\infty}^{\infty}x(2n)z^{-n}=\dfrac{1}{2}\left[2\cdot\sum_{-\infty}^{\infty}x(2m)z^{-m}\right]=\dfrac{1}{2}\left[X(\sqrt{z})+X(-\sqrt{z})\right]
+\end{align*}
+
+
+
+\section{正交镜像滤波器组推论}
+\[ G_1(z)=-z^{-2k+1}G_0(-z^{-1})\implies g_1(n)=(-1)^ng_0(2k-1-n) \]
+
+由于：
+\begin{align*}
+    G_1(z)=-z^{-2k+1}G_0(-z^{-1})=-z^{-2k+1}\sum_{-\infty}^{\infty}g_0(n)(-z^{-1})^{-n}=\sum_{-\infty}^{\infty}g_0(n)(-1)^{n+1}z^{n+1-2k}
+\end{align*}
+
+令 $-m=n+1-2k$，则：
+\begin{align*}
+    \sum_{-\infty}^{\infty}g_0(n)(-1)^{n+1}z^{n+1-2k}&=\sum_{-\infty}^{\infty}g_0(2k-1-m)(-1)^{2k-m}z^{-m}
+\end{align*}
+
+又因为：
+\begin{align*}
+    (-1)^{2k-m}=(-1)^{2k}\cdot(-1)^{-m}=1\cdot(-1)^m=(-1)^m
+\end{align*}
+
+所以：
+\begin{align*}
+    \sum_{-\infty}^{\infty}g_0(2k-1-m)(-1)^{2k-m}z^{-m}=\sum_{-\infty}^{\infty}g_0(2k-1-m)(-1)^{m}z^{-m}
+\end{align*}
+
+因此：
+\begin{align*}
+    g_1(n)=(-1)^ng_0(2k-1-n)
+\end{align*}
+
+
+
+\section{正交族小波变换完美重建滤波器组推论}
+由于高通和低通综合滤波器交替反转关系：
+\begin{align*}
+    g_1(n)=(-1)^ng_0(2k-1-n)
+\end{align*}
+
+又因为分析滤波器是综合滤波器时域镜像正交关系：
+\begin{align*}
+    \begin{cases}
+        h_0(n)=g_0(2k-1-n)
+        \\[10pt]
+        h_1(n)=g_1(2k-1-n)
+    \end{cases}
+\end{align*}
+
+反转表达：
+\begin{align*}
+    h_0(n)=g_0(2k-1-n)\implies h_0(2k-1-n)=g_0(n)
+\end{align*}
+
+由：
+\begin{align*}
+    h_1(n)=g_1(2k-1-n)=(-1)^{2k-1-n}g_0\left[2k-1-(2k-1-n)\right]=(-1)^{n+1}g_0(n)
+\end{align*}
+
+即：
+\begin{align*}
+    h_1(n)=(-1)^{n+1}h_0(2k-1-n)
+\end{align*}
+
+
+
+\section{哈尔小波变换矩阵}
+哈尔基函数：
+\begin{align*}
+    h_k(z)=h_{pq}(z)=\dfrac{1}{\sqrt{N}}\begin{cases}
+        2^{p/2},\qquad \dfrac{q-1}{\displaystyle2^p}\leqslant z<\dfrac{q-0.5}{\displaystyle2^p}
+        \\[10pt]
+        -2^{p/2},\qquad \dfrac{q-0.5}{\displaystyle2^p}\leqslant z<\dfrac{q}{\displaystyle2^p}
+        \\[10pt]
+        0,\quad z\in\left[0,\ \dfrac{q-1}{\displaystyle2^p}\right)\bigcup\left[\dfrac{q}{\displaystyle2^p},\ 1\right]
+    \end{cases}
+\end{align*}
+
+根据公式 $k=2^{p}+q-1$，可得：
+\begin{table}[H]
+    \centering
+    \setlength{\tabcolsep}{64pt}
+    \renewcommand{\arraystretch}{1.2}
+    \caption{哈尔变换参数组}
+    \begin{tabular}{ccc}
+        \bottomrule[1.5pt]
+        $k$ & $p$ & $q$ \\
+        \midrule[0.75pt]
+        0 & 0 & 0\\
+        1 & 0 & 1 \\
+        \hline
+        2 & 1 & 1 \\
+        3 & 1 & 2 \\
+        \hline
+        4 & 2 & 1 \\
+        5 & 2 & 2 \\
+        6 & 2 & 3 \\
+        7 & 2 & 4 \\
+        \hline
+        8 & 3 & 1 \\
+        9 & 3 & 2 \\
+        10 & 3 & 3 \\
+        11 & 3 & 4 \\
+        12 & 3 & 5 \\
+        13 & 3 & 6 \\
+        14 & 3 & 7 \\
+        15 & 3 & 8 \\
+        \toprule[1.5pt]
+    \end{tabular}
+\end{table}
+
+以 $k=6$ 为例，能满足条件的最大 $2^p$ 是 4，所以 $p=2$，因此 $q=k-2^p+1=3$，根据 $h_6(z)$ 哈尔基函数：
+\begin{align*}
+    h_6(z)=\dfrac{1}{\sqrt{16}}\begin{cases}
+        2^{2/2},\qquad \dfrac{3-1}{\displaystyle2^2}\leqslant z<\dfrac{3-0.5}{\displaystyle2^2}
+        \\[10pt]
+        -2^{2/2},\qquad \dfrac{3-0.5}{\displaystyle2^2}\leqslant z<\dfrac{3}{\displaystyle2^2}
+        \\[10pt]
+        0,\quad z\in\left[0,\ \dfrac{3-1}{\displaystyle2^2}\right)\bigcup\left[\dfrac{3}{\displaystyle2^2},\ 1\right]
+    \end{cases}=\begin{cases}
+        0.5,\qquad\quad\ \ 0.5\leqslant z<0.625
+        \\[10pt]
+        -0.5,\qquad 0.625\leqslant z<0.75
+        \\[10pt]
+        0,\qquad z\in\left[0,\ 0.5\right)\bigcup\left[0.75,\ 1\right]
+    \end{cases}
+\end{align*}
+
+采样点 $z$ 的取值即填充列，包含 $\dfrac{0}{16},\ \dfrac{1}{16},\ \dfrac{2}{16},\ \ldots,\ \dfrac{15}{16}$ 共 16 个值，因为 $\dfrac{8}{16}=0.5,\ \dfrac{9}{16}=0.5625,\ \dfrac{10}{16}=0.625,\ \dfrac{11}{16}=0.6875$，所以哈尔变换矩阵第 6 行的 16 个元素为：
+\begin{align*}
+    [0,\ 0,\ 0,\ 0,\ 0,\ 0,\ 0,\ 0,\ 0.5,\ 0.5,\ -0.5,\ -0.5,\ 0,\ 0,\ 0,\ 0]
+\end{align*}
+
+以此类推，可得 $H_{16}$ 矩阵：
+\begin{mathsize}
+    \begin{align*}
+        H_{16}=\dfrac{1}{4}\left[\begin{matrix}
+            1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 \\
+            1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & -1 & -1 & -1 & -1 & -1 & -1 & -1 & -1 \\
+            \sqrt{2} & \sqrt{2} & \sqrt{2} & \sqrt{2} & -\sqrt{2} & -\sqrt{2} & -\sqrt{2} & -\sqrt{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+            0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \sqrt{2} & \sqrt{2} & \sqrt{2} & \sqrt{2} & -\sqrt{2} & -\sqrt{2} & -\sqrt{2} & -\sqrt{2} \\
+            2 & 2 & -2 & -2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+            0 & 0 & 0 & 0 & 2 & 2 & -2 & -2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+            0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 2 & 2 & -2 & -2 & 0 & 0 & 0 & 0 \\
+            0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 2 & 2 & -2 & -2 \\
+            2\sqrt{2} & -2\sqrt{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+            0 & 0 & 2\sqrt{2} & -2\sqrt{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+            0 & 0 & 0 & 0 & 2\sqrt{2} & -2\sqrt{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+            0 & 0 & 0 & 0 & 0 & 0 & 2\sqrt{2} & -2\sqrt{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+            0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 2\sqrt{2} & -2\sqrt{2} & 0 & 0 & 0 & 0 & 0 & 0 \\
+            0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 2\sqrt{2} & -2\sqrt{2} & 0 & 0 & 0 & 0 \\
+            0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 2\sqrt{2} & -2\sqrt{2} & 0 & 0 \\
+            0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 2\sqrt{2} & -2\sqrt{2} \\
+        \end{matrix}\right]
+    \end{align*}
+\end{mathsize}
+
+
+
+\section{二元组扩展与其系数}
+\subsection{$\varphi_0=[1/\sqrt{2},\ 1/\sqrt{2}]^{\top},\ \varphi_1=[1/\sqrt{2},\ -1/\sqrt{2}]^{\top}$}
+\[ \alpha_0=\varphi_0^{\top}\cdot[3,\ 2]^{\top}=[1/\sqrt{2},\ 1/\sqrt{2}]\cdot\left[\begin{matrix}
+    3
+    \\
+    2
+\end{matrix}\right]=\dfrac{5\sqrt{2}}{2} \]
+\[ \alpha_1=\varphi_1^{\top}\cdot[3,\ 2]^{\top}=[1/\sqrt{2},\ -1/\sqrt{2}]\cdot\left[\begin{matrix}
+    3
+    \\
+    2
+\end{matrix}\right]=\dfrac{\sqrt{2}}{2} \]
+\[ \alpha_0\varphi_0+\alpha_1\varphi_1=\dfrac{5\sqrt{2}}{2}\left[\begin{matrix}
+    \dfrac{1}{\sqrt{2}}
+    \\[10pt]
+    \dfrac{1}{\sqrt{2}}
+\end{matrix}\right]+\dfrac{\sqrt{2}}{2}\left[\begin{matrix}
+    \dfrac{1}{\sqrt{2}}
+    \\[10pt]
+    -\dfrac{1}{\sqrt{2}}
+\end{matrix}\right]=[3,\ 2]^{\top} \]
+
+
+
+\subsection{$\varphi_0=[1,\ 0]^{\top},\ \varphi_1=[1,\ 1]^{\top}$，基础的对偶 $\barline{\varphi}_0=[1,\ -1]^{\top},\ \barline{\varphi}_1=[0,\ 1]^{\top}$}
+\[ \alpha_0=\barline{\varphi}_0^{\top}\cdot[3,\ 2]^{\top}=[1,\ -1]\cdot\left[\begin{matrix}
+    3
+    \\
+    2
+\end{matrix}\right]=1 \]
+\[ \alpha_1=\barline{\varphi}_1^{\top}\cdot[3,\ 2]^{\top}=[0,\ 1]\cdot\left[\begin{matrix}
+    3
+    \\
+    2
+\end{matrix}\right]=2 \]
+\[ \alpha_0\varphi_0+\alpha_1\varphi_1=1\times\left[\begin{matrix}
+    1
+    \\[10pt]
+    0
+\end{matrix}\right]+2\left[\begin{matrix}
+    1
+    \\[10pt]
+    1
+\end{matrix}\right]=[3,\ 2]^{\top} \]
+
+
+
+\subsection{$\varphi_0=[1,\ 0]^{\top},\ \varphi_1=[-1/2,\ \sqrt{3}/2]^{\top},\ \varphi_2=[-1/2,\ -\sqrt{3}/2]^{\top},\ \barline{\varphi}_i=2\varphi_i/3$}
+
+
+\[ \alpha_0=\barline{\varphi}_0^{\top}\cdot[3,\ 2]^{\top}=\left[\dfrac{2}{3},\ 0\right]\cdot\left[\begin{matrix}
+    3
+    \\
+    2
+\end{matrix}\right]=2 \]
+\[ \alpha_1=\barline{\varphi}_1^{\top}\cdot[3,\ 2]^{\top}=\left[-\dfrac{1}{3},\ \dfrac{\sqrt{3}}{3}\right]\cdot\left[\begin{matrix}
+    3
+    \\
+    2
+\end{matrix}\right]=-1+\dfrac{2\sqrt{3}}{3} \]
+\[ \alpha_2=\barline{\varphi}_2^{\top}\cdot[3,\ 2]^{\top}=\left[-\dfrac{1}{3},\ -\dfrac{\sqrt{3}}{3}\right]\cdot\left[\begin{matrix}
+    3
+    \\
+    2
+\end{matrix}\right]=-1-\dfrac{2\sqrt{3}}{3} \]
+\[ \alpha_0\varphi_0+\alpha_1\varphi_1+\alpha_2\varphi_2=2\times\left[\begin{matrix}
+    1
+    \\[10pt]
+    0
+\end{matrix}\right]+\left(\dfrac{2\sqrt{3}}{3}-1\right)\left[\begin{matrix}
+    -\dfrac{1}{2}
+    \\[10pt]
+    \dfrac{\sqrt{3}}{2}
+\end{matrix}\right]-\left(\dfrac{2\sqrt{3}}{3}+1\right)\left[\begin{matrix}
+    -\dfrac{1}{2}
+    \\[10pt]
+    -\dfrac{\sqrt{3}}{2}
+\end{matrix}\right]=[3,\ 2]^{\top} \]
+
+
+
+\section{尺度函数未满足多分辨率分析的第二要求}
+\[ \varphi(x)=\begin{cases}
+    1\qquad0.25\leqslant x<0.75
+    \\[10pt]
+    0\qquad\rm other
+\end{cases} \]
+
+$W_j$ 空间的所有 $k\in\mathbb{Z}$ 定义小波集合 $\{\psi_{j,k}(x)\}$：
+\begin{align*}
+    \psi_{j,k}(x)=2^{j/2}\psi(2^jx-k)
+\end{align*}
+
+因此：
+\begin{align*}
+    \varphi_{0,0}(x)&=\varphi(x)
+    \\
+    \varphi_{1,0}(x)&=\sqrt{2}\varphi(2x)
+    \\
+    \varphi_{1,1}(x)&=\sqrt{2}\varphi(2x-1)
+\end{align*}
+
+因为 $\varphi_{0,0}(x)$ 的支撑集是 $[0.25,\ 0.75)$，$\varphi_{1,0}(x)$ 的支撑集是 $[0.125,\ 0.375)$，$\varphi_{1,1}(x)$ 的支撑集是 $[0.625,\ 0.875)$，所以区间 $[0.375,\ 0.625)$ 出现空洞，即 $\varphi_{1,0}(x)=\varphi_{1,1}(x)\equiv0$，而 $\varphi_{0,0}(x)\equiv1$，因此意味着无论这两个函数如何加权，都无法填满中间这段空隙，即 $\varphi_{0,0}(x)$ 无法由 $\varphi_{1,0}(x)$ 和 $\varphi_{1,1}(x)$ 加权求和表示。
+
+
+
+% https://blog.csdn.net/qq_43578042/article/details/129874629
+\section{离散小波变换}
+DWT 起始尺度 $j$ 的函数：
+\begin{align*}
+    W_{\varphi}(j_0,\ k)&=\dfrac{1}{\sqrt{M}}\sum_{x}f(x)\varphi_{j_0,k}(x)
+    \\
+    W_{\psi}(j,\ k)&=\dfrac{1}{\sqrt{M}}\sum_{x}f(x)\psi_{j,k}(x)
+\end{align*}
+\[ f(0)=1\qquad f(1)=4\qquad f(2)=-3\qquad f(3)=0 \]
+
+哈尔尺度函数：
+\begin{align*}
+    \varphi(x)=\begin{cases}
+        1\qquad0\leqslant x<1
+        \\[10pt]
+        0\qquad\rm other
+    \end{cases}
+\end{align*}
+
+哈尔小波函数：
+\begin{align*}
+    \psi(x)=\begin{cases}
+        1\qquad0\leqslant x<0.5
+        \\[10pt]
+        -1\qquad0.5\leqslant x<1
+        \\[10pt]
+        0\qquad\rm other
+    \end{cases}
+\end{align*}
+
+小波集合：
+\begin{align*}
+    \psi_{j,k}(x)=2^{j/2}\psi\left(2^j\dfrac{x}{M}-k\right)
+\end{align*}
+
+
+\subsection{计算一维 DWT}
+若 $j_0=1$：
+\begin{align*}
+    W_{\varphi}(1,0)&=\dfrac{1}{\displaystyle\sqrt{4}}\left[f(0)\varphi_{1,0}(0)+f(1)\varphi_{1,0}(1)+f(2)\varphi_{1,0}(2)+f(3)\varphi_{1,0}(3)\right]
+    \\
+    &=\dfrac{1}{2}\left(1\times\sqrt{2}+4\times\sqrt{2}-3\times0+0\times0\right)
+    \\
+    &=\dfrac{5\sqrt{2}}{2}
+\end{align*}
+\begin{align*}
+    W_{\varphi}(1,1)&=\dfrac{1}{\displaystyle\sqrt{4}}\left[f(0)\varphi_{1,1}(0)+f(1)\varphi_{1,1}(1)+f(2)\varphi_{1,1}(2)+f(3)\varphi_{1,1}(3)\right]
+    \\
+    &=\dfrac{1}{2}\left(1\times0+4\times0-3\times\sqrt{2}+0\times\sqrt{2}\right)
+    \\
+    &=-\dfrac{3\sqrt{2}}{2}
+\end{align*}
+\begin{align*}
+    W_{\psi}(1,0)&=\dfrac{1}{\displaystyle\sqrt{4}}\left[f(0)\psi_{1,0}(0)+f(1)\psi_{1,0}(1)+f(2)\psi_{1,0}(2)+f(3)\psi_{1,0}(3)\right]
+    \\
+    &=\dfrac{1}{2}\left[1\times\sqrt{2}+4\times\left(-\sqrt{2}\right)-3\times0+0\times0\right]
+    \\
+    &=-\dfrac{3\sqrt{2}}{2}
+\end{align*}
+\begin{align*}
+    W_{\psi}(1,1)&=\dfrac{1}{\displaystyle\sqrt{4}}\left[f(0)\psi_{1,1}(0)+f(1)\psi_{1,1}(1)+f(2)\psi_{1,1}(2)+f(3)\psi_{1,1}(3)\right]
+    \\
+    &=\dfrac{1}{2}\left[1\times0+4\times0-3\times\sqrt{2}+0\times\left(-\sqrt{2}\right)\right]
+    \\
+    &=-\dfrac{3\sqrt{2}}{2}
+\end{align*}
+
+因此，DWT 集合是 $\left\{\dfrac{5\sqrt{2}}{2},\ -\dfrac{3\sqrt{2}}{2},\ -\dfrac{3\sqrt{2}}{2},\ -\dfrac{3\sqrt{2}}{2}\right\}$。
+
+
+
+\subsection{根据变换值计算 $f(1)$}
+根据：
+\begin{align*}
+    f(x)=\dfrac{1}{\displaystyle\sqrt{M}}\sum_{k}W_{\varphi}(j_0,k)\varphi_{j_0,k}(x)+\dfrac{1}{\displaystyle\sqrt{M}}\sum_{j=j_0}^{\infty}\sum_{k}W_{\psi}(j,k)\psi_{j,k}(x)
+\end{align*}
+
+则有：
+\begin{align*}
+    f(x)&=\dfrac{1}{\displaystyle\sqrt{4}}\left[W_{\varphi}(1,0)\varphi_{1,0}(x)+W_{\varphi}(1,1)\varphi_{1,1}(x)+W_{\psi}(1,0)\psi_{1,0}(x)+W_{\psi}(1,1)\psi_{1,1}(x)\right]
+    \\
+    &=\dfrac{1}{2}\left[\dfrac{5\sqrt{2}}{2}\varphi_{1,0}(x)-\dfrac{3\sqrt{2}}{2}\varphi_{1,1}(x)-\dfrac{3\sqrt{2}}{2}\psi_{1,0}(x)-\dfrac{3\sqrt{2}}{2}\psi_{1,1}(x)\right]
+\end{align*}
+
+因此：
+\begin{align*}
+    f(1)=\dfrac{1}{2}\times\left(\dfrac{5\sqrt{2}}{2}\times\sqrt{2}-\dfrac{3\sqrt{2}}{2}\times0-\dfrac{3\sqrt{2}}{2}\times\sqrt{2}-\dfrac{3\sqrt{2}}{2}\times0\right)=1
+\end{align*}
+
+
+
+\section{完美重建来此小波变换分解后的滤波器输出}
+信号 $f=[1,\ 3,\ 5,\ 7,\ 4,\ 3,\ 2,\ 1]$，利用哈尔小波进行两层快速小波变换分解，计算各层的滤波器输出，然后再进行完美重建。其中：
+\begin{align*}
+    \text{高通滤波器}\ h_1&=\left[-\dfrac{1}{\displaystyle\sqrt{2}},\ \dfrac{1}{\displaystyle\sqrt{2}}\right]
+    \\
+    \text{低通滤波器}\ h_0&=\left[\dfrac{1}{\displaystyle\sqrt{2}},\ \dfrac{1}{\displaystyle\sqrt{2}}\right]
+\end{align*}
+
+高通卷积：
+\begin{align*}
+    f\circledast h_1=\left[-\dfrac{1}{\displaystyle\sqrt{2}},\ -\dfrac{2}{\displaystyle\sqrt{2}},\ -\dfrac{2}{\displaystyle\sqrt{2}},\ -\dfrac{2}{\displaystyle\sqrt{2}},\ \dfrac{3}{\displaystyle\sqrt{2}},\ \dfrac{1}{\displaystyle\sqrt{2}},\ \dfrac{1}{\displaystyle\sqrt{2}},\ \dfrac{1}{\displaystyle\sqrt{2}},\ \dfrac{1}{\displaystyle\sqrt{2}}\right]
+\end{align*}
+
+低通卷积：
+\begin{align*}
+    f\circledast h_0=\left[\dfrac{1}{\displaystyle\sqrt{2}},\ \dfrac{4}{\displaystyle\sqrt{2}},\ \dfrac{8}{\displaystyle\sqrt{2}},\ \dfrac{12}{\displaystyle\sqrt{2}},\ \dfrac{11}{\displaystyle\sqrt{2}},\ \dfrac{7}{\displaystyle\sqrt{2}},\ \dfrac{5}{\displaystyle\sqrt{2}},\ \dfrac{3}{\displaystyle\sqrt{2}},\ \dfrac{1}{\displaystyle\sqrt{2}}\right]
+\end{align*}
+
+由于 $2\downarrow$ 每隔一个点取一个值，所以：
+\begin{align*}
+    W_{\psi}(1,n)&=\left\{-\dfrac{2}{\displaystyle\sqrt{2}},\ -\dfrac{2}{\displaystyle\sqrt{2}},\ \dfrac{1}{\displaystyle\sqrt{2}},\ \dfrac{1}{\displaystyle\sqrt{2}}\right\}
+    \\
+    W_{\varphi}(1,n)&=\left\{\dfrac{4}{\displaystyle\sqrt{2}},\ \dfrac{12}{\displaystyle\sqrt{2}},\ \dfrac{7}{\displaystyle\sqrt{2}},\ \dfrac{3}{\displaystyle\sqrt{2}}\right\}
+\end{align*}
+
+上支路卷积：
+\begin{align*}
+    W_{\varphi}(1,n)\circledast h_1=\left[-2,\ -4,\ \dfrac{5}{2},\ 2,\ \dfrac{3}{2}\right]
+\end{align*}
+
+下支路卷积：
+\begin{align*}
+    W_{\varphi}(1,n)\circledast h_0=\left[2,\ 8,\ \dfrac{19}{2},\ 5,\ \dfrac{3}{2}\right]
+\end{align*}
+
+由于 $2\downarrow$ 每隔一个点取一个值，所以第二级：
+\begin{align*}
+    W_{\psi}(0,n)&=\left\{-4,\ 2\right\}
+    \\
+    W_{\varphi}(0,n)&=\left\{8,\ 5\right\}
+\end{align*}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale=0.42]{./figs/HaarWavelet.pdf}
+    \caption{用哈尔尺度和小波向量计算序列 $f$ 的二尺度快速小波变换}
+\end{figure}
+\begin{align*}
+    \text{高通综合滤波器}\ h_1&=\left[\dfrac{1}{\displaystyle\sqrt{2}},\ -\dfrac{1}{\displaystyle\sqrt{2}}\right]
+    \\
+    \text{低通综合滤波器}\ h_0&=\left[\dfrac{1}{\displaystyle\sqrt{2}},\ \dfrac{1}{\displaystyle\sqrt{2}}\right]
+\end{align*}
+
+由于 $2\uparrow$ 每隔一个点补充零值，所以：
+\begin{align*}
+    W_{\psi}(0,n)&=\left\{-4,\ 2\right\}\to\{-4,\ 0,\ 2,\ 0\}
+    \\
+    W_{\varphi}(0,n)&=\left\{8,\ 5\right\}\to\{8,\ 0,\ 5,\ 0\}
+\end{align*}
+
+高通综合卷积：
+\begin{align*}
+    \{-4,\ 0,\ 2,\ 0\}\circledast h_1=\left[-\dfrac{4}{\displaystyle\sqrt{2}},\ \dfrac{4}{\displaystyle\sqrt{2}},\ \dfrac{2}{\displaystyle\sqrt{2}},\ -\dfrac{2}{\displaystyle\sqrt{2}},\ 0\right]
+\end{align*}
+
+低通综合卷积：
+\begin{align*}
+    \{8,\ 0,\ 5,\ 0\}\circledast h_0=\left[\dfrac{8}{\displaystyle\sqrt{2}},\ \dfrac{8}{\displaystyle\sqrt{2}},\ \dfrac{5}{\displaystyle\sqrt{2}},\ \dfrac{5}{\displaystyle\sqrt{2}},\ 0\right]
+\end{align*}
+
+叠加：
+\begin{align*}
+    W_{\varphi}(1,n)&=\left[-\dfrac{4}{\displaystyle\sqrt{2}},\ \dfrac{4}{\displaystyle\sqrt{2}},\ \dfrac{2}{\displaystyle\sqrt{2}},\ -\dfrac{2}{\displaystyle\sqrt{2}},\ 0\right]+\left[\dfrac{8}{\displaystyle\sqrt{2}},\ \dfrac{8}{\displaystyle\sqrt{2}},\ \dfrac{5}{\displaystyle\sqrt{2}},\ \dfrac{5}{\displaystyle\sqrt{2}},\ 0\right]
+    \\
+    &=\left[\dfrac{4}{\displaystyle\sqrt{2}},\ \dfrac{12}{\displaystyle\sqrt{2}},\ \dfrac{7}{\displaystyle\sqrt{2}},\ \dfrac{3}{\displaystyle\sqrt{2}},\ 0\right]
+\end{align*}
+
+由于 $2\uparrow$ 每隔一个点补充零值，所以第二级：
+\begin{align*}
+    \left[\dfrac{4}{\displaystyle\sqrt{2}},\ \dfrac{12}{\displaystyle\sqrt{2}},\ \dfrac{7}{\displaystyle\sqrt{2}},\ \dfrac{3}{\displaystyle\sqrt{2}},\ 0\right]\to\left[\dfrac{4}{\displaystyle\sqrt{2}},\ 0,\ \dfrac{12}{\displaystyle\sqrt{2}},\ 0,\ \dfrac{7}{\displaystyle\sqrt{2}},\ 0,\ \dfrac{3}{\displaystyle\sqrt{2}}\right]
+\end{align*}
+
+第二级低通综合卷积：
+\begin{align*}
+    \left[\dfrac{4}{\displaystyle\sqrt{2}},\ 0,\ \dfrac{12}{\displaystyle\sqrt{2}},\ 0,\ \dfrac{7}{\displaystyle\sqrt{2}},\ 0,\ \dfrac{3}{\displaystyle\sqrt{2}}\right]\circledast h_0=\left[2,\ 2,\ 6,\ 6,\ \dfrac{7}{2},\ \dfrac{7}{2},\ \dfrac{3}{2},\ \dfrac{3}{2}\right]
+\end{align*}
+
+又因为：
+\begin{align*}
+    W_{\psi}(1,n)=\left\{-\dfrac{2}{\displaystyle\sqrt{2}},\ -\dfrac{2}{\displaystyle\sqrt{2}},\ \dfrac{1}{\displaystyle\sqrt{2}},\ \dfrac{1}{\displaystyle\sqrt{2}},\ 0\right\}
+\end{align*}
+
+所以 $2\uparrow$ 每隔一个点补充零值，得到：
+\begin{align*}
+    \left[-\dfrac{2}{\displaystyle\sqrt{2}},\ -\dfrac{2}{\displaystyle\sqrt{2}},\ \dfrac{1}{\displaystyle\sqrt{2}},\ \dfrac{1}{\displaystyle\sqrt{2}},\ 0\right]\to\left[-\dfrac{2}{\displaystyle\sqrt{2}},\ 0,\ -\dfrac{2}{\displaystyle\sqrt{2}},\ 0,\ \dfrac{1}{\displaystyle\sqrt{2}},\ 0,\ \dfrac{1}{\displaystyle\sqrt{2}}\right]
+\end{align*}
+
+第二级高通综合卷积：
+\begin{align*}
+    \left[-\dfrac{2}{\displaystyle\sqrt{2}},\ 0,\ -\dfrac{2}{\displaystyle\sqrt{2}},\ 0,\ \dfrac{1}{\displaystyle\sqrt{2}},\ 0,\ \dfrac{1}{\displaystyle\sqrt{2}}\right]\circledast h_1=\left[-1,\ 1,\ -1,\ 1,\ \dfrac{1}{2},\ -\dfrac{1}{2},\ \dfrac{1}{2},\ -\dfrac{1}{2}\right]
+\end{align*}
+
+第二级叠加：
+\begin{align*}
+    W_{\varphi}(2,n)=f(n)&=\left[-1,\ 1,\ -1,\ 1,\ \dfrac{1}{2},\ -\dfrac{1}{2},\ \dfrac{1}{2},\ -\dfrac{1}{2}\right]+\left[2,\ 2,\ 6,\ 6,\ \dfrac{7}{2},\ \dfrac{7}{2},\ \dfrac{3}{2},\ \dfrac{3}{2}\right]
+    \\
+    &=\left[1,\ 3,\ 5,\ 7,\ 4,\ 3,\ 2,\ 1\right]
+\end{align*}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[scale=0.42]{./figs/InverseHaarWavelet.pdf}
+    \caption{用哈尔尺度和小波向量计算序列 $W_{\psi}(0,n),W_{\varphi}(0,n),W_{\psi}(1,n)$ 的二尺度快速小波逆变换}
+\end{figure}
+
+
+
+\end{document}
