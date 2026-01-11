@@ -1,0 +1,18 @@
+\contentsline {section}{\numberline {1}灰度值及其在图像中出现的概率}{1}{}%
+\contentsline {subsection}{\numberline {(a)}哈夫曼编码构建最优二叉树}{1}{}%
+\contentsline {subsection}{\numberline {(b)}哈夫曼编码节省的存储空间}{2}{}%
+\contentsline {subsection}{\numberline {(c)}哈夫曼编码在图像压缩中的优劣性}{3}{}%
+\contentsline {section}{\numberline {2}算术解码}{3}{}%
+\contentsline {section}{\numberline {3}名词解释}{4}{}%
+\contentsline {subsection}{\numberline {(a)}信源编码与解码器}{4}{}%
+\contentsline {subsection}{\numberline {(b)}信道编码与解码器}{4}{}%
+\contentsline {subsection}{\numberline {(c)}信息量 / 自信息}{5}{}%
+\contentsline {subsection}{\numberline {(d)}熵}{5}{}%
+\contentsline {subsection}{\numberline {(e)}条件熵}{5}{}%
+\contentsline {subsection}{\numberline {(f)}互信息}{5}{}%
+\contentsline {subsection}{\numberline {(g)}信道容量}{5}{}%
+\contentsline {section}{\numberline {4}海明码的编码解码计算方法}{6}{}%
+\contentsline {subsection}{\numberline {(a)}编码方法}{6}{}%
+\contentsline {subsection}{\numberline {(b)}解码与纠错}{6}{}%
+\contentsline {subsection}{\numberline {(c)}矩阵表示法}{7}{}%
+\contentsline {section}{\numberline {5}证明二元表达式}{7}{}%
