@@ -251,9 +251,9 @@
         \\[10pt]
         0,\quad z\in\left[0,\ \dfrac{3-1}{\displaystyle2^2}\right)\bigcup\left[\dfrac{3}{\displaystyle2^2},\ 1\right]
     \end{cases}=\begin{cases}
-        0.5,\qquad\quad\ \ 0.5\leqslant z<0.625
+        2,\qquad\quad\ \ 0.5\leqslant z<0.625
         \\[10pt]
-        -0.5,\qquad 0.625\leqslant z<0.75
+        -2,\qquad 0.625\leqslant z<0.75
         \\[10pt]
         0,\qquad z\in\left[0,\ 0.5\right)\bigcup\left[0.75,\ 1\right]
     \end{cases}
@@ -261,7 +261,7 @@
 
 采样点 $z$ 的取值即填充列，包含 $\dfrac{0}{16},\ \dfrac{1}{16},\ \dfrac{2}{16},\ \ldots,\ \dfrac{15}{16}$ 共 16 个值，因为 $\dfrac{8}{16}=0.5,\ \dfrac{9}{16}=0.5625,\ \dfrac{10}{16}=0.625,\ \dfrac{11}{16}=0.6875$，所以哈尔变换矩阵第 6 行的 16 个元素为：
 \begin{align*}
-    [0,\ 0,\ 0,\ 0,\ 0,\ 0,\ 0,\ 0,\ 0.5,\ 0.5,\ -0.5,\ -0.5,\ 0,\ 0,\ 0,\ 0]
+    [0,\ 0,\ 0,\ 0,\ 0,\ 0,\ 0,\ 0,\ 2,\ 2,\ -2,\ -2,\ 0,\ 0,\ 0,\ 0]
 \end{align*}
 
 以此类推，可得 $H_{16}$ 矩阵：
