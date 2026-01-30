@@ -1,0 +1,25 @@
+\contentsline {section}{\numberline {1}引言}{1}{section.1}%
+\contentsline {section}{\numberline {2}研究背景与意义}{1}{section.2}%
+\contentsline {subsection}{\numberline {2.1}背景}{1}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}意义}{2}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}研究问题内容}{3}{subsection.2.3}%
+\contentsline {section}{\numberline {3}文献综述}{4}{section.3}%
+\contentsline {section}{\numberline {4}研究方法设计}{7}{section.4}%
+\contentsline {subsection}{\numberline {4.1}数据集}{7}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}被试}{7}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}研究对象}{7}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}研究工具}{8}{subsection.4.4}%
+\contentsline {subsubsection}{\numberline {4.4.1}家庭教育期望量表}{8}{subsubsection.4.4.1}%
+\contentsline {subsubsection}{\numberline {4.4.2}心理健康量表}{8}{subsubsection.4.4.2}%
+\contentsline {subsubsection}{\numberline {4.4.3}学业期望压力中介变量}{9}{subsubsection.4.4.3}%
+\contentsline {subsubsection}{\numberline {4.4.4}未来信心水平中介变量}{10}{subsubsection.4.4.4}%
+\contentsline {subsubsection}{\numberline {4.4.5}控制变量}{10}{subsubsection.4.4.5}%
+\contentsline {section}{\numberline {5}研究结果与分析}{10}{section.5}%
+\contentsline {subsection}{\numberline {5.1}描述性统计}{10}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}差异性检验}{15}{subsection.5.2}%
+\contentsline {subsubsection}{\numberline {5.2.1}独立样本 $t$ 检验}{15}{subsubsection.5.2.1}%
+\contentsline {subsubsection}{\numberline {5.2.2}单因素方差分析}{19}{subsubsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.3}相关性分析}{26}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}多元线性回归}{29}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}中介效应检验}{33}{subsection.5.5}%
+\contentsline {section}{\numberline {6}结论}{35}{section.6}%
