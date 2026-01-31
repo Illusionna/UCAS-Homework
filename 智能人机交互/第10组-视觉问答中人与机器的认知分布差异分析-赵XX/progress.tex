@@ -1,0 +1,30 @@
+\documentclass{standalone}
+
+\usepackage{ctex}
+\usepackage{pgfgantt}
+
+\begin{document}
+
+\begin{ganttchart}[
+    time slot
+    format = isodate,
+    progress = today,
+    today = 2025-11-10
+]{2025-10-20}{2025-11-15}
+    \gantttitlecalendar{month = name, day, week = 1}
+    \\
+    \ganttgroup[name = 1]{组队建群}{2025-10-20}{2025-10-23}
+    \\
+    \ganttbar[name = 2]{赵XX调研}{2025-11-02}{2025-11-06}
+    \\
+    \ganttbar[name = 3]{李XX调研}{2025-10-31}{2025-11-04}
+    \\
+    \ganttbar[name = 4, progress = 0]{蔡XX汇报}{2025-11-12}{2025-11-12}
+    \\
+    \ganttbar[name = 5]{Illusionna 制作}{2025-11-07}{2025-11-10}
+    \ganttlink{2}{5}
+    \ganttlink{3}{5}
+    \ganttlink{5}{4}
+\end{ganttchart}
+
+\end{document}
