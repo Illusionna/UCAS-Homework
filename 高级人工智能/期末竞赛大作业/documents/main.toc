@@ -1,0 +1,39 @@
+\contentsline {section}{\numberline {1}竞赛背景}{4}{section.1}%
+\contentsline {subsection}{\numberline {1.1}问题描述}{4}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}建模思路}{4}{subsection.1.2}%
+\contentsline {section}{\numberline {2}探索性数据分析}{5}{section.2}%
+\contentsline {subsection}{\numberline {2.1}数据规模与内存占用}{5}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}缺失值分布}{5}{subsection.2.2}%
+\contentsline {section}{\numberline {3}文本清洗}{6}{section.3}%
+\contentsline {subsection}{\numberline {3.1}正则化表达式清洗}{6}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}特征融合策略}{6}{subsection.3.2}%
+\contentsline {section}{\numberline {4}Baseline}{7}{section.4}%
+\contentsline {subsection}{\numberline {4.1}TF-IDF 文档向量化}{7}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Logistic Regression 对数几率回归}{8}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}实验结果}{8}{subsection.4.3}%
+\contentsline {section}{\numberline {5}提升模型}{9}{section.5}%
+\contentsline {subsection}{\numberline {5.1}支持向量机（SVM）}{9}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}决策树}{10}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}贝叶斯模型}{11}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}实验结果}{12}{subsection.5.4}%
+\contentsline {subsubsection}{\numberline {5.4.1}线性核 SVM}{12}{subsubsection.5.4.1}%
+\contentsline {subsubsection}{\numberline {5.4.2}非线性核 SVM}{12}{subsubsection.5.4.2}%
+\contentsline {subsubsection}{\numberline {5.4.3}决策树}{13}{subsubsection.5.4.3}%
+\contentsline {subsubsection}{\numberline {5.4.4}贝叶斯方法}{13}{subsubsection.5.4.4}%
+\contentsline {section}{\numberline {6}BERT}{14}{section.6}%
+\contentsline {subsection}{\numberline {6.1}设计思路}{14}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}模型架构}{14}{subsection.6.2}%
+\contentsline {subsubsection}{\numberline {6.2.1}Transformer Encoder 结构}{14}{subsubsection.6.2.1}%
+\contentsline {subsubsection}{\numberline {6.2.2}BERT 结构}{15}{subsubsection.6.2.2}%
+\contentsline {subsection}{\numberline {6.3}优化与损失函数}{15}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}实验结果}{17}{subsection.6.4}%
+\contentsline {section}{\numberline {7}AdaBoost 集成}{19}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Boosting 算法以及 AdaBoost 介绍}{19}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}与 BERT 分类器的结合}{20}{subsection.7.2}%
+\contentsline {subsubsection}{\numberline {7.2.1}损失函数实现}{20}{subsubsection.7.2.1}%
+\contentsline {subsubsection}{\numberline {7.2.2}小批次训练}{21}{subsubsection.7.2.2}%
+\contentsline {subsection}{\numberline {7.3}代码实现}{22}{subsection.7.3}%
+\contentsline {subsubsection}{\numberline {7.3.1}AdaBoost 参数更新}{22}{subsubsection.7.3.1}%
+\contentsline {subsubsection}{\numberline {7.3.2}BERT 训练}{24}{subsubsection.7.3.2}%
+\contentsline {subsection}{\numberline {7.4}实验结果}{25}{subsection.7.4}%
+\contentsline {section}{\numberline {8}分工介绍}{25}{section.8}%
