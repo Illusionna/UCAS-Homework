@@ -1,0 +1,262 @@
+\documentclass{article}
+
+\usepackage{bm}
+\usepackage{ctex}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{dsfont}
+\usepackage{setspace}
+\usepackage{datetime}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{nicematrix}
+\usepackage{algorithm, algpseudocode}
+\usepackage{amsmath, amssymb, amsfonts, mathrsfs}
+\usepackage[fontsize = 12pt]{fontsize}
+
+\geometry{
+    a4paper,
+    left = 1.75cm,
+    right = 1.75cm,
+    top = 2cm,
+    bottom = 2cm
+}
+
+\setitemize[1]{
+    itemsep = 0pt,
+    partopsep = 0pt,
+    parsep = \parskip,
+    topsep = 5pt
+}
+
+\renewcommand{\thesubsection}{(\alph{subsection})}
+\newcommand{\diff}[2]{\dfrac{\mathrm{d}#1}{\mathrm{d}#2}}
+\newcommand{\diffn}[3]{\dfrac{\mathrm{d}^{#3}#1}{\mathrm{d}#2^{#3}}}
+\newcommand{\piff}[2]{\dfrac{\partial{#1}}{\partial{#2}}}
+\newcommand{\eval}[2]{\left.#1\right|_{#2}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\barline}[1]{\overline{#1\rule{0pt}{1.75ex}}}
+
+\newtheorem{theorem}{定理}
+
+\title{格密码：第一次作业}
+\author{叶炳辉 \quad 202528017729004 \quad 人工智能学院}
+\date{\currenttime,\ \today}
+
+
+
+\begin{document}
+
+\maketitle
+\vspace*{2em}
+\begin{spacing}{2}
+    \tableofcontents
+\end{spacing}
+\thispagestyle{empty}
+\clearpage
+\setcounter{page}{1}
+
+
+
+\section{研究 $l_1$ 和 $l_{\infty}$ 距离下 Minkowski 第一定理}
+\begin{theorem}[Minkowski 第一定理]
+    对任意满秩格 $\Lambda\in\mathbb{R}^{n\times n}$ 有 $\lambda_{1}(\Lambda)\leqslant\displaystyle\sqrt{n}(\det\Lambda)^{\tfrac{1}{n}}$，其中 $\lambda_{1}(\Lambda)$ 是最短非零向量的长度。
+\end{theorem}
+
+\begin{theorem}[足够大的凸对称集含格点]
+    设 $\Lambda\in\mathbb{R}^{n\times n}$ 是一个满秩格，则对任意中心对称凸集 $S$，若 ${\rm Vol}(S)\geqslant2^{n}\det\Lambda$，则 $S$ 包含一个非零格点。
+\end{theorem}
+
+
+
+\subsection{切比雪夫最大值距离 $l_{\infty}$}
+\[ \|\bm{x}\|_{\infty}=\max\left\{|x_1|,\ |x_2|,\ \ldots,\ |x|_n\right\} \]
+
+设超立方体的半径（即中心到超平面的垂直距离）为 $r$，记作集合 $\text{Ball}_{\infty}(r)$，则超立方体的边长是 $2r$，则 $n$ 维空间中，其体积为：
+\[ V=(2r)^n=2^nr^n \]
+
+代入 Minkowski 定理，即为了保证这个超立方体一定有一个非零格点，其体积必须满足定理要求：
+\[ 2^nr^n\geqslant2^n\det\Lambda\implies r\geqslant(\det\Lambda)^{\tfrac{1}{n}} \]
+
+所以在半径 $r=(\det\Lambda)^{\tfrac{1}{n}}$ 的方形格网里，已经存在一个格点，假设为 $P$，那么原点到点 $P$ 的距离肯定是 $\leqslant r$ 的，因此由 $\lambda_1$ 定义是到最近邻到距离。
+
+则在 $l_{\infty}$ 距离下，最短非零向量的长度 $\lambda_{1}^{(\infty)}(\Lambda)$ 不会超过这个刚好碰到格点点半径 $r$，即：
+\[ \lambda_{1}^{(\infty)}(\Lambda)\leqslant(\det\Lambda)^{\tfrac{1}{n}} \]
+
+
+
+\subsection{曼哈顿城市街区距离 $l_{1}$}
+\[ \|\bm{x}\|_{1}=|x_1|+|x_2|+\cdots+|x_n| \]
+
+设正轴体的半径（即中心到顶点的距离）为 $r$，集合记作 $\text{Ball}_{1}(r)$，则 $n$ 维空间中 $\mathds{1}$ 范数这种绝对值之和构成的几何体，其体积为：
+\[ V=\dfrac{\displaystyle2^n}{n!}r^n \]
+
+代入 Minkowski 定理，可得：
+\[ \dfrac{\displaystyle2^n}{n!}r^n\geqslant2^n\det\Lambda\implies r\geqslant(n!)^{\tfrac{1}{n}}(\det\Lambda)^{\tfrac{1}{n}} \]
+
+则在 $l_{1}$ 距离下，最短非零向量长度：
+\[ \lambda_{1}^{(1)}(\Lambda)\leqslant(n!)^{\tfrac{1}{n}}(\det\Lambda)^{\tfrac{1}{n}} \]
+
+其中 $(n!)^{\tfrac{1}{n}}\geqslant\sqrt{n}$ 在正整数域上恒成立。
+
+
+
+\subsection{通式}
+由于 $n$ 维球体的体积满足：
+\[ \text{Vol}\left[\text{Ball}\left(0,\ r\right)\right]\geqslant\left(\dfrac{2r}{\displaystyle\sqrt{n}}\right)^n \]
+
+让球体的下界满足 Minkowski 定理：
+\[ \left(\dfrac{2r}{\displaystyle\sqrt{n}}\right)^n\geqslant2^n\det\Lambda \]
+
+化简可得：
+\[ r\geqslant\displaystyle\sqrt{n}(\det\Lambda)^{\tfrac{1}{n}} \]
+
+此时球体内包含一个非零格点，既然里面有格点，那么原点到最近邻的那个格点距离 $\lambda_1(\Lambda)$ 不可能超过球体的半径 $r$，所以：
+\[ \lambda_1(\Lambda)\leqslant\displaystyle\sqrt{n}(\det\Lambda)^{\tfrac{1}{n}} \]
+
+
+
+\subsection{补充：$l_2$ 距离下的情况}
+由于 $l_2$ 距离下球体体积公式为：
+\[ V_n(r)=\dfrac{\pi^{\tfrac{n}{2}}}{\Gamma\left(\dfrac{n}{2}+1\right)}r^n \]
+
+则：
+\[ \dfrac{\pi^{\tfrac{n}{2}}}{\Gamma\left(\dfrac{n}{2}+1\right)}r^n\geqslant2^n\det\Lambda \]
+
+最短非零向量的长度：
+\[ \lambda_1^{(2)}(\Lambda)\leqslant\dfrac{\displaystyle2\cdot\sqrt[\leftroot{-1}\uproot{10}n]{\Gamma\left(\dfrac{n}{2}+1\right)}}{\displaystyle\sqrt{\pi}}\left(\det\Lambda\right)^{\tfrac{1}{n}} \]
+
+
+
+\section{判断子格算法}
+由列向量为格基的矩阵 $\bm{B}$ 生成的格定义为：
+\[ \mathcal{L}(\bm{B})=\{\bm{B}\bm{x}\mid\bm{x}\in\mathbb{Z}^{n}\} \]
+
+即格点是格基向量的所有整线性组合，假设两个格 $\Lambda_1=\mathcal{L}(\bm{B}_1),\ \Lambda_2=\mathcal{L}(\bm{B}_2)$，如果 $\Lambda_1$ 是 $\Lambda_2$ 的子格，意味着 $\Lambda_1$ 中所有向量必须属于 $\Lambda_2$，要求 $\Lambda_1$ 的格基矩阵 $\bm{B}_1$ 中每一个列向量都必须能被 $\Lambda_2$ 的格基矩阵 $\bm{B}_2$ 进行整线性表示。
+
+因此必须存在一个整数矩阵 $\bm{U}$，使得以下等式成立：
+\[ \bm{B}_1=\bm{B}_2\bm{U} \]
+
+所以算法流程可表示为，在 $\mathbb{R}^{n\times n}$ 实数域中求解方程组，如果方程无解，意味 $\bm{B}_1$ 中的向量甚至不在 $\bm{B}_2$ 的线性生成空间 span 内，因此不是子格；如果有解并且 $\bm{U}$ 元素全为整数，则是子格，否则依然不是子格。
+
+\begin{algorithm}[H]
+    \setstretch{1.5}
+    \caption{非满秩（列满秩）格}
+    \begin{algorithmic}[1]
+        \Require 格 $\mathcal{L}_1$ 的基矩阵 $\bm{B}_1\in \mathbb{R}^{m\times n}$，格 $\mathcal{L}_2$ 的基矩阵 $\bm{B}_2\in\mathbb{R}^{m\times k}$
+        \Ensure 如果 $\mathcal{L}_1\subseteq\mathcal{L}_2$ 返回 \textbf{True}，否则返回 \textbf{False}
+        \State 用最小二乘法计算 $\bm{B}_2$ 的左伪逆矩阵 $\bm{B}_2^{*}=(\bm{B}_2^{\top}\bm{B}_2)^{-1}\bm{B}_2^{\top}$
+        \State 计算候选的转移矩阵 $\bm{U}=\bm{B}_2^{*}\bm{B}_1=(\bm{B}_2^{\top}\bm{B}_2)^{-1}\bm{B}_2^{\top}\bm{B}_1$ \Comment{$\bm{U}\in\mathbb{R}^{k\times n}$}
+        \State 回调函数验证原方程组 $\bm{B}_1=\bm{B}_2\bm{U}$ 是否严格成立
+        \If{$\bm{B}_1\neq\bm{B}_2\bm{U}$}
+            \State \Return \textbf{False} \Comment{$\mathcal{L}_1$ 存在向量不在 $\bm{B}_2$ 生成的实数线性空间中}
+        \Else
+            \If{$\bm{U}\in\mathbb{Z}^{k\times n}$} \Comment{$\bm{U}$ 的每一个元素均为整数}
+                \State \Return \textbf{True}
+            \Else
+                \State \Return \textbf{False} \Comment{存在非整数的线性组合系数}
+            \EndIf
+        \EndIf
+    \end{algorithmic}
+\end{algorithm}
+
+如果格的秩 $k$ 和它的线性空间维度 $m$ 完全相同，即满秩方阵格，$\bm{B}_2$ 是 $k\times k$ 的方阵，且行列式不为零 $\det\bm{B}_2\neq0$，则 $\bm{B}_2^{*}=(\bm{B}_2^{\top}\bm{B}_2)^{-1}\bm{B}_2^{\top}=\bm{B}_2^{-1}(\bm{B}_2^{\top})^{-1}\bm{B}_2^{\top}=\bm{B}_2^{-1}\bm{I}=\bm{B}_2^{-1}$，左伪逆公式会自动退化成普通的逆矩阵，则 $\bm{U}=\bm{B}_2^{-1}\bm{B}_1$，同样的进行回代计算 $\bm{B}_1=\bm{B}_2\bm{U}$ 是否严格成立，以及如果成立情况下元素是否全为整数。
+
+
+
+\section{判断循环格算法}
+由列向量为格基的矩阵 $\bm{B}$ 生成的格定义为：
+\[ \mathcal{L}(\bm{B})=\{\bm{B}\bm{x}\mid\bm{x}\in\mathbb{Z}^{n}\} \]
+
+因为循环格具备性质是格向量中的分量做循环位移后依然是格向量，因此格内任何向量都是由格基向量（矩阵 $\bm{B}$ 的列）的整线性组合生成的，所以要满足性质，只需要验证格基矩阵 $\bm{B}$ 中的每一个基向量在经过循环位移后，是否依然属于该格，即运算封闭性。
+
+循环位移的本质是，将向量循环转动起来，即：
+\[ \bm{v}=[v_1,\ v_2,\ \ldots,\ v_n]\circlearrowright\looparrowright\bm{v}_{\text{rotate}}=[v_n,\ v_1,\ \ldots,\ v_{n-1}] \]
+
+由于在矩阵视角，循环位移等价于左乘初等行变化矩阵 $\bm{P}$，将最后一个元素移动到最前方，为此引入矩阵：
+\[ \setlength{\arraycolsep}{7pt}\bm{P}=\left[\begin{matrix}
+    0 & 0 & \cdots & 0 & 1 \\
+    1 & 0 & \cdots & 0 & 0 \\
+    0 & 1 & \cdots & 0 & 0 \\
+    \vdots & \vdots & \ddots & \vdots & \vdots \\
+    0 & 0 & \cdots & 1 & 0 \\
+\end{matrix}\right] \]
+
+则：
+\[ \bm{B}_{\text{rotate}}=[\bm{P}\bm{b}_1,\ \bm{P}\bm{b}_2,\ \ldots,\ \bm{P}\bm{b}_n]=\bm{P}[\bm{b}_1,\ \bm{b}_2,\ \ldots,\ \bm{b}_n]=\bm{P}\bm{B} \]
+
+判断循环格的核心在于，循环位移后的矩阵 $\bm{B}_{\text{rotate}}$ 能否由原基矩阵 $\bm{B}$ 通过整线性组合 $\bm{C}$ 表示出来：
+\[ \bm{B}_{\text{rotate}}=\bm{B}\bm{C}\implies \bm{C}=\bm{B}^{-1}\bm{P}\bm{B} \]
+
+若 $\bm{C}\in\mathbb{Z}^{n\times n}$ 的所有元素是整数，则该格为循环格，否则不是循环格。譬如，向量 $[0,\ 0,\ 1]$ 循环位移变成 $[1,\ 0,\ 0]$，可能需要 0.5 倍 $[2,\ 0,\ 0]$ 向量才能组合出来，即位移后的向量逃逸到原格范围外。
+
+
+
+\section{Gram-Schmit 正交化基}
+\subsection{说明 $\lambda_n(\Lambda)\geqslant\max\limits_{i=1,2,\ldots,n}\|\tilde{\bm{b}}_i\|$ 不一定成立}
+考虑二维整数格 $\Lambda=\mathbb{Z}^{2\times2}$，连续极小向量长度 $\lambda_1(\Lambda)=1$ 和 $\lambda_2(\Lambda)=1$，譬如取标准基 $(1,\ 0)$ 和 $(0,\ 1)$ 的长度。因此，对于 $n=2$ 有：
+\[ \lambda_2(\Lambda)=1 \]
+
+选择基 $\bm{B}=[\bm{b}_1,\ \bm{b}_2]$：
+\[ \bm{b}_1=(2,\ 1)^{\top}\qquad\bm{b}_2=(1,\ 1)^{\top} \]
+
+因此该基构成的矩阵行列式 $\det\bm{B}=2\times1-1\times1=1$，所以可以生成完整的 $\mathbb{Z}^{2\times2}$ 格，对这组基进行 Gram-Schmidt 正交化：
+\[ \tilde{\bm{b}}_1=\bm{b}_1=(2,\ 1)^{\top} \]
+\[ \tilde{\bm{b}}_2=\bm{b}_2-\dfrac{<\bm{b}_2,\tilde{\bm{b}}_1>}{<\tilde{\bm{b}}_1,\tilde{\bm{b}}_1>}\tilde{\bm{b}}_1=\left(-\dfrac{1}{5},\ \dfrac{2}{5}\right)^{\top} \]
+
+因为：
+\[ \|\tilde{\bm{b}}_1\|=\sqrt{5}>\lambda_2(\Lambda)=1 \]
+
+所以命题 $\lambda_n(\Lambda)\geqslant\max\limits_{i=1,2,\ldots,n}\|\tilde{\bm{b}}_i\|$ 不一定成立。
+
+
+
+\subsection{对任意 $j=1,2,\ldots,n$ 有 $\lambda_j(\Lambda)\geqslant\min\limits_{i=j,\ldots,n}\|\tilde{\bm{b}}_i\|$}
+在秩为 $n$ 的格 $\Lambda$ 中，对任意的 $1\leqslant j\leqslant n$，第 $j$ 个连续极小值 $\lambda_j(\Lambda)$ 被定义为：
+\[ \lambda_j(\Lambda)=\inf\Biggl(r>0\biggm|\dim\biggl(\text{span}\Bigl(\Lambda\cap\barline{B}(0,\ r)\Bigr)\biggr)\geqslant j\Biggr) \]
+
+其中，$\barline{B}(0,\ r)$ 表示以原点为中心、半径为 $r$ 的闭球：
+\[ \barline{B}(0,\ r)=\{\bm{x}\in\mathbb{R}^{m}\mid\|\bm{x}\|\leqslant r\} \]
+
+因此，根据连续最小向量 $\lambda_j(\Lambda)$ 的定义，在格 $\Lambda$ 中必然存在 $j$ 个线性无关的格向量，记为 $\bm{v}_1,\ \bm{v}_2,\ \ldots,\ \bm{v}_j$，并且这 $j$ 个向量中的每一个，其长度都不会超过 $\lambda_j(\Lambda)$，即：
+\[ \|\bm{v}_k\|\leqslant\lambda_j(\Lambda)\qquad\forall k=1,2,\ldots,j \]
+
+将这 $j$ 个向量用基底 $\bm{b}_i$ 表示，因为 $\bm{b}_1,\ \bm{b}_2,\ \ldots,\ \bm{b}_n$ 是格的一组基，所以格里的任何向量都可以表示为这组基的整线性组合，对于任意一个向量 $\bm{v}_k$ 可表达为：
+\[ \bm{v}_k=c_1\bm{b}_1+c_2\bm{b}_2+\cdots+c_t\bm{b}_t+0\cdot\bm{b}_{t+1}+0\cdot\bm{b}_{t+2}+\cdots+0\cdot\bm{b}_{n} \]
+
+其中 $c_i$ 都是整数，即 $c_i\in\mathbb{Z}$，并且定义 $t$ 是这个向量中系数不为 0 的最大下标，即从 $t+1$ 起 $\bm{b}_i$ 的系数全为零。
+
+假设最大下标 $t$ 严格小于 $j$，即 $t\leqslant j-1$，因此这 $j$ 个向量全部都只由前 $j-1$ 个基向量 $\bm{b}_1,\ \bm{b}_2,\ \ldots,\ \bm{b}_{j-1}$ 组合而成，意味着这 $j$ 个向量全部落在 $j-1$ 维的子空间 $\text{span}(\bm{b}_1,\ \bm{b}_2,\ \ldots,\ \bm{b}_{j-1})$ 里，而公理可知，$j-1$ 维空间不可能存在 $j$ 个线性无关的向量，因此假设不成立，所以这 $j$ 个向量中，必然至少存在一个向量 $\bm{v}^*$ 其最大下标 $t\geqslant j$ 的。
+
+又因为 $\bm{v}^*$ 是那 $j$ 个向量之一，所以必然满足 $\|\bm{v}^*\|\leqslant\lambda_j(\Lambda)$，且满足：
+\[ \bm{v}^{*}=c_1\bm{b}_1+c_2\bm{b}_2+\cdots+c_t\bm{b}_t \]
+
+其中整数 $c_t\neq0$ 且 $t\geqslant j$ 亦满足。根据 Gram-Schmidt 定义，每一个原基向量 $\bm{b}_i$ 都可以表示为 $\tilde{\bm{b}}_i$ 加先前的正交向量的线性组合：
+\[ \bm{b}_i=\tilde{\bm{b}}_i+\sum_{s=1}^{i-1}\dfrac{<\bm{b}_i,\tilde{\bm{b}}_s>}{<\tilde{\bm{b}}_s,\tilde{\bm{b}}_s>}\tilde{\bm{b}}_s \]
+
+因此：
+\[ \bm{v}^{*}=c_1\left(\tilde{\bm{b}}_1+\sum_{s=1}^{1-1}\dfrac{<\bm{b}_1,\tilde{\bm{b}}_s>}{<\tilde{\bm{b}}_s,\tilde{\bm{b}}_s>}\tilde{\bm{b}}_s\right)+c_2\left(\tilde{\bm{b}}_2+\sum_{s=1}^{2-1}\dfrac{<\bm{b}_2,\tilde{\bm{b}}_s>}{<\tilde{\bm{b}}_s,\tilde{\bm{b}}_s>}\tilde{\bm{b}}_s\right)+\cdots+c_t\left(\tilde{\bm{b}}_t+\sum_{s=1}^{t-1}\dfrac{<\bm{b}_t,\tilde{\bm{b}}_s>}{<\tilde{\bm{b}}_s,\tilde{\bm{b}}_s>}\tilde{\bm{b}}_s\right) \]
+
+注意到 $\bm{v}^{*}$ 中关于 $\tilde{\bm{b}}_t$ 分量，仅仅且完全来自于 $c_t\bm{b}_t$ 中的 $c_t\tilde{\bm{b}}_t$，因为前面的基 $\bm{b}_1,\ \bm{b}_2,\ \ldots,\ \bm{b}_{t-1}$ 展开后不包含 $\tilde{\bm{b}}_t$ 分量，因此方程改写为：
+\[ \bm{v}^{*}=z_1\tilde{\bm{b}}_1+z_2\tilde{\bm{b}}_2+\cdots+z_{t-1}\tilde{\bm{b}}_{t-1}+c_t\tilde{\bm{b}}_t \]
+
+要使得 $\bm{v}^{*}$ 是一个格向量，它的组合系数 $c_t$ 必须是一个非零整数，而 $z_i$ 任意。又由于 $\tilde{\bm{b}}_1,\ \tilde{\bm{b}}_2,\ \ldots,\ \tilde{\bm{b}}_t$ 彼此正交，根据勾股定理：
+\[ \|\bm{v}^{*}\|^2=z_1^2\|\tilde{\bm{b}}_1\|^2+z_2^2\|\tilde{\bm{b}}_2\|^2+\cdots+z_{t-1}^2\|\tilde{\bm{b}}_{t-1}\|^2+c_t^2\|\tilde{\bm{b}}_t\|^2 \]
+
+所以：
+\[ \|\bm{v}^{*}\|^2\geqslant c_t^2\|\tilde{\bm{b}}_t\|^2 \]
+
+由于 $c_t$ 是不为零的整数，所以：
+\[ \|\bm{v}^{*}\|\geqslant\|\tilde{\bm{b}}_t\| \]
+
+综上所述，因 $\lambda_j(\Lambda)\geqslant\|\bm{v}^*\|$，而且 $\|\bm{v}^*\|\geqslant\|\tilde{\bm{b}}_t\|$，加之 $t\geqslant j$，所以 $\|\tilde{\bm{b}}_j\|,\ \|\tilde{\bm{b}}_{j+1}\|,\ \ldots,\ \|\tilde{\bm{b}}_n\|$ 中，$\|\tilde{\bm{b}}_t\|$ 不过是其中一个候选值，因此 $\|\tilde{\bm{b}}_t\|\geqslant\min\limits_{i=j,\ldots,n}\|\tilde{\bm{b}}_i\|$，最终：
+\[ \lambda_j(\Lambda)\geqslant\|\bm{v}^{*}\|\geqslant\|\tilde{\bm{b}}_t\|\geqslant\min\limits_{i=j,\ldots,n}\|\tilde{\bm{b}}_i\| \]
+
+
+
+
+\end{document}

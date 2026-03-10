@@ -1,0 +1,10 @@
+\contentsline {section}{\numberline {1}研究 $l_1$ 和 $l_{\infty }$ 距离下 Minkowski 第一定理}{1}{}%
+\contentsline {subsection}{\numberline {(a)}切比雪夫最大值距离 $l_{\infty }$}{1}{}%
+\contentsline {subsection}{\numberline {(b)}曼哈顿城市街区距离 $l_{1}$}{1}{}%
+\contentsline {subsection}{\numberline {(c)}通式}{2}{}%
+\contentsline {subsection}{\numberline {(d)}补充：$l_2$ 距离下的情况}{2}{}%
+\contentsline {section}{\numberline {2}判断子格算法}{3}{}%
+\contentsline {section}{\numberline {3}判断循环格算法}{4}{}%
+\contentsline {section}{\numberline {4}Gram-Schmit 正交化基}{4}{}%
+\contentsline {subsection}{\numberline {(a)}说明 $\lambda _n(\Lambda )\geqslant \max \limits _{i=1,2,\ldots ,n}\|\tilde {\bm {b}}_i\|$ 不一定成立}{4}{}%
+\contentsline {subsection}{\numberline {(b)}对任意 $j=1,2,\ldots ,n$ 有 $\lambda _j(\Lambda )\geqslant \min \limits _{i=j,\ldots ,n}\|\tilde {\bm {b}}_i\|$}{5}{}%
