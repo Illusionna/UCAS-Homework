@@ -1,0 +1,159 @@
+\documentclass{article}
+
+\usepackage{bm}
+\usepackage{ctex}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{setspace}
+\usepackage{datetime}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{nicematrix}
+\usepackage{amsmath, amssymb, amsfonts, mathrsfs}
+\usepackage[fontsize = 12pt]{fontsize}
+
+\renewcommand{\thesubsection}{(\alph{subsection})}
+\newcommand{\diff}[2]{\dfrac{\mathrm{d}#1}{\mathrm{d}#2}}
+\newcommand{\diffn}[3]{\dfrac{\mathrm{d}^{#3}#1}{\mathrm{d}#2^{#3}}}
+\newcommand{\piff}[2]{\dfrac{\partial{#1}}{\partial{#2}}}
+\newcommand{\eval}[2]{\left.#1\right|_{#2}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\barline}[1]{\overline{#1\rule{0pt}{1.9ex}}}
+
+\geometry{
+    a4paper,
+    left = 3cm,
+    right = 3cm,
+    top = 2.4cm,
+    bottom = 2.4cm
+}
+
+\setitemize[1]{
+    itemsep = 0pt,
+    partopsep = 0pt,
+    parsep = \parskip,
+    topsep = 5pt
+}
+
+\title{应用统计：第二次作业}
+\author{Illusionna \quad 2025...............004 \quad 人工智能学院}
+\date{\currenttime,\ \today}
+
+
+
+\begin{document}
+
+\maketitle
+
+
+
+\section{Q-1.6}
+\textit{\textcolor{gray}{两台车床加工同一种零件，第一台车床出现废品的概率为 0.03，第二台出现废品的概率为 0.02。若两台车床加工的零件放在一起，并且已知第一台车床加工的零件比第二台车床加工的零件多一倍。}}
+
+设 $A$ 表示零件是第一台车床加工，$B$ 表示零件是第二台车床加工，$C$ 表示零件是废品，$\barline{C}$ 表示零件是合格品。
+\[ \Pr(A)=\dfrac{2}{3}\qquad\Pr(B)=\dfrac{1}{3} \]
+
+两台车床出现废品的概率：
+\[ \Pr(C\mid A)=0.03\qquad\Pr(C\mid B)=0.02 \]
+
+
+
+\subsection{\textit{\textcolor{gray}{求从整批零件中任取 1 件，恰好是合格的概率}}}
+由全概率公式，任取 1 件是废品的概率为：
+\[ \Pr(C)=\Pr(A)\Pr(C\mid A)+\Pr(B)\Pr(C\mid B)=\dfrac{2}{3}\times0.03+\dfrac{1}{3}\times0.02=\dfrac{2}{75} \]
+
+因此，任取 1 件恰好是合格品的概率为：
+\[ \Pr(\barline{C})=1-\Pr(C)=\dfrac{73}{75}\approx97.33\% \]
+
+
+
+\subsection{\textit{\textcolor{gray}{如果任取 1 件后，发现是废品，求它是第二台车床加工的概率}}}
+\[ \Pr(B\mid C)=\dfrac{\Pr(B)\Pr(C\mid B)}{\Pr(C)}=\dfrac{\dfrac{1}{3}\times0.02}{\displaystyle\dfrac{2}{75}}=25\% \]
+
+
+
+\section{Q-1.8}
+\textit{\textcolor{gray}{设离散型随机变量 $X$ 的概率分布为}}
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \setlength{\tabcolsep}{16pt}
+    \color{gray}{
+        \caption{随机变量 $X$ 的分布列}
+        \begin{tabular}{|c|c|c|c|c|c|c|}
+            \hline
+            $X$ & $-2$ & $-1$ & $0$ & $1$ & $2$ & $3$ \\
+            \hline
+            $\Pr$ & 0.05 & 0.15 & 0.20 & 0.25 & 0.2 & 0.15 \\
+            \hline
+        \end{tabular}
+    }
+\end{table}
+
+\textit{\textcolor{gray}{求 $Y=2X+1$ 和 $Z=X^2$ 的概率分布}}
+
+由于所有的 $Y$ 值互不相同，对应的概率不变，故 $Y=2X+1$ 的概率分布为：
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \setlength{\tabcolsep}{16pt}
+    \caption{随机变量 $Y$ 的分布列}
+    \begin{tabular}{|c|c|c|c|c|c|c|}
+        \hline
+        $Y$ & $-3$ & $-1$ & $1$ & $3$ & $5$ & $7$ \\
+        \hline
+        $\Pr$ & 0.05 & 0.15 & 0.20 & 0.25 & 0.2 & 0.15 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+我们计算 $X$ 取不同值时对应的 $Z$ 值，并将产生相同 $Z$ 值的概率相加：
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \setlength{\tabcolsep}{16pt}
+    \caption{随机变量 $Z$ 的分布列}
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        $Z$ & $0$ & $1$ & $4$ & $9$ \\
+        \hline
+        $\Pr$ & 0.20 & 0.40 & 0.25 & 0.15 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+
+
+\section{Q-1.12}
+\textit{\textcolor{gray}{设随机变量 $X\sim N(3,4)$，求概率 $\Pr(X\geqslant4)$ 及 $\Pr(-2\leqslant X\leqslant7)$。（$\Phi(2)=0.9772,\ \Phi(2.5)=0.9938,\ \Phi(0.5)=0.6915$）}}
+
+随机变量 $X\sim N(3,4)$，标准化后 $Z=\dfrac{X-\mu}{\sigma}=\dfrac{X-3}{2}\sim N(0,1)$，则：
+\begin{align*}
+    \Pr(X\geqslant4)&=\Pr\left(\dfrac{X-3}{2}\geqslant\dfrac{4-3}{2}\right)
+    \\
+    &=\Pr(Z\geqslant0.5)
+    \\
+    &=1-\Phi(0.5)
+    \\
+    &=0.3085
+\end{align*}
+\begin{align*}
+    \Pr(-2\leqslant X\leqslant7)&=\Pr\left(\dfrac{-2-3}{2}\leqslant\dfrac{X-3}{2}\leqslant\dfrac{7-3}{2}\right)
+    \\
+    &=\Pr(-2.5\leqslant Z\leqslant2)
+    \\
+    &=\Phi(2)-\Phi(-2.5)=\Phi(2)-\left[1-\Phi(2.5)\right]
+    \\
+    &=0.9772-(1-0.9938)=0.9710
+\end{align*}
+
+
+
+\end{document}
