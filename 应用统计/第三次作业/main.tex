@@ -1,0 +1,139 @@
+\documentclass{article}
+
+\usepackage{bm}
+\usepackage{ctex}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{setspace}
+\usepackage{datetime}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\usepackage{nicematrix}
+\usepackage{amsmath, amssymb, amsfonts, mathrsfs}
+\usepackage[fontsize = 12pt]{fontsize}
+
+\renewcommand{\thesubsection}{(\alph{subsection})}
+\newcommand{\diff}[2]{\dfrac{\mathrm{d}#1}{\mathrm{d}#2}}
+\newcommand{\diffn}[3]{\dfrac{\mathrm{d}^{#3}#1}{\mathrm{d}#2^{#3}}}
+\newcommand{\piff}[2]{\dfrac{\partial{#1}}{\partial{#2}}}
+\newcommand{\eval}[2]{\left.#1\right|_{#2}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\barline}[1]{\overline{#1\rule{0pt}{1.9ex}}}
+
+\geometry{
+    a4paper,
+    left = 2cm,
+    right = 2cm,
+    top = 2.4cm,
+    bottom = 2.4cm
+}
+
+\setitemize[1]{
+    itemsep = 7pt,
+    partopsep = 0pt,
+    parsep = \parskip,
+    topsep = 5pt
+}
+
+\title{\vspace{-3em}应用统计：第三次作业}
+\author{Illusionna \quad 2025.........004 \quad 人工智能学院}
+\date{\currenttime,\ \today}
+
+
+
+\begin{document}
+
+\maketitle\vspace*{-1.5em}
+
+
+
+\section{Q-2.2}
+\textit{\textcolor{gray}{(1) 计算一组数据的均值、方差、标准差及均值的方差时，若给每个数据加上或减去一个正实数 $C$，与原数据组相比较，新数据组的均值、方差、标准差及均值的方差有无变化？为什么？}}
+
+\textit{\textcolor{gray}{(2) 如果给每个原始数据乘以一个大于 1 的实数，结果又如何？有变化的请写出表达式。}}
+
+为了方便表达，我们先设原数据组为 $x_1,\ x_2,\ \ldots,\ x_n$，则：
+
+\begin{itemize}
+    \item 均值
+    \begin{itemize}
+        \item 加减（有变化）：$\barline{x}_{\text{new}}=\dfrac{1}{n}\displaystyle\sum\limits_{i=1}^{n}\left(x_i\pm C\right)=\barline{x}\pm C$
+        \item 数乘（有变化）：$\barline{x}_{\text{new}}=k\barline{x}$
+    \end{itemize}
+    \item 方差
+    \begin{itemize}
+        \item 加减（无变化）：$\sigma_{\text{new}}^2=\dfrac{1}{n}\displaystyle\sum\limits_{i=1}^{n}\left[\left(x_i\pm C\right)-\left(\barline{x}\pm C\right)\right]^2=\dfrac{1}{n}\displaystyle\sum\limits_{i=1}^{n}\left(x_i-\barline{x}\right)^2=\sigma^2$
+        \item 数乘（有变化）：$\sigma_{\text{new}}^2=\dfrac{1}{n}\displaystyle\sum\limits_{i=1}^{n}\left(kx_i-k\barline{x}\right)^2=k^2\sigma^2$
+    \end{itemize}
+    \item 标准差
+    \begin{itemize}
+        \item 加减（无变化）：$\sigma_{\text{new}}=\sigma$
+        \item 数乘（有变化）：$\sigma_{\text{new}}=\displaystyle\sqrt{\displaystyle k^2\sigma^2}=k\sigma$
+    \end{itemize}
+    \item 均值的方差
+    \begin{itemize}
+        \item 加减（无变化）：$D_{\text{new}}=\dfrac{\sigma^2}{n}$
+        \item 数乘（有变化）：$D_{\text{new}}=\dfrac{k^2\sigma^2}{n}$
+    \end{itemize}
+\end{itemize}
+
+
+
+\section{Q-2.3}
+\textit{\textcolor{gray}{某厂制作一种产品，某天统计 10 名工人当天制作的数量，结果为 31,\ 23,\ 27,\ 30,\ 31,\ 32,\ 19,\ 26,\ 40,\ 31。构造该组数据的茎叶图，并求这组数据的平均值、中位数、众数、上四分位数、下四分位、极差、方差、标准差。}}
+
+\[ \text{排序后数据}=[19,\ 23,\ 26,\ 27,\ 30,\ 31,\ 31,\ 31,\ 32,\ 40] \]
+
+\begingroup
+\linespread{1}\selectfont
+\begin{lstlisting}[
+    basicstyle = \ttfamily,
+    columns = flexible,
+    breaklines = true,
+    escapeinside = {!@}{@!}
+]
+>>> stem | leaf
+>>> -----------
+>>>    1      9
+>>>    2      3 6 7
+>>>    3      0 1 1 1 2
+>>>    4      0
+\end{lstlisting}
+\endgroup
+
+\[ \barline{x}=\dfrac{1}{n}\sum_{i=1}^{n}x_i=\dfrac{290}{10}=29\qquad\text{median}=\dfrac{30+31}{2}=30.5 \]
+\[ \text{mode}=31\qquad\text{range}=\max-\min=40-19=21 \]
+\[ Q_1=26\qquad Q_3=31 \]
+\[ S^2=\dfrac{1}{n-1}\sum_{i=1}^{n}\left(x_i-\barline{x}\right)^2=\dfrac{292}{10-1}\approx32.444\implies S=\sqrt{\dfrac{292}{9}}\approx5.696 \]
+
+
+
+\section{Q-2.4}
+\textit{\textcolor{gray}{设 $X\sim N(1,\ 9)$，从总体中抽取样本容量为 81 的样本，(1) 求样本均值 $\barline{X}$ 的标准差，(2) 求概率 $\Pr(0\leqslant\barline{X}\leqslant2)$.}}
+
+根据总体分布 $X\sim N(1,\ 9)$，有：
+
+\begin{itemize}
+    \item 总体均值 $\mu=1$
+    \item 总体方差 $\sigma^2=9$
+    \item 总体标准差 $\sigma=3$
+    \item 样本容量 $n=81$
+\end{itemize}
+\[ \sigma_{\overline{X}}=\dfrac{\sigma}{\sqrt{n}}=\dfrac{3}{\sqrt{81}}=\dfrac{1}{3} \]
+
+\[ \barline{X}\sim N\left(\mu,\ \dfrac{\sigma^2}{n}\right)=N\left[1, \left(\dfrac{1}{3}\right)^2\right] \]
+
+为了求概率，将 $\barline{X}$ 标准化，转化为标准正态分布 $Z\sim N(0,\ 1)$，标准化公式为：
+\[ Z=\dfrac{\barline{X}-\mu}{\sigma_{\overline{X}}}=\dfrac{\barline{X}-1}{1/3} \]
+
+当 $\barline{X}=0$ 时，$Z=-3$；当 $\barline{X}=2$ 时，$Z=3$，则根据 $3\sigma$ 准则有：
+\[ \Pr(0\leqslant\barline{X}\leqslant2)=\Pr(-3\leqslant\barline{X}\leqslant3)=\Phi(3)-\Phi(-3)\approx99.73\% \]
+
+
+
+\end{document}
