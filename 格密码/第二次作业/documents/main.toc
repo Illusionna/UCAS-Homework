@@ -1,0 +1,10 @@
+\contentsline {section}{\numberline {1}给出下面基的 3/4-LLL 约化基}{1}{}%
+\contentsline {section}{\numberline {2}证明 3/4-LLL 约化基的下面性质}{7}{}%
+\contentsline {subsection}{\numberline {a)}$\|\bm {b}_1\|\leqslant 2^{(n-1)/4}(\det \Lambda )^{1/n}$}{7}{}%
+\contentsline {subsection}{\numberline {b)}对任意 $1\leqslant i\leqslant n,\ \|\bm {b}_i\|\leqslant 2^{(i-1)/2}\|\tilde {\bm {b}}_i\|$}{8}{}%
+\contentsline {subsection}{\numberline {c)}$\displaystyle \DOTSB \prod@ \slimits@ \|\bm {b}_i\|\leqslant 2^{n(n-1)/4}\det \Lambda $}{8}{}%
+\contentsline {subsection}{\numberline {d)}对任意 $1\leqslant i\leqslant j\leqslant n,\ \|\bm {b}_i\|\leqslant 2^{(j-1)/2}\|\tilde {\bm {b}}_j\|$}{8}{}%
+\contentsline {subsection}{\numberline {e)}对任意 $1\leqslant i\leqslant n,\ \lambda _i(\Lambda )\leqslant 2^{(i-1)/2}\|\tilde {\bm {b}}_i\|$}{9}{}%
+\contentsline {subsection}{\numberline {f)}对任意 $1\leqslant i\leqslant n,\ \lambda _i(\Lambda )\geqslant 2^{-(n-1)/2}\|\bm {b}_i\|$}{9}{}%
+\contentsline {section}{\numberline {3}证明 $B\leqslant c_1(d)N^{\tfrac {2}{d(d+1)}}$ 时导致 $\left |a_iB^i\right |<\dfrac {N}{d+1}$}{9}{}%
+\contentsline {section}{\numberline {4}证明 Babai 算法可以解出离 $\bm {t}$ 最近的格点}{10}{}%
