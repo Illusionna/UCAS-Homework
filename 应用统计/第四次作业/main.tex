@@ -1,0 +1,113 @@
+\documentclass{article}
+
+\usepackage{bm}
+\usepackage{ctex}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{setspace}
+\usepackage{datetime}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\usepackage{nicematrix}
+\usepackage{amsmath, amssymb, amsfonts, mathrsfs}
+\usepackage[fontsize = 12pt]{fontsize}
+
+\renewcommand{\thesubsection}{(\alph{subsection})}
+\newcommand{\diff}[2]{\dfrac{\mathrm{d}#1}{\mathrm{d}#2}}
+\newcommand{\diffn}[3]{\dfrac{\mathrm{d}^{#3}#1}{\mathrm{d}#2^{#3}}}
+\newcommand{\piff}[2]{\dfrac{\partial{#1}}{\partial{#2}}}
+\newcommand{\eval}[2]{\left.#1\right|_{#2}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\barline}[1]{\overline{#1\rule{0pt}{1.9ex}}}
+
+\geometry{
+    a4paper,
+    left = 2cm,
+    right = 2cm,
+    top = 2.4cm,
+    bottom = 2.4cm
+}
+
+\setitemize[1]{
+    itemsep = 7pt,
+    partopsep = 0pt,
+    parsep = \parskip,
+    topsep = 5pt
+}
+
+\title{\vspace{-3em}应用统计：第四次作业}
+\author{Illusionna \quad 2025..........004 \quad 人工智能学院}
+\date{\currenttime,\ \today}
+
+
+
+\begin{document}
+
+\maketitle\vspace*{-1.5em}
+
+
+
+\section{Q-3.5}
+\textit{\textcolor{gray}{设总体 $X$ 服从区间 $[0,\ \theta]$ 上的某种分布，其密度函数为：
+\[ P(x, \theta) = \begin{cases} 
+    \dfrac{1}{\theta}x, & 0 \leqslant x \leqslant \theta
+    \\[7pt]
+    0, & others
+\end{cases} \]
+(1) 设 $X_1, X_2, \cdots, X_n$ 是样本，求参数 $\theta$ 的矩估计量；\\[5pt]
+(2) 假定测得样本值 $(13, 6, 17, 22, 3, 11)$，求 $\theta$ 的矩估计值。}}
+
+\paragraph*{参数 $\theta$ 的矩估计量}~{}
+
+计算总体一阶原点矩，即数学期望：
+\[ E(X) = \int_{-\infty}^{+\infty} x P(x, \theta) \d x = \int_{0}^{\theta} x \cdot \dfrac{1}{\theta}x \d x = \dfrac{1}{\theta} \int_{0}^{\theta} x^2 \d x = \dfrac{1}{\theta} \cdot \left[ \dfrac{1}{3}x^3 \right]_{0}^{\theta} = \dfrac{1}{3}\theta^2 \]
+
+令一阶样本矩 $\barline{X}$ 等于一阶总体矩 $E(X)$：
+\[ \barline{X} = \dfrac{1}{3}\theta^2 \]
+
+由题意 $x \in [0,\ \theta]$ 可知 $\theta \geqslant 0$，解得参数 $\theta$ 的矩估计量为：
+\[ \hat{\theta} = \sqrt{3\barline{X}} \]
+
+\paragraph*{参数 $\theta$ 的矩估计值}~{}
+
+已知样本值为 $(13, 6, 17, 22, 3, 11)$，计算样本均值 $\barline{x}$：
+\[ \barline{x} = \dfrac{1}{n}\sum_{i=1}^{n}x_i = \dfrac{13 + 6 + 17 + 22 + 3 + 11}{6} = \dfrac{72}{6} = 12 \]
+
+将样本均值代入矩估计量公式，得到 $\theta$ 的矩估计值为：
+\[ \hat{\theta} = \sqrt{3\barline{x}} = \sqrt{3 \times 12} = \sqrt{36} = 6 \]
+
+
+
+\section{Q-3.6}
+\textit{\textcolor{gray}{设 $\hat{\theta}$ 是参数 $\theta$ 的无偏估计量，且有 $D(\hat{\theta}) > 0$，请证明 $\hat{\theta}^2$ 不是 $\theta^2$ 的无偏估计量。}}
+
+\paragraph*{证明}~{}
+
+因为 $\hat{\theta}$ 是参数 $\theta$ 的无偏估计量，则由定义：
+\[ E(\hat{\theta}) = \theta \]
+
+由方差：
+\[ D(X) = E(X^2) - [E(X)]^2 \]
+
+可得：
+\[ D(\hat{\theta}) = E(\hat{\theta}^2) - [E(\hat{\theta})]^2 \]
+
+则：
+\[ D(\hat{\theta}) = E(\hat{\theta}^2) - \theta^2 \]
+
+因此 $\hat{\theta}^2$ 的数学期望：
+\[ E(\hat{\theta}^2) = \theta^2 + D(\hat{\theta}) \]
+
+已知 $D(\hat{\theta}) > 0$ 所以：
+\[ E(\hat{\theta}^2) = \theta^2 + D(\hat{\theta}) > \theta^2 \]
+
+即 $E(\hat{\theta}^2) \neq \theta^2$，所以，$\hat{\theta}^2$ 不是 $\theta^2$ 的无偏估计量。
+
+
+
+\end{document}
