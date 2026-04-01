@@ -1,0 +1,4 @@
+\contentsline {section}{\numberline {1}证明对任意秩为 $n$ 的格 $\Lambda $，有 $\lambda _1(\Lambda )\cdot \lambda _n(\Lambda ^{*})\geqslant 1$}{1}{}%
+\contentsline {section}{\numberline {2}当 $q$ 是一个素数时，计算 $\det \left [\Lambda _{q}^{\perp }\left (\bm {A}\right )\right ]$ 和 $\det \left [\Lambda _{q}\left (\bm {A}\right )\right ]$}{1}{}%
+\contentsline {section}{\numberline {3}对任意的 $c>0$，有 $(c\Lambda )^{*}=\dfrac {1}{c}\Lambda ^{*}$}{2}{}%
+\contentsline {section}{\numberline {4}若 $\mathrm {span}(\Lambda _{1})=\mathrm {span}(\Lambda _{2})$，则有 $\Lambda _1\subseteq \Lambda _{2}\DOTSB \tmspace +\thickmuskip {.2777em}\DOTSB \Leftarrow \joinrel \Rightarrow \tmspace +\thickmuskip {.2777em}\Lambda _{1}^{*}\supseteq \Lambda _{2}^{*}$}{4}{}%

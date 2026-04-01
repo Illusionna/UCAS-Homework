@@ -1,0 +1,215 @@
+\documentclass{article}
+
+\usepackage{bm}
+\usepackage{ctex}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{dsfont}
+\usepackage{setspace}
+\usepackage{datetime}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{nicematrix}
+\usepackage{algorithm, algpseudocode}
+\usepackage{amsmath, amssymb, amsfonts, mathrsfs}
+\usepackage[fontsize = 12pt]{fontsize}
+
+\geometry{
+    a4paper,
+    left = 2.1cm,
+    right = 2.1cm,
+    top = 2.5cm,
+    bottom = 2.5cm
+}
+
+\setitemize[1]{
+    itemsep = 7pt,
+    partopsep = 0pt,
+    parsep = \parskip,
+    topsep = 5pt
+}
+
+\renewcommand{\thesubsection}{\alph{subsection})}
+\newcommand{\diff}[2]{\dfrac{\mathrm{d}#1}{\mathrm{d}#2}}
+\newcommand{\diffn}[3]{\dfrac{\mathrm{d}^{#3}#1}{\mathrm{d}#2^{#3}}}
+\newcommand{\piff}[2]{\dfrac{\partial{#1}}{\partial{#2}}}
+\newcommand{\eval}[2]{\left.#1\right|_{#2}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\barline}[1]{\overline{#1\rule{0pt}{1.75ex}}}
+
+\newtheorem{theorem}{定理}
+
+\title{格密码：第三次作业}
+\author{Illusionna \quad 2025.........004 \quad 人工智能学院}
+\date{\currenttime,\ \today}
+
+
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+\begin{spacing}{2}
+    \tableofcontents
+\end{spacing}
+\thispagestyle{empty}
+\clearpage
+\setcounter{page}{1}
+
+
+
+\section{证明对任意秩为 $n$ 的格 $\Lambda$，有 $\lambda_1(\Lambda)\cdot\lambda_n(\Lambda^{*})\geqslant1$}
+
+根据连续极小值定义：$\lambda_1(\Lambda)$ 是格 $\Lambda$ 中最短非零向量的长度，设 $\bm{v}\in\Lambda$ 是一个最短非零向量，即 $\|\bm{v}\|=\lambda_1(\Lambda)$ 且 $\bm{v}\neq\bm{0}$，在对偶格 $\Lambda^{*}$ 中，其第 $n$ 个连续极小值 $\lambda_n(\Lambda^{*})$ 意味在 $\Lambda^{*}$ 中存在 $n$ 个线性无关的向量 $\bm{w}_1,\ \bm{w}_2,\ \ldots,\ \bm{w}_n$，满足：
+\[ \forall i\in[1,\ n]\quad\&\quad i\in\mathbb{N},\qquad \|\bm{w}_i\|\leqslant\lambda_n(\Lambda^{*}) \]
+
+因为 $\bm{v}$ 是非零向量，且 $\bm{w}_1,\ \bm{w}_2,\ \ldots,\ \bm{w}_n$ 构成了所在空间的一组基，线性无关且数量等于格的秩 $n$，所以 $\bm{v}$ 不可能与所有的 $\bm{w}_i$ 都正交，因此存在某个索引使内积不为零：
+\[ j\in\{1,\ 2,\ \ldots,\ n\},\qquad \langle\bm{v},\ \bm{w}_j\rangle\neq0 \]
+
+根据偶格定义，由于 $\bm{v}\in\Lambda$ 且 $\bm{w}_j\in\Lambda^{*}$，内积是一个整数：
+\[ \langle\bm{v},\ \bm{w}_j\rangle\neq\mathbb{Z} \]
+
+则其绝对值必然有：
+\[ \left\lvert\langle\bm{v},\ \bm{w}_j\rangle\right\rvert\geqslant1  \]
+
+根据 Cauchy-Schwarz 不等式：
+\[ \left\lvert\langle\bm{v},\ \bm{w}_j\rangle\right\rvert\leqslant\|\bm{v}\|\cdot\|\bm{w}_j\| \]
+
+代入 $\|\bm{v}\|=\lambda_1(\Lambda)$ 和 $\|\bm{w}_j\|\leqslant\lambda_n(\Lambda^{*})$，可得：
+\[ 1\leqslant\left\lvert\langle\bm{v},\ \bm{w}_j\rangle\right\rvert\leqslant\|\bm{v}\|\cdot\|\bm{w}_j\|\leqslant\lambda_1(\Lambda)\cdot\lambda_n(\Lambda^{*}) \]
+
+
+
+\section{当 $q$ 是一个素数时，计算 $\det\left[\Lambda_{q}^{\perp}\left(\bm{A}\right)\right]$ 和 $\det\left[\Lambda_{q}\left(\bm{A}\right)\right]$}
+
+定义 $q$ 元格矩阵为 $\bm{A}\in\mathbb{Z}_q^{n\times m}$，约定 $m\geqslant n$ 且矩阵 $\bm{A}$ 行 $n$ 满秩。
+
+
+
+\paragraph*{(a) 计算 $\det\left[\Lambda_{q}^{\perp}\left(\bm{A}\right)\right]$}~{\\[-7pt]}
+
+$\Lambda_{q}^{\perp}\left(\bm{A}\right)$ 定义：
+\[ \Lambda_{q}^{\perp}\left(\bm{A}\right)=\{\bm{x}\in\mathbb{Z}^m\mid \bm{A}\bm{x}\equiv\bm{0}\pmod q\} \]
+
+考虑同态映射：
+\[ \phi:\mathbb{Z}^m\to\mathbb{Z}_q^n \]
+
+映射定义为：
+\[ \phi(\bm{x})=\bm{A}\bm{x}\pmod q \]
+
+因为 $\bm{A}$ 满秩，该映射是一个满射，其核恰好为 $\Lambda_{q}^{\perp}\left(\bm{A}\right)$，根据群同构第一定理：
+\[ \mathbb{Z}^{m}\ /\ \Lambda_{q}^{\perp}\left(\bm{A}\right)\ \cong\ \mathbb{Z}_q^n \]
+
+对于全秩格，其行列式等于它在包含它的超晶格 $\mathbb{Z}^m$ 中的群指数，因此：
+\[ \det\left[\Lambda_{q}^{\perp}\left(\bm{A}\right)\right]=\left[\mathbb{Z}^m:\Lambda_{q}^{\perp}\left(\bm{A}\right)\right]=\left\lvert\mathbb{Z}_q^n\right\rvert=q^n \]
+
+
+
+\paragraph*{(b) 计算 $\det\left[\Lambda_{q}\left(\bm{A}\right)\right]$}~{\\[-7pt]}
+
+$\Lambda_q(\bm{A})$ 定义：
+\[ \Lambda_q(\bm{A})=\{\bm{y}\in\mathbb{Z}^m\mid\exists\bm{s}\in\mathbb{Z}^n,\quad\bm{y}\equiv\bm{A}^{\top}\bm{s}\pmod q\} \]
+
+注意到 $\Lambda_q(\bm{A})$ 包含了 $q\mathbb{Z}^m$ 作为子格，所以只在基底 $[0,\ q)^m$ 的基本平行六面体中进行研究，由于 $\bm{A}$ 在 $\mathbb{Z}_q$ 上满秩，则有 $\mathbb{Z}_q^n$ 到 $\mathbb{Z}_q^m$ 的单射：
+\[ \bm{s}\mapsto\bm{A}^{\top}\bm{s}\pmod q \]
+
+因此，在商群 $\mathbb{Z}^m\ /\ q\mathbb{Z}^m\ \cong\ \mathbb{Z}_q^m$ 中，群 $\Lambda_q(\bm{A})\ /\ q\mathbb{Z}^m$ 生成的子群大小为 $q^n$，所以 $\Lambda_q(\bm{A})$ 在 $\mathbb{Z}^m$ 中的指数为全体可能的剩余类数量除以该子群大小：
+\[ \left[\mathbb{Z}^m:\Lambda_q(\bm{A})\right]=\dfrac{\left\lvert\mathbb{Z}_q^m\right\rvert}{q^n}=\dfrac{q^m}{q^n}=q^{m-n} \]
+
+因此其行列式：
+\[ \det\left[\Lambda_{q}\left(\bm{A}\right)\right]=q^{m-n} \]
+
+\textit{\textcolor{gray}{对偶关系 $\Lambda_{q}^{\perp}\left(\bm{A}\right)=q\Lambda_q(\bm{A})^{*}$ 可得 $\det\left[\Lambda_{q}^{\perp}\left(\bm{A}\right)\right]=\det\left[q\Lambda_q\left(\bm{A}\right)^{*}\right]=q^m\ /\ \det\left[\Lambda_q\left(\bm{A}\right)\right]$，代入 $\det\left[\Lambda_{q}^{\perp}\left(\bm{A}\right)\right]=q^n$ 亦可直接得出 $\det\left[\Lambda_{q}\left(\bm{A}\right)\right]=q^{m-n}$ 结论。}}
+
+
+
+\section{对任意的 $c>0$，有 $(c\Lambda)^{*}=\dfrac{1}{c}\Lambda^{*}$}
+
+格 $\mathcal{L}$ 的对偶格定义：
+\[ \mathcal{L}^{*}=\{\bm{x}\in\mathrm{span}\left(\mathcal{L}\right)\mid\forall\bm{y}\in\mathcal{L},\ \langle\bm{x},\ \bm{y}\rangle\in\mathbb{Z} \} \]
+
+
+
+\paragraph*{(a) 证明 $(c\Lambda)^{*}\subseteq\dfrac{1}{c}\Lambda^{*}$}~{\\[-7pt]}
+
+任取 $\bm{v}\in(c\Lambda)^{*}$，由定义可知：
+\[ \forall\bm{y}\in c\Lambda,\qquad\langle\bm{v},\ \bm{y}\rangle\in\mathbb{Z} \]
+
+又因为 $\bm{y}\in c\Lambda$，则 $\bm{y}=c\bm{x}$，其中 $\bm{x}\in\Lambda$，可得内积：
+\[ \langle\bm{v},\ c\bm{x}\rangle=\langle c\bm{v},\ \bm{x}\rangle\in\mathbb{Z} \]
+
+向量 $c\bm{v}$ 与格 $\Lambda$ 中的所有向量的内积均为整数，由于 $\bm{v}\in\mathrm{span}\left(c\Lambda\right)=\mathrm{span}\left(\Lambda\right)$，必然 $c\bm{v}$ 在 $\Lambda$ 的生成空间中，因此根据对偶格定义，有：
+\[ c\bm{v}\in\Lambda^{*}\implies\bm{v}\in\dfrac{1}{c}\Lambda^{*}\implies(c\Lambda)^{*}\subseteq\dfrac{1}{c}\Lambda^{*} \]
+
+
+
+\paragraph*{(b) 证明 $\dfrac{1}{c}\Lambda^{*}\subseteq(c\Lambda)^{*}$}~{\\[-7pt]}
+
+任取 $\bm{w}\in\dfrac{1}{c}\Lambda^{*}$，则存在 $\bm{u}\in\Lambda^{*}$ 使得 $\bm{w}=\dfrac{1}{c}\bm{u}$，对于任意 $\bm{y}\in c\Lambda$，存在 $\bm{x}\in\Lambda$ 使得 $\bm{y}=c\bm{x}$，则：
+\[ \langle\bm{w},\ \bm{y}\rangle=\left\langle\dfrac{1}{c}\bm{u},\ c\bm{x}\right\rangle=\dfrac{1}{c}\cdot c\cdot\langle\bm{u},\ \bm{x}\rangle=\langle\bm{u},\ \bm{x}\rangle \]
+
+因为 $\bm{u}\in\Lambda^{*}$ 且 $\bm{x}\in\Lambda$，根据对偶格性质，其内积为整数：
+\[ \langle\bm{u},\ \bm{x}\rangle\in\mathbb{Z} \]
+
+所以 $\langle\bm{w},\ \bm{y}\rangle\in\mathbb{Z}$ 对于所有的 $\bm{y}\in c\Lambda$ 均成立，且有：
+\[ \bm{w}\in\mathrm{span}\left(\Lambda\right)=\mathrm{span}\left(c\Lambda\right) \]
+
+由此可知 $\bm{w}\in(c\Lambda)^{*}$，则：
+\[ \dfrac{1}{c}\Lambda^{*}\subseteq(c\Lambda)^{*} \]
+
+
+
+\paragraph*{(c) 综合}~{\\[-7pt]}
+
+由于：
+\[ (c\Lambda)^{*}\subseteq\dfrac{1}{c}\Lambda^{*} \]
+\[ \dfrac{1}{c}\Lambda^{*}\subseteq(c\Lambda)^{*} \]
+
+所以：
+\[ \forall c>0,\qquad(c\Lambda)^{*}=\dfrac{1}{c}\Lambda^{*} \]
+
+
+
+\section{若 $\mathrm{span}(\Lambda_{1})=\mathrm{span}(\Lambda_{2})$，则有 $\Lambda_1\subseteq\Lambda_{2}\iff\Lambda_{1}^{*}\supseteq\Lambda_{2}^{*}$}
+
+\paragraph*{充分性 ($\Rightarrow$)：若 $\Lambda_1\subseteq\Lambda_2$，则 $\Lambda_1^{*}\supseteq\Lambda_2^{*}$}~{\\[-7pt]}
+
+任取 $\bm{x}\in\Lambda_2^{*}$，根据对偶格定义，对于任意 $\bm{y}\in\Lambda_2$，有内积 $\langle\bm{x},\ \bm{y}\rangle\in\mathbb{Z}$，因此：
+\[ \Lambda_1\subseteq\Lambda_2 \]
+
+所以对于任意 $\bm{z}\in\Lambda_1$，必然有 $\bm{z}\in\Lambda_2$，因此将 $\bm{z}$ 视作 $\bm{y}$ 代入上式，得出 $\langle\bm{x},\ \bm{x}\rangle\in\mathbb{Z}$ 对于所有 $\bm{z}\in\Lambda_1$ 均成立，又因为 $\bm{x}\in\mathrm{span}\left(\Lambda_2\right)=\mathrm{span}\left(\Lambda_1\right)$，其满足 $\Lambda_1$ 对偶格所在空间的要求，故：
+\[ \bm{x}\in\Lambda_1^{*} \]
+
+则：
+\[ \Lambda_1^{*}\supseteq\Lambda_2^{*} \]
+
+
+
+\paragraph*{必要性 ($\Leftarrow$)：若 $\Lambda_1^{*}\supseteq\Lambda_2^{*}$，则 $\Lambda_1\subseteq\Lambda_2$}~{\\[-7pt]}
+
+对偶格的对偶等于格本身，即：
+\[ (\Lambda^{*})^{*}=\Lambda \]
+
+由于 $\mathrm{span}\left(\Lambda_1\right)=\mathrm{span}\left(\Lambda_2\right)$，其对偶格自然满足：
+\[ \mathrm{span}\left(\Lambda_1^{*}\right)=\mathrm{span}\left(\Lambda_2^{*}\right) \]
+
+空间相同的格的包含关系，在取对偶后会发生反转。应用于 $\Lambda_1^{*}$ 和 $\Lambda_2^{*}$，由于已知 $\Lambda_2^{*}\subseteq\Lambda_1^{*}$，对其两边取对偶格，包含关系反转，可得：
+\[ (\Lambda_2^{*})^{*}\supseteq(\Lambda_1^{*})^{*} \]
+
+故：
+\[ \Lambda_2\supseteq\Lambda_1 \]
+
+
+
+\paragraph*{综合}~{\\[-7pt]}
+
+综上所述，充要条件：
+\[ \Lambda_1\subseteq\Lambda_2\iff\Lambda_1^{*}\supseteq\Lambda_2^{*} \]
+
+
+
+\end{document}
