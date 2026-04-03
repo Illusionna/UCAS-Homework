@@ -1,0 +1,153 @@
+\documentclass{article}
+
+\usepackage{bm}
+\usepackage{ctex}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{setspace}
+\usepackage{datetime}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\usepackage{nicematrix}
+\usepackage{amsmath, amssymb, amsfonts, mathrsfs}
+\usepackage[fontsize = 12pt]{fontsize}
+
+\renewcommand{\thesubsection}{(\alph{subsection})}
+\newcommand{\diff}[2]{\dfrac{\mathrm{d}#1}{\mathrm{d}#2}}
+\newcommand{\diffn}[3]{\dfrac{\mathrm{d}^{#3}#1}{\mathrm{d}#2^{#3}}}
+\newcommand{\piff}[2]{\dfrac{\partial{#1}}{\partial{#2}}}
+\newcommand{\eval}[2]{\left.#1\right|_{#2}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\barline}[1]{\overline{#1\rule{0pt}{1.5ex}}}
+
+\geometry{
+    a4paper,
+    left = 2cm,
+    right = 2cm,
+    top = 2.4cm,
+    bottom = 2.4cm
+}
+
+\setitemize[1]{
+    itemsep = 7pt,
+    partopsep = 0pt,
+    parsep = \parskip,
+    topsep = 5pt
+}
+
+\title{\vspace{-3em}应用统计：第五次作业}
+\author{Illusionna \quad 2025...........004 \quad 人工智能学院}
+\date{\currenttime,\ \today}
+
+
+
+\begin{document}
+
+\maketitle\vspace*{-1.5em}
+
+
+
+% \section{3 \quad Q-3.7}
+\section{Q-3.7}
+\textit{\textcolor{gray}{某社会学家要研究居住在某乡村的 $10\sim12$ 岁儿童的看电视时长，随机调查了 81 名当地儿童，得到他们每周看电视的平均时长是 20 分钟。假定儿童每天看电视的时长服从正态分布，且已知方差 $\sigma^2=9$。求该地区儿童每天看电视时长的数学期望 $\mu$ 的 99\% 置信区间和 95\% 置信区间。$Z_{0.005} = 2.58, Z_{0.025} = 1.96$}}
+
+根据正态总体均值的置信区间，置信水平为 $1-\alpha$ 的区间为：
+\[ \left[\barline{x}-Z_{\alpha/2}\dfrac{\sigma}{\displaystyle\sqrt{n}},\ \barline{x}+Z_{\alpha/2}\dfrac{\sigma}{\displaystyle\sqrt{n}}\right] \]
+
+由于样本容量 $n=81$，样本均值 $\barline{x}=20$，总体方差 $\sigma^2=9$，因此 99\% 置信区间：
+\[ \alpha=0.01\implies Z_{0.005}=2.58\implies\left[20-2.58\times\dfrac{3}{\displaystyle\sqrt{81}},\ 20+2.58\times\dfrac{3}{\displaystyle\sqrt{81}}\right] \]
+
+即：
+\[ [19.14,\ 20.86] \]
+
+95\% 置信区间：
+\[ \alpha=0.05\implies Z_{0.025}=1.96\implies\left[20-1.96\times\dfrac{3}{\displaystyle\sqrt{81}},\ 20+1.96\times\dfrac{3}{\displaystyle\sqrt{81}}\right] \]
+
+即：
+\[ [19.35,\ 20.65] \]
+
+
+
+\section{Q-3.8}
+\textit{\textcolor{gray}{一家设备公司收到了一大批轴承，在其中随机抽取了 26 根测量其直径，结果有 2 根是 0.998 厘米，4 根是 0.999 厘米，12 根是 1.000 厘米，5 根是 1.001 厘米，3 根是 1.002 厘米。按公司规定，如果样本均值接近 1.000 厘米，且轴承直径的置信度为 99\% 的置信区间长度小于 0.002 时，则接受该批轴承。假设轴承的长度服从正态分布，问这批轴承会被接受吗？$t_{0.005}(25) = 2.7874$}}
+
+由于 $y_i=x_i-1.000$，则 $y_i$ 对应值为 $-0.002,\ -0.001,\ 0,\ 0.001,\ 0.002$，所以：
+\[ \barline{y}=\dfrac{1}{26}\left[-0.002\times2-0.001\times4+0\times12+0.001\times5+0.002\times3\right]=\dfrac{0.003}{26}\approx0.000115\text{cm} \]
+
+因此：
+\[ \barline{x}=1.000+\barline{y}=1.000115\text{cm} \]
+
+样本方差：
+\begin{align*}
+    S^2&=\dfrac{\displaystyle\sum_{i=1}^{n}y_i^2\cdot f_i-n\barline{y}^2}{n-1}
+    \\
+    &=\dfrac{2\times(-0.002)^2+4\times(-0.001)^2+\cdots+3\times(0.002)^2-26\times\left(\dfrac{0.003}{26}\right)^2}{26-1}
+    \\
+    &\approx1.146\times10^{-6}
+\end{align*}
+
+因此样本标准差：
+\[ S=\sqrt{\displaystyle1.146\times10^{-6}}\approx0.00107\text{cm} \]
+
+总体方差未知，总体均值的 99\% 置信区间长度 $L$ 为：
+\[ L=2\times t_{0.005}(n-1)\times\dfrac{S}{\displaystyle\sqrt{n}}=2\times2.7874\times\dfrac{0.00107}{\displaystyle\sqrt{26}}\approx0.00117\text{cm} \]
+
+样本均值 $\barline{x}\approx1.000115\text{cm}$，非常接近 1.000 厘米，且 99\% 置信区间长度 $L\approx0.00117\text{cm}<0.002\text{cm}$，满足规定条件，因此这批轴承会被接受。
+
+
+
+\section{Q-3.12}
+\textit{\textcolor{gray}{设小麦品种 A 生长天数 $X\sim N(\mu_1, \sigma^2)$；小麦品种 B 生长天数 $Y\sim N(\mu_2, \sigma^2)$。从总体 $X$ 中抽取容量为 32 的样本，计算得$\barline{X}=99.2,\ S_1^2=0.84$；从总体 $Y$ 中抽取容量为 32 的样本，计算得 $\barline{Y}=98.9,\ S_2^2=0.77$。求 $\mu_1-\mu_2$ 的 95\% 置信区间。$(t_{0.025}(62) = 2.0000)$}}
+
+两独立正态总体方差未知但相同，均值差的置信区间：
+\[ (\barline{X}-\barline{Y})\pm t_{\alpha/2}(n_1+n_2-2)\cdot S_w\sqrt{\dfrac{1}{n_1}+\dfrac{1}{n_2}} \]
+
+由于 $n_1=n_2=32$，合并方差 $S_w^2$ 可简化为：
+\[ S_w^2=\dfrac{(n_1-1)S_1^2+(n_2-1)S_2^2}{n_1+n_2-2}=\dfrac{S_1^2+S_2^2}{2}=\dfrac{0.84+0.77}{2}=0.805 \]
+
+则：
+\[ S_w=\sqrt{0.805}\approx0.8972 \]
+
+均值差：
+\[ \barline{X}-\barline{Y}=99.2-98.9=0.3 \]
+
+误差界限：
+\begin{align*}
+    E&=t_{0.025}(62)\cdot S_w\sqrt{\dfrac{1}{32}+\dfrac{1}{32}}
+    \\
+    &=2.0000\times\sqrt{0.805}\times\sqrt{\dfrac{1}{16}}
+    \\
+    &\approx2.0000\times0.8972\times0.25
+    \\
+    &=0.4486
+\end{align*}
+
+因为 $\mu_1-\mu_2$ 的 95\% 置信区间为 $0.3\pm0.4486$，即 $[-0.1486,\ 0.7486]$。
+
+
+
+\section{Q-3.13}
+\textit{\textcolor{gray}{设有两个正态总体 $X\sim N(\mu_1, \sigma_1^2),\ Y\sim N(\mu_2, \sigma_2^2)$，参数都未知，分别从两个总体随机抽取样本容量为 $n_1=25$ 和 $n_2=15$ 的两个独立样本，算得 $S_1^2=6.38,\ S_2^2=5.15$，求两个正态总体的方差之比 $\dfrac{\sigma_1^2}{\sigma_2^2}$ 的 90\% 置信区间。$(F_{0.05}(24,14) = 2.35, F_{0.05}(14,24) = 2.13)$}}
+
+两独立正态总体方差比 $\dfrac{\sigma_1^2}{\sigma_2^2}$ 的 $1-\alpha$ 置信区间为：
+\[ \left[\dfrac{S_1^2}{S_2^2}\cdot\dfrac{1}{F_{\alpha/2}(n_1-1,n_2-1)},\ \dfrac{S_1^2}{S_2^2}\cdot F_{\alpha/2}(n_2-1,n_1-1)\right] \]
+
+已知 $\alpha=0.10,\ F_{0.05}(24,14)=2.35,\ F_{0.05}(14,24)=2.13$，则样本方差之比：
+\[ \dfrac{S_1^2}{S_2^2}=\dfrac{6.38}{5.15}\approx1.2388 \]
+
+区间下限：
+\[ \dfrac{S_1^2}{S_2^2}\cdot\dfrac{1}{F_{0.05}(24,14)}=\dfrac{1.2388}{2.35}\approx0.5271 \]
+
+区间上限：
+\[ \dfrac{S_1^2}{S_2^2}\cdot F_{0.05}(14,24)=1.2388\times2.13\approx2.6386 \]
+
+因此，两个正态总体的方差之比 $\dfrac{\sigma_1^2}{\sigma_2^2}$ 的 90\% 置信区间为 $[0.5271,\ 2.6386]$。
+
+
+
+\end{document}
