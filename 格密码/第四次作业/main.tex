@@ -1,0 +1,280 @@
+\documentclass{article}
+
+\usepackage{bm}
+\usepackage{ctex}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{dsfont}
+\usepackage{setspace}
+\usepackage{datetime}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{nicematrix}
+\usepackage{algorithm, algpseudocode}
+\usepackage{amsmath, amssymb, amsfonts, mathrsfs}
+\usepackage[fontsize = 12pt]{fontsize}
+
+\geometry{
+    a4paper,
+    left = 2.1cm,
+    right = 2.1cm,
+    top = 2.5cm,
+    bottom = 2.5cm
+}
+
+\setitemize[1]{
+    itemsep = 7pt,
+    partopsep = 0pt,
+    parsep = \parskip,
+    topsep = 5pt
+}
+
+\renewcommand{\thesubsection}{\alph{subsection})}
+\newcommand{\diff}[2]{\dfrac{\mathrm{d}#1}{\mathrm{d}#2}}
+\newcommand{\diffn}[3]{\dfrac{\mathrm{d}^{#3}#1}{\mathrm{d}#2^{#3}}}
+\newcommand{\piff}[2]{\dfrac{\partial{#1}}{\partial{#2}}}
+\newcommand{\eval}[2]{\left.#1\right|_{#2}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\barline}[1]{\overline{#1\rule{0pt}{1.75ex}}}
+
+\newtheorem{theorem}{定理}
+
+\title{格密码：第四次作业}
+\author{Illusionna \quad 2025.........004 \quad 人工智能学院}
+\date{\currenttime,\ \today}
+
+
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+\begin{spacing}{2}
+    \tableofcontents
+\end{spacing}
+\thispagestyle{empty}
+\clearpage
+\setcounter{page}{1}
+
+
+
+\begin{theorem}
+    标准的傅立叶变换积分定义：对于函数 $f\in L^1(\mathbb{R})$，其傅立叶变换定义为
+    \[ \hat{f}(y) = \int_{-\infty}^{\infty} f(x)\e^{-2\pi i xy} \d x \]
+\end{theorem}
+
+
+
+\noindent\textbf{对任意的 $f,g\in L^1(\mathbb{R}),\ x,y,z\in\mathbb{R}$，以下 8 个命题均成立}
+
+
+
+\section{$\widehat{f+g} = \hat{f} + \hat{g}$ 且对任意 $\alpha \in \mathbb{C}, \widehat{(\alpha f)} = \alpha\hat{f}$}
+由傅立叶变换的积分定义，利用积分的线性性质，有：
+\begin{align*}
+    \widehat{f+g}(y) &= \int_{-\infty}^{\infty} [f(x) + g(x)]\e^{-2\pi i xy} \d x
+    \\
+    &= \int_{-\infty}^{\infty} f(x)\e^{-2\pi i xy} \d x + \int_{-\infty}^{\infty} g(x)\e^{-2\pi i xy} \d x
+    \\
+    &= \hat{f}(y) + \hat{g}(y)
+\end{align*}
+
+对于任意复常数 $\alpha \in \mathbb{C}$，有：
+\begin{align*}
+    \widehat{(\alpha f)}(y) &= \int_{-\infty}^{\infty} \alpha f(x)\e^{-2\pi i xy} \d x
+    \\
+    &= \alpha \int_{-\infty}^{\infty} f(x)\e^{-2\pi i xy} \d x
+    \\
+    &= \alpha\hat{f}(y)
+\end{align*}
+
+
+
+\section{$\bar{f}$ 是由函数 $f$ 取复共轭得到，则 $\widehat{(\bar{f})}(y) = \overline{\hat{f}(-y)}$}
+根据定义，对共轭函数 $\bar{f}(x)$ 进行傅里叶变换：
+\[ \widehat{(\bar{f})}(y) = \int_{-\infty}^{\infty} \overline{f(x)}\e^{-2\pi i xy} \d x \]
+
+因为 $\overline{\e^{2\pi i xy}} = \e^{-2\pi i xy}$，可得：
+\begin{align*}
+    \widehat{(\bar{f})}(y) &= \int_{-\infty}^{\infty} \overline{f(x)\e^{2\pi i xy}} \d x
+    \\
+    &= \overline{\int_{-\infty}^{\infty} f(x)\e^{-2\pi i x(-y)} \d x}
+    \\
+    &= \overline{\hat{f}(-y)}
+\end{align*}
+
+
+
+\section{若 $h(x) := f(x+z)$ 则 $\hat{h}(y) = \hat{f}(y) \cdot \e^{2\pi izy}$}
+根据定义对时移函数进行变换：
+\[ \hat{h}(y) = \int_{-\infty}^{\infty} f(x+z)\e^{-2\pi i xy} \d x \]
+
+令 $t = x+z$，则 $x = t-z$ 且 $\d x = \d t$，由于积分区间在实数轴上无穷，平移不改变积分限，代入得：
+\begin{align*}
+    \hat{h}(y) &= \int_{-\infty}^{\infty} f(t)\e^{-2\pi i (t-z)y} \d t
+    \\
+    &= \e^{2\pi i zy} \int_{-\infty}^{\infty} f(t)\e^{-2\pi i ty} \d t
+    \\
+    &= \e^{2\pi i zy} \cdot \hat{f}(y)
+\end{align*}
+
+
+
+\section{若 $h(x) := \e^{2\pi izx}f(x)$ 则 $\hat{h}(y) = \hat{f}(y - z)$}
+根据定义进行频移计算：
+\begin{align*}
+    \hat{h}(y) &= \int_{-\infty}^{\infty} \left[ \e^{2\pi i zx}f(x) \right] \e^{-2\pi i xy} \d x
+    \\
+    &= \int_{-\infty}^{\infty} f(x)\e^{-2\pi i x(y-z)} \d x
+\end{align*}
+
+记 $y-z$ 为新的频率变量，则：
+\[ \hat{h}(y) = \hat{f}(y-z) \]
+
+
+
+\section{$|\hat{f}(y)| \leqslant \displaystyle\int_{-\infty}^{\infty} |f(x)|\d x$}
+积分的绝对值不等式：
+\[ \left|\int F(x)\d x\right| \leqslant \int |F(x)|\d x \]
+
+则对傅里叶变换的积分等式两边取绝对值：
+\begin{align*}
+    |\hat{f}(y)| &= \left| \int_{-\infty}^{\infty} f(x)\e^{-2\pi i xy} \d x \right|
+    \\
+    &\leqslant \int_{-\infty}^{\infty} \left| f(x)\e^{-2\pi i xy} \right| \d x
+\end{align*}
+
+而 $\forall x,y\in\mathbb{R}$，有欧拉公式性质 $|\e^{-2\pi i xy}| = 1$，因此：
+\[ \int_{-\infty}^{\infty} \left| f(x)\e^{-2\pi i xy} \right| \d x = \int_{-\infty}^{\infty} |f(x)|\cdot 1 \d x = \int_{-\infty}^{\infty} |f(x)| \d x \]
+
+即：
+\[ |\hat{f}(y)| \leqslant \int_{-\infty}^{\infty} |f(x)|\d x \]
+
+
+
+\section{$\forall \lambda > 0$，若 $h(x) := \lambda f(\lambda x)$ 则 $\hat{h}(y) = \hat{f}\left(\dfrac{y}{\lambda}\right)$}
+根据定义：
+\[ \hat{h}(y) = \int_{-\infty}^{\infty} \lambda f(\lambda x)\e^{-2\pi i xy} \d x \]
+
+令 $t = \lambda x$，因为缩放因子 $\lambda > 0$，所以积分的上下限方向不发生改变，且 $\d x = \dfrac{1}{\lambda} \d t$，代入积分式：
+\begin{align*}
+    \hat{h}(y) &= \int_{-\infty}^{\infty} \lambda f(t)\e^{-2\pi i \left(\tfrac{t}{\lambda}\right)y} \cdot \dfrac{1}{\lambda} \d t
+    \\
+    &= \int_{-\infty}^{\infty} f(t)\e^{-2\pi i t \left(\tfrac{y}{\lambda}\right)} \d t
+    \\
+    &= \hat{f}\left(\dfrac{y}{\lambda}\right)
+\end{align*}
+
+
+
+\section{$\widehat{f * g} = \hat{f} \cdot \hat{g}$ 且 $\widehat{f \cdot g} = \hat{f} * \hat{g}$}
+\paragraph*{(a) 证明 $\widehat{f * g} = \hat{f} \cdot \hat{g}$}~{\\[-7pt]}
+
+两函数的卷积：
+\[ (f * g)(x) = \int_{-\infty}^{\infty} f(t)g(x-t) \d t \]
+
+对其进行傅立叶变换：
+\[ \widehat{f * g}(y) = \int_{-\infty}^{\infty} \left[ \int_{-\infty}^{\infty} f(t)g(x-t) \d t \right] \e^{-2\pi i xy} \d x \]
+
+由 Fubini 定理交换积分顺序：
+\[ \widehat{f * g}(y) = \int_{-\infty}^{\infty} f(t) \left[ \int_{-\infty}^{\infty} g(x-t)\e^{-2\pi i xy} \d x \right] \d t \]
+
+令 $u = x - t$，则 $x = u + t$，$\d x = \d u$：
+\begin{align*}
+    \int_{-\infty}^{\infty} g(u)\e^{-2\pi i (u+t)y} \d u &= \e^{-2\pi i ty} \int_{-\infty}^{\infty} g(u)\e^{-2\pi i uy} \d u
+    \\
+    &= \e^{-2\pi i ty} \hat{g}(y)
+\end{align*}
+
+则：
+\begin{align*}
+    \widehat{f * g}(y) &= \int_{-\infty}^{\infty} f(t)\e^{-2\pi i ty} \hat{g}(y) \d t
+    \\
+    &= \hat{g}(y) \int_{-\infty}^{\infty} f(t)\e^{-2\pi i ty} \d t
+    \\
+    &= \hat{f}(y) \cdot \hat{g}(y)
+\end{align*}
+
+
+
+\paragraph*{(b) 证明 $\widehat{f \cdot g} = \hat{f} * \hat{g}$}~{\\[-7pt]}
+
+根据傅里叶逆变换定理：
+\[ f(x) = \int_{-\infty}^{\infty} \hat{f}(u)\e^{2\pi i xu} \d u \]
+
+对 $f(x)g(x)$ 进行傅里叶变换：
+\begin{align*}
+    \widehat{f \cdot g}(y) &= \int_{-\infty}^{\infty} f(x)g(x)\e^{-2\pi i xy} \d x
+    \\
+    &= \int_{-\infty}^{\infty} \left[ \int_{-\infty}^{\infty} \hat{f}(u)\e^{2\pi i xu} \d u \right] g(x)\e^{-2\pi i xy} \d x
+\end{align*}
+
+交换积分顺序可得：
+\[ \widehat{f \cdot g}(y) = \int_{-\infty}^{\infty} \hat{f}(u) \left[ \int_{-\infty}^{\infty} g(x)\e^{-2\pi i x(y-u)} \d x \right] \d u \]
+
+则：
+\begin{align*}
+    \widehat{f \cdot g}(y) &= \int_{-\infty}^{\infty} \hat{f}(u) \hat{g}(y-u) \d u
+    \\
+    &= (\hat{f} * \hat{g})(y)
+\end{align*}
+
+
+
+\section{若 $h(x) = f'(x) \in L^1(\mathbb{R})$ 则 $\hat{h}(y) = 2\pi iy\hat{f}(y)$}
+对导数进行傅里叶变换，并运用分部积分：
+\begin{align*}
+    \hat{h}(y) &= \int_{-\infty}^{\infty} f'(x)\e^{-2\pi i xy} \d x
+    \\
+    &= \eval{\left[ f(x)\e^{-2\pi i xy} \right]}{-\infty}^{\infty} - \int_{-\infty}^{\infty} f(x) \cdot \frac{\d}{\d x}\left( \e^{-2\pi i xy} \right) \d x
+\end{align*}
+
+由于 $f \in L^1(\mathbb{R})$ 且 $f' \in L^1(\mathbb{R})$，这隐含了在边界处：
+\[ \lim\limits_{|x| \to \infty} f(x) = 0 \]
+
+因此第一项的边界值为零：
+\[ \eval{\left[ f(x)\e^{-2\pi i xy} \right]}{-\infty}^{\infty} = 0 \]
+
+处理第二项的微积分：
+\begin{align*}
+    \hat{h}(y) &= 0 - \int_{-\infty}^{\infty} f(x) \left( -2\pi i y\e^{-2\pi i xy} \right) \d x
+    \\
+    &= 2\pi i y \int_{-\infty}^{\infty} f(x)\e^{-2\pi i xy} \d x
+    \\
+    &= 2\pi i y\hat{f}(y)
+\end{align*}
+
+
+\section{设 $\bm{B}$ 是非奇异的方阵，试计算 $\hat{f}_{\bm{B}}(\vec{\bm{y}})$ 其中 $f_{\bm{B}}(\vec{\bm{x}}) = f(\bm{B}\vec{\bm{x}})$}
+视 $\vec{\bm{x}},\vec{\bm{y}}$ 为列向量，对于多维函数 $f(\vec{\bm{x}})$，其标准傅立叶变换为：
+\[ \hat{f}(\vec{\bm{y}}) = \int_{\mathbb{R}^n} f(\vec{\bm{x}}) \e^{-2\pi i \vec{\bm{x}}^{\top}\vec{\bm{y}}} \d \vec{\bm{x}} \]
+
+由于 $f_{\bm{B}}(\vec{\bm{x}}) = f(\bm{B}\vec{\bm{x}})$ 的傅立叶变换为：
+\[ \hat{f}_{\bm{B}}(\vec{\bm{y}}) = \int_{\mathbb{R}^n} f(\bm{B}\vec{\bm{x}}) \e^{-2\pi i \vec{\bm{x}}^{\top}\vec{\bm{y}}} \d \vec{\bm{x}} \]
+
+令 $\vec{\bm{u}} = \bm{B}\vec{\bm{x}}$，因为方阵 $\bm{B}$ 是非奇异的，即 $\det(\bm{B}) \neq 0$，矩阵可逆，所以可以解得：
+\[ \vec{\bm{x}} = \bm{B}^{-1}\vec{\bm{u}} \]
+
+多维积分换元中，积分微元 $\d \vec{\bm{x}}$ 和 $\d \vec{\bm{u}}$ 相差一个雅可比矩阵行列式的绝对值，而变换 $\vec{\bm{x}} = \bm{B}^{-1}\vec{\bm{u}}$ 的雅可比行列式即为 $\det(\bm{B}^{-1})$，因此：
+\[ \d\vec{\bm{x}} = \left| \det(\bm{B}^{-1}) \right| \d\vec{\bm{u}} = \dfrac{1}{|\det(\bm{B})|} \d\vec{\bm{u}} \]
+
+将 $\vec{\bm{x}} = \bm{B}^{-1}\vec{\bm{u}}$ 代入，并利用矩阵转置的性质：
+\[ \vec{\bm{x}}^{\top}\vec{\bm{y}} = (\bm{B}^{-1}\vec{\bm{u}})^{\top}\vec{\bm{y}} = \vec{\bm{u}}^{\top} (\bm{B}^{-1})^{\top}\vec{\bm{y}} = \vec{\bm{u}}^{\top} (\bm{B}^{\top})^{-1} \vec{\bm{y}} \]
+
+则：
+\begin{align*}
+    \hat{f}_{\bm{B}}(\vec{\bm{y}}) &= \int_{\mathbb{R}^n} f(\vec{\bm{u}}) \e^{-2\pi i \vec{\bm{x}}^{\top} (\bm{B}^{\top})^{-1} \vec{\bm{y}}} \dfrac{1}{|\det(\bm{B})|} \d\vec{\bm{u}}
+    \\[7pt]
+    &= \dfrac{1}{|\det(\bm{B})|} \int_{\mathbb{R}^n} f(\vec{\bm{u}}) \e^{-2\pi i \vec{\bm{u}}^{\top} \left[(\bm{B}^{\top})^{-1}\vec{\bm{y}}\right]} \d\vec{\bm{u}}
+\end{align*}
+
+被积函数部分正是原函数 $f$ 在频率变量为 $(\bm{B}^{\top})^{-1}\vec{\bm{y}}$ 时的傅立叶变换定义式，可直接得出结论：
+\[ \hat{f}_{\bm{B}}(\vec{\bm{y}}) = \dfrac{1}{|\det(\bm{B})|} \hat{f}\left[(\bm{B}^{\top})^{-1}\vec{\bm{y}}\right] \]
+
+
+
+\end{document}
