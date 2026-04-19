@@ -1,0 +1,137 @@
+\documentclass{article}
+
+\usepackage{bm}
+\usepackage{ctex}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{dsfont}
+\usepackage{setspace}
+\usepackage{datetime}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{nicematrix}
+\usepackage{algorithm, algpseudocode}
+\usepackage{amsmath, amssymb, amsfonts, mathrsfs}
+\usepackage[fontsize = 12pt]{fontsize}
+
+\geometry{
+    a4paper,
+    left = 1.25in,
+    right = 1.25in,
+    top = 1in,
+    bottom = 1in
+}
+
+\setitemize[1]{
+    itemsep = 7pt,
+    partopsep = 0pt,
+    parsep = \parskip,
+    topsep = 5pt
+}
+
+\renewcommand{\thesubsection}{\alph{subsection})}
+\newcommand{\diff}[2]{\dfrac{\mathrm{d}#1}{\mathrm{d}#2}}
+\newcommand{\diffn}[3]{\dfrac{\mathrm{d}^{#3}#1}{\mathrm{d}#2^{#3}}}
+\newcommand{\piff}[2]{\dfrac{\partial{#1}}{\partial{#2}}}
+\newcommand{\eval}[2]{\left.#1\right|_{#2}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\barline}[1]{\overline{#1\rule{0pt}{1.75ex}}}
+
+\newtheorem{theorem}{定理}
+
+\title{格密码：第五次作业}
+\author{Illusionna \quad 2025.........004 \quad 人工智能学院}
+\date{\currenttime,\ \today}
+
+
+
+\begin{document}
+
+\maketitle
+% \thispagestyle{empty}
+% \begin{spacing}{2}
+%     \tableofcontents
+% \end{spacing}
+% \thispagestyle{empty}
+% \clearpage
+% \setcounter{page}{1}
+
+
+
+\paragraph*{证明：设 $\Lambda$ 是 $n$ 维满秩格，对于其中任意 $n$ 个线性无关向量 $b_1,\dots,b_n$，若 $\varepsilon = n^{-\log n}$，则 $\eta_\varepsilon(\Lambda) \leqslant \log n \cdot \max \|\tilde{b}_i\|$}~{\\}
+
+已知对于任意格的基 $B=\{b_1,b_2,\ldots,b_n\}$，其平滑参数 $\eta_{\varepsilon}$ 满足标准上界：
+\[ \eta_{\varepsilon}\leqslant\sqrt{\displaystyle\dfrac{\ln\left[2n\left(1+\dfrac{1}{\varepsilon}\right)\right]}{\pi}}\cdot\max_{1 \leqslant i \leqslant n} \|\tilde{b}_i\| \]
+
+向量组 $b_1,b_2,\ldots,b_n$ 是 $\Lambda$ 中的 $n$ 个线性无关向量，它们不一定是 $\Lambda$ 的基，但它们生成了 $\Lambda$ 的一个满秩子格，记作：
+\[ \Lambda'\subseteq\Lambda \]
+
+因此 $b_1,b_2,\ldots,b_n$ 是子格 $\Lambda'$ 的基，根据对偶格性质，子格包含于原格，它们的对偶格满足反向包含关系，即：
+\[ \Lambda^{*}\subseteq(\Lambda')^{*} \]
+
+平滑参数 $\eta_\varepsilon(\Lambda)$ 的定义为：
+\[ \eta_\varepsilon(\Lambda)=\mathop{\arg\min}\limits_{s>0}\left\{\rho_{1/s}(\Lambda^* \setminus \{0\}) \leqslant \varepsilon\right\} \]
+
+由于 $\Lambda^{*}\subseteq(\Lambda')^{*}$，对于任意 $s>0$，离散高斯测度都有如下不等式：
+\[ \rho_{1/s}(\Lambda^* \setminus \{0\}) \leqslant \rho_{1/s}((\Lambda')^* \setminus \{0\}) \]
+
+这意味着要使高斯测度不超过 $\varepsilon$，$\Lambda$ 所需的参数 $s$ 不会超过 $\Lambda'$ 所需的 $s$，因此有：
+\[ \eta_\varepsilon(\Lambda) \leqslant \eta_\varepsilon(\Lambda') \]
+
+将子格 $\Lambda'$ 及其基 $b_1,b_2, \ldots, b_n$ 代入标准上界公式，可得：
+\[ \eta_\varepsilon(\Lambda) \leqslant \eta_\varepsilon(\Lambda') \leqslant \sqrt{\dfrac{\ln(2n(1+1/\varepsilon))}{\pi}} \max_{1 \leqslant i \leqslant n} \|\tilde{b}_i\| \]
+
+题目给定 $\varepsilon = n^{-\log n}$，即 $\varepsilon = n^{-\log_2 n}$，则 $1/\varepsilon = n^{\log_2 n} = 2^{(\log_2 n)^2}$，对根号下的系数部分进行放缩分析：
+\begin{align*}
+    \ln(2n(1+1/\varepsilon)) &= \ln(2n) + \ln(1 + n^{\log_2 n})
+    \\
+    &\approx \ln(2n) + \ln(n^{\log_2 n})
+    \\
+    &= \ln 2 + \ln n + \log_2 n \cdot \ln n
+    \\
+    &= \ln 2 + \ln n + \frac{(\ln n)^2}{\ln 2}
+\end{align*}
+
+需要证明该系数在开平方后不超过 $\log_2 n$，即证：
+\[ \frac{1}{\pi} \left[ \ln 2 + \ln n + \frac{(\ln n)^2}{\ln 2} \right] \leqslant (\log_2 n)^2 = \frac{(\ln n)^2}{(\ln 2)^2} \]
+由于 $\pi \approx 3.14$，$\ln 2 \approx 0.693$，不等式右侧的二次项系数 $\dfrac{1}{(\ln 2)^2} \approx 2.08$，而左侧的二次项系数 $\dfrac{1}{\pi \ln 2} \approx 0.46$，对于充分大的 $n$，低次项的影响可以忽略，显然有 $0.46 (\ln n)^2 \leqslant 2.08 (\ln n)^2$ 成立。
+
+因此，放缩后得出结论：
+\[ \sqrt{\frac{\ln(2n(1+1/\varepsilon))}{\pi}} \leqslant \log n \]
+代入原不等式即证：
+\[ \eta_\varepsilon(\Lambda) \leqslant \log n \cdot \max \|\tilde{b}_i\| \]
+
+
+
+\paragraph*{假设我们有一个可以解决 $n$ 维满秩格上 SIVP$_\gamma$ 问题的 Oracle，试利用这个 Oracle 构造一个解决 $n$ 维满秩格上优化型 SVP$_{n\gamma}$ 问题的算法}~{\\}
+
+\textbf{基于对偶格与转移定理的算法构造}
+
+要在多项式时间内利用 SIVP$_\gamma$ Oracle 寻找格 $\Lambda$ 中的一个短向量，使得其长度不超过 $n\gamma \cdot \lambda_1(\Lambda)$，可利用对偶格的性质以及 Banaszczyk 转移定理进行构造。
+
+\begin{enumerate}
+    \item \textbf{计算对偶格基：} 给定 $n$ 维满秩格 $\Lambda$ 的基 $\bm{B}$，计算其对偶格 $\Lambda^*$ 的基 $\bm{D} = (\bm{B}^{-1})^\top$。
+    
+    \item \textbf{调用 Oracle：} 将对偶格基 $\bm{D}$ 作为输入，调用 SIVP$_\gamma$ 的 Oracle，Oracle 将返回 $\Lambda^*$ 中的 $n$ 个线性无关向量 $w_1, w_2, \ldots, w_n \in \Lambda^*$，且满足：
+    \[ \max_{1 \leqslant i \leqslant n} \|w_i\| \leqslant \gamma \cdot \lambda_n(\Lambda^*) \]
+    
+    \item \textbf{应用转移定理放缩：} 根据 Banaszczyk 转移定理，对于任意 $n$ 维格及其对偶格，其连续极小值满足 $\lambda_1(\Lambda) \cdot \lambda_n(\Lambda^*) \leqslant n$，因此我们可以得到对偶格中向量长度的上界与原格最短向量的关系：
+    \[ \max_{1 \leqslant i \leqslant n} \|w_i\| \leqslant \gamma \cdot \frac{n}{\lambda_1(\Lambda)} \]
+    
+    \item \textbf{界定内积空间寻找短向量：} 设原格 $\Lambda$ 中真正的最短非零向量为 $v_{\text{opt}}$，则 $\|v_{\text{opt}}\| = \lambda_1(\Lambda)$，由于 $v_{\text{opt}} \in \Lambda$ 且 $w_i \in \Lambda^*$，根据格与对偶格的定义，它们的内积必然为整数，即 $\langle v_{\text{opt}}, w_i \rangle \in \mathbb{Z}$。
+    同时，由柯西-施瓦茨不等式可以给出内积的绝对值上界：
+    \[ |\langle v_{\text{opt}}, w_i \rangle| \leqslant \|v_{\text{opt}}\| \cdot \|w_i\| \leqslant \lambda_1(\Lambda) \cdot \dfrac{n\gamma}{\lambda_1(\Lambda)} = n\gamma \]
+    这意味着，原格中的最短向量与 Oracle 返回的 $w_i$ 的内积是一个绝对值不超过 $n\gamma$ 的整数。
+    
+    \item \textbf{向量还原：} 由于 $w_1, \ldots, w_n$ 构成了 $\mathbb{R}^n$ 的一组基，任意原格中的目标短向量 $v$ 都可以被这组基的内积特征完全唯一确定，可以将寻找 $v \in \Lambda$ 转化为一个有界的整数搜索问题，或者通过将 $w_i$ 转换为正交空间配合 Babai 最近平面算法来提取原格中的短向量 $v$，由于内积被严格界定在 $n\gamma$ 范围内，提取出的非零向量 $v$ 必然满足：
+    \[ \|v\| \leqslant n\gamma \cdot \lambda_1(\Lambda) \]
+    从而成功解决了优化型 SVP$_{n\gamma}$ 问题。
+\end{enumerate}
+
+
+
+\end{document}
