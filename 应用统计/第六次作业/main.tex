@@ -1,0 +1,128 @@
+\documentclass{article}
+
+\usepackage{bm}
+\usepackage{ctex}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{setspace}
+\usepackage{datetime}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\usepackage{nicematrix}
+\usepackage{amsmath, amssymb, amsfonts, mathrsfs}
+\usepackage[fontsize = 12pt]{fontsize}
+
+\renewcommand{\thesubsection}{(\alph{subsection})}
+\newcommand{\diff}[2]{\dfrac{\mathrm{d}#1}{\mathrm{d}#2}}
+\newcommand{\diffn}[3]{\dfrac{\mathrm{d}^{#3}#1}{\mathrm{d}#2^{#3}}}
+\newcommand{\piff}[2]{\dfrac{\partial{#1}}{\partial{#2}}}
+\newcommand{\eval}[2]{\left.#1\right|_{#2}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\barline}[1]{\overline{#1\rule{0pt}{1.5ex}}}
+
+\geometry{
+    a4paper,
+    left = 2cm,
+    right = 2cm,
+    top = 2.4cm,
+    bottom = 2.4cm
+}
+
+\setitemize[1]{
+    itemsep = 7pt,
+    partopsep = 0pt,
+    parsep = \parskip,
+    topsep = 5pt
+}
+
+\title{\vspace{-3em}应用统计：第六次作业}
+\author{Illusionna \quad 2025..........004 \quad 人工智能学院}
+\date{\currenttime,\ \today}
+
+
+
+\begin{document}
+
+\maketitle\vspace*{-1.5em}
+
+
+
+\section{Q-4.4}
+\textit{\textcolor{gray}{某包装车间每天开工时，须检验自动包装机工作是否正常。设该车间的包装机所包装的产品的重量服从正态分布 $X\sim N(100, 1.5^2)$，在正常情况下包装出的产品的重量期望值应为 $\mu = 100$。某天抽取了 9 件包装产品，得 $X$ 的观测值为：99.3, 98.7, 100.5, 101.2, 98.3, 99.7, 99.5, 102.1, 100.5。问在显著性水平 $\alpha=0.05$ 下，包装机这天的工作是否正常？$(Z_{0.025} = 1.96)$}}
+
+总体方差已知 $\sigma^2=1.5^2$，采用 $Z$ 检验，提出双侧假设：
+\[ H_0:\ \mu=\mu_0=100 \quad\text{vs}\quad H_1:\ \mu\neq\mu_0 \]
+
+检验统计量及其拒绝域为：
+\[ Z=\dfrac{\barline{X}-\mu_0}{\displaystyle\sigma/\sqrt{n}}\sim N(0,1),\quad \text{拒绝域}:\ |Z|\geqslant Z_{\alpha/2}=Z_{0.025}=1.96 \]
+
+由样本计算样本均值：
+\begin{align*}
+    \barline{x}&=\dfrac{1}{9}\left(99.3+98.7+100.5+101.2+98.3+99.7+99.5+102.1+100.5\right)
+    \\[5pt]
+    &=\dfrac{899.8}{9}\approx99.9778
+\end{align*}
+
+代入检验统计量：
+\[ Z=\dfrac{\barline{x}-\mu_0}{\displaystyle\sigma/\sqrt{n}}=\dfrac{99.9778-100}{\displaystyle 1.5/\sqrt{9}}=\dfrac{-0.0222}{0.5}\approx-0.0444 \]
+
+由于 $|Z|\approx0.0444<1.96=Z_{0.025}$，落在接受域内，故在显著性水平 $\alpha=0.05$ 下接受 $H_0$，认为包装机这天的工作正常。
+
+
+
+\section{Q-4.8}
+\textit{\textcolor{gray}{某厂进行了一项工艺改革。现加工 25 个零件，测量其直径，算得样本方差 $S^2=0.026^2$。设零件直径服从正态分布，改革前的方差为 0.0004。为了考察这项工艺改革是否成功，提出如下假设检验问题：$H_0:\ \sigma^2\leqslant0.0004,\ H_1:\ \sigma^2>0.0004$。请在显著性水平 $\alpha=0.05$ 下，完成该假设检验。$(\chi^2_{0.05}(24)=36.42)$}}
+
+总体均值未知，对正态总体方差进行单侧检验，采用 $\chi^2$ 检验，其检验统计量及拒绝域为：
+\[ \chi^2=\dfrac{(n-1)S^2}{\sigma_0^2}\sim\chi^2(n-1),\quad \text{拒绝域}:\ \chi^2\geqslant\chi^2_{\alpha}(n-1)=\chi^2_{0.05}(24)=36.42 \]
+
+已知 $n=25$，$S^2=0.026^2=0.000676$，$\sigma_0^2=0.0004$，代入：
+\[ \chi^2=\dfrac{(n-1)S^2}{\sigma_0^2}=\dfrac{24\times0.000676}{0.0004}=\dfrac{0.016224}{0.0004}=40.56 \]
+
+由于 $\chi^2=40.56>36.42=\chi^2_{0.05}(24)$，落入拒绝域，故在显著性水平 $\alpha=0.05$ 下拒绝 $H_0$，接受 $H_1$，认为改革后的方差显著大于改革前，这项工艺改革并未成功。
+
+
+
+\section{Q-4.9}
+\textit{\textcolor{gray}{某林场采用两种育苗方法做树苗试验。已知苗高服从正态分布。在两组育苗试验中，已知苗高的标准差分别为 $\sigma_1=3$，$\sigma_2=4$，各取 100 株苗作为样本，求出苗高的平均值分别为 $\barline{x}=59$ 厘米，$\barline{y}=49$ 厘米。取显著性水平 $\alpha=0.05$，试判断两种育苗方法对树苗平均高是否有显著影响。$(Z_{0.025}=1.96)$}}
+
+两独立正态总体方差均已知，采用双侧 $Z$ 检验，提出假设：
+\[ H_0:\ \mu_1=\mu_2 \quad\text{vs}\quad H_1:\ \mu_1\neq\mu_2 \]
+
+检验统计量及其拒绝域为：
+\[ Z=\dfrac{\barline{X}-\barline{Y}}{\displaystyle\sqrt{\dfrac{\sigma_1^2}{n_1}+\dfrac{\sigma_2^2}{n_2}}}\sim N(0,1),\quad \text{拒绝域}:\ |Z|\geqslant Z_{\alpha/2}=Z_{0.025}=1.96 \]
+
+已知 $\sigma_1=3,\ \sigma_2=4,\ n_1=n_2=100,\ \barline{x}=59,\ \barline{y}=49$，代入：
+\[ Z=\dfrac{59-49}{\displaystyle\sqrt{\dfrac{9}{100}+\dfrac{16}{100}}}=\dfrac{10}{\displaystyle\sqrt{0.25}}=\dfrac{10}{0.5}=20 \]
+
+由于 $|Z|=20>1.96=Z_{0.025}$，落入拒绝域，故在显著性水平 $\alpha=0.05$ 下拒绝 $H_0$，认为两种育苗方法对树苗平均高有显著影响。
+
+
+
+\section{Q-4.12}
+\textit{\textcolor{gray}{某份杂志声称其读者群中至少有 80\% 为女性。为验证这一说法是否属实，某研究机构从经常阅读该刊的读者中随机选取了 200 名，发现有 146 人是女性读者。请分别取显著性水平 $\alpha=0.05$ 和 $\alpha=0.005$，检验该杂志读者群中女性的比例是否不少于 80\%。$(Z_{0.05}=1.64,\ Z_{0.005}=2.58)$}}
+
+设女性读者的真实比例为 $p$，建立单侧检验假设：
+\[ H_0:\ p\geqslant p_0=0.80 \quad\text{vs}\quad H_1:\ p<0.80 \]
+
+大样本下，采用单侧 $Z$ 检验，检验统计量及拒绝域为：
+\[ Z=\dfrac{\hat{p}-p_0}{\displaystyle\sqrt{\dfrac{p_0(1-p_0)}{n}}}\sim N(0,1),\quad \text{拒绝域}:\ Z\leqslant-Z_{\alpha} \]
+
+已知 $n=200$，女性读者数为 146，样本比例：
+\[ \hat{p}=\dfrac{146}{200}=0.73 \]
+
+代入计算检验统计量：
+\[ Z=\dfrac{0.73-0.80}{\displaystyle\sqrt{\dfrac{0.80\times0.20}{200}}}=\dfrac{-0.07}{\displaystyle\sqrt{0.0008}}=\dfrac{-0.07}{0.02828}\approx-2.475 \]
+
+\textbf{当 $\alpha=0.05$ 时}，拒绝域为 $Z\leqslant-Z_{0.05}=-1.64$。由于 $Z\approx-2.475<-1.64$，落入拒绝域，故拒绝 $H_0$，即在 $\alpha=0.05$ 显著性水平下，不能认为女性读者比例不少于 80\%，杂志的说法不成立。
+
+\textbf{当 $\alpha=0.005$ 时}，拒绝域为 $Z\leqslant-Z_{0.005}=-2.58$。由于 $Z\approx-2.475>-2.58$，未落入拒绝域，故接受 $H_0$，即在 $\alpha=0.005$ 显著性水平下，可以认为女性读者比例不少于 80\%，杂志的说法成立。
+
+
+
+\end{document}
