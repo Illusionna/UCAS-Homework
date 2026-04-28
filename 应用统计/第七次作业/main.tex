@@ -1,0 +1,171 @@
+\documentclass{article}
+
+\usepackage{bm}
+\usepackage{ctex}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{setspace}
+\usepackage{datetime}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\usepackage{nicematrix}
+\usepackage{amsmath, amssymb, amsfonts, mathrsfs}
+\usepackage[fontsize = 12pt]{fontsize}
+
+\renewcommand{\thesubsection}{(\alph{subsection})}
+\newcommand{\diff}[2]{\dfrac{\mathrm{d}#1}{\mathrm{d}#2}}
+\newcommand{\diffn}[3]{\dfrac{\mathrm{d}^{#3}#1}{\mathrm{d}#2^{#3}}}
+\newcommand{\piff}[2]{\dfrac{\partial{#1}}{\partial{#2}}}
+\newcommand{\eval}[2]{\left.#1\right|_{#2}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\barline}[1]{\overline{#1\rule{0pt}{1.5ex}}}
+
+\geometry{
+    a4paper,
+    left = 1.25in,
+    right = 1.25in,
+    top = 1in,
+    bottom = 1in
+}
+
+\setitemize[1]{
+    itemsep = 7pt,
+    partopsep = 0pt,
+    parsep = \parskip,
+    topsep = 5pt
+}
+
+\title{\vspace*{-3em}应用统计：第七次作业}
+\author{Illusionna \quad 2025............004 \quad 人工智能学院}
+\date{\currenttime,\ \today}
+
+
+
+\begin{document}
+
+\maketitle
+
+\section{Q-5.2}
+\textit{\textcolor{gray}{某研究人员为了研究一个交易市场上某种商品的价格 $x$ 与供给量 $y$ 间的相关关系，收集了某段时期内该商品的价格与供给量的观察数据如下表。请帮他求出供给量 $y$ 关于价格 $x$ 的回归直线。}
+\begin{center}
+    \color{gray}{
+        \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
+            \hline
+            价格 $x$（百元） & 2 & 3 & 4 & 5 & 6 & 8 & 10 & 12 & 14 & 16 \\
+            \hline
+            供给量 $y$（吨） & 15 & 20 & 25 & 30 & 35 & 45 & 60 & 80 & 80 & 110 \\
+            \hline
+        \end{tabular}
+    }
+\end{center}
+}
+
+设回归直线为 $\hat{y}=\hat{a}+\hat{b}x$，由最小二乘法：
+\[ \hat{b}=\dfrac{S_{xy}}{S_{xx}},\quad \hat{a}=\barline{y}-\hat{b}\,\barline{x},\quad S_{xx}=\sum_{i=1}^{n}x_i^2-n\barline{x}^2,\quad S_{xy}=\sum_{i=1}^{n}x_iy_i-n\barline{x}\,\barline{y} \]
+
+由 $n=10$，计算各汇总量：
+\[ \sum_{i=1}^{10} x_i=80,\quad \sum_{i=1}^{10} y_i=500,\quad \barline{x}=8,\quad \barline{y}=50,\quad \sum_{i=1}^{10} x_i^2=850,\quad \sum_{i=1}^{10} x_iy_i=5350 \]
+
+故：
+\[ S_{xx}=850-10\times 8^2=210,\quad S_{xy}=5350-10\times 8\times 50=1350 \]
+
+则：
+\[ \hat{b}=\dfrac{1350}{210}=\dfrac{45}{7}\approx 6.4286,\quad \hat{a}=50-\dfrac{45}{7}\times 8=-\dfrac{10}{7}\approx -1.4286 \]
+
+故所求回归直线为：
+\[ \hat{y}\approx6.4286x-1.4286 \]
+
+
+
+\section{Q-5.3}
+\textit{\textcolor{gray}{英国遗传学家 Francis Galton 调查人的先代身高与后代身高的关系，他收集了父亲身高与儿子身高的数据，其中 10 对数据如下：}
+\begin{center}
+    \color{gray}{
+        \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
+            \hline
+            父亲 $x_i$ & 60 & 62 & 64 & 65 & 66 & 67 & 68 & 70 & 72 & 74 \\
+            \hline
+            儿子 $y_i$ & 63.6 & 65.2 & 66 & 65.5 & 66.9 & 67.1 & 67.4 & 68.3 & 70.1 & 70 \\
+            \hline
+        \end{tabular}
+    }
+\end{center}
+\textcolor{gray}{其中身高数据单位是英寸。求 $y$ 关于 $x$ 的线性回归方程。在该项调查中，Galton 认为儿子身高会受到父亲身高的影响，且父亲身高偏离平均值的程度会在儿子辈缩小，请分析该结论是否可信。$\alpha=0.05,\ F_{0.05}(1,8)=5.32$。}
+}
+
+\paragraph*{回归方程}~{}
+
+由 $n=10$，计算汇总量：
+\[ \sum_{i=1}^{10} x_i=668,\ \sum_{i=1}^{10} y_i=670.1,\ \barline{x}=66.8,\ \barline{y}=67.01 \]
+\[ \sum_{i=1}^{10} x_i^2=44794,\ \sum_{i=1}^{10} y_i^2=44941.93,\ \sum_{i=1}^{10} x_iy_i=44842.4 \]
+\[ S_{xx}=44794-10\times 66.8^2=171.6,\quad S_{yy}=44941.93-10\times 67.01^2=38.529 \]
+\[ S_{xy}=44842.4-10\times 66.8\times 67.01=79.72 \]
+
+则：
+\[ \hat{b}=\dfrac{S_{xy}}{S_{xx}}=\dfrac{79.72}{171.6}\approx 0.4646,\quad \hat{a}=\barline{y}-\hat{b}\,\barline{x}=67.01-0.4646\times 66.8\approx 35.977 \]
+
+因此：
+\[ \hat{y}\approx0.4646x+35.977 \]
+
+\paragraph*{显著性检验}~{}
+
+假设 $H_0:\ \beta=0$ vs $H_1:\ \beta\neq 0$，构造 $F$ 统计量：
+\[ F=\dfrac{SS_R/1}{SS_E/(n-2)}\sim F(1,n-2),\quad \text{拒绝域}:\ F\geqslant F_{0.05}(1,8)=5.32 \]
+
+其中：
+\[ SS_R=\hat{b}\,S_{xy}=0.4646\times 79.72\approx 37.035,\quad SS_E=S_{yy}-SS_R\approx 1.494 \]
+\[ F=\dfrac{37.035}{1.494/8}\approx 198.37 \]
+
+相关系数：
+\[ r=\dfrac{L_{xy}}{\sqrt{L_{xx}L_{yy}}}\approx0.981 \]
+
+由于 $F\approx 198.37\gg 5.32$，落入拒绝域，故拒绝 $H_0$，认为父亲身高对儿子身高有\textbf{显著的线性影响}，Galton 论断的可信。
+
+\paragraph*{偏离程度均值在子辈缩小}~{}
+
+此论断等价于 $\beta=1$。但所得回归系数 $\hat{b}\approx 0.4646\ll 1$，意味着父亲身高每偏离均值 1 英寸，儿子身高仅偏离均值约 0.46 英寸——存在明显的\textbf{回归到均值}现象，故 Galton 关于“偏离程度在子辈缩小”的论断是可信的。
+
+
+
+
+\section{Q-5.4}
+\textit{\textcolor{gray}{有人认为企业的利润水平 $y$ 与它的广告费用 $x$ 间存在线性关系。下表的统计数据能否支持这种论断？（$\alpha=0.05$）$F_{0.05}(1,8)=5.32,\ t_{0.025}(8)=2.3060$。}
+\begin{center}
+    \color{gray}{
+        \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
+            \hline
+            广告费用（万元） & 10 & 10 & 8 & 8 & 8 & 12 & 12 & 12 & 11 & 11 \\
+            \hline
+            利润（万元） & 100 & 150 & 200 & 180 & 250 & 300 & 280 & 310 & 320 & 300 \\
+            \hline
+        \end{tabular}
+    }
+\end{center}
+}
+
+样本量 $n=10$，计算各统计量：
+\[ \sum_{i=1}^{10}x_i=102,\ \barline{x}=10.2,\ \sum_{i=1}^{10}y_i=2390,\ \barline{y}=239 \]
+\[ \sum_{i=1}^{10}x_i^2=1066,\ \sum_{i=1}^{10}y_i^2=624300,\ \sum_{i=1}^{10}x_iy_i=25040 \]
+
+离差平方和：
+\begin{align*}
+    L_{xx} &= \sum_{i=1}^{10} x_i^2 - n\barline{x}^2 = 1066 - 10 \times 10.2^2 = 25.6 \\
+    L_{yy} &= \sum_{i=1}^{10} y_i^2 - n\barline{y}^2 = 624300 - 10 \times 239^2 = 53090 \\
+    L_{xy} &= \sum_{i=1}^{10} x_i y_i - n\barline{x}\cdot\barline{y} = 25040 - 10 \times 10.2 \times 239 = 662
+\end{align*}
+
+假设 $H_0: \beta_1 = 0$（线性关系不显著）； $H_1: \beta_1 \neq 0$（线性关系显著）。
+
+则：
+\[ F=\dfrac{SSR / 1}{SSE / (n-2)}=\dfrac{\dfrac{L_{xy}^2}{L_{xx}}/1}{(L_{yy}-SSR) / (n-2)}=\dfrac{17118.91}{35971.09/8}\approx3.81 \]
+
+由于 $F\approx3.81<F_{0.05}(1,8)=5.32$，未落入拒绝域，故接受原假设 $H_0$，即利润与费用线性关系不显著。
+
+
+
+\end{document}
