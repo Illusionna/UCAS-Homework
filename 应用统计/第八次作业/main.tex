@@ -1,0 +1,204 @@
+\documentclass{article}
+
+\usepackage{bm}
+\usepackage{ctex}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{setspace}
+\usepackage{datetime}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\usepackage{nicematrix}
+\usepackage{amsmath, amssymb, amsfonts, mathrsfs}
+\usepackage[fontsize = 12pt]{fontsize}
+
+\renewcommand{\thesubsection}{(\alph{subsection})}
+\newcommand{\diff}[2]{\dfrac{\mathrm{d}#1}{\mathrm{d}#2}}
+\newcommand{\diffn}[3]{\dfrac{\mathrm{d}^{#3}#1}{\mathrm{d}#2^{#3}}}
+\newcommand{\piff}[2]{\dfrac{\partial{#1}}{\partial{#2}}}
+\newcommand{\eval}[2]{\left.#1\right|_{#2}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\barline}[1]{\overline{#1\rule{0pt}{1.5ex}}}
+
+\geometry{
+    a4paper,
+    left = 1.25in,
+    right = 1.25in,
+    top = 1in,
+    bottom = 1in
+}
+
+\setitemize[1]{
+    itemsep = 7pt,
+    partopsep = 0pt,
+    parsep = \parskip,
+    topsep = 5pt
+}
+
+\title{\vspace*{-3em}应用统计：第八次作业}
+\author{Illusionna \quad 2025..................004 \quad 人工智能学院}
+\date{\currenttime,\ \today}
+
+
+
+\begin{document}
+
+\maketitle
+
+\section{Q-5.5}
+\textit{\textcolor{gray}{下表统计了 8 个不同经济发展水平国家的人均年能量消耗量（折合标准煤）和人均年国民经济总值的数据。}
+\begin{center}
+    \color{gray}{
+        \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+            \hline
+            人均年生产总值 $x$（美元） & 600 & 2700 & 2900 & 4200 & 3100 & 5400 & 8600 & 10300 \\
+            \hline
+            人均年耗能 $y$（公斤） & 1000 & 700 & 1400 & 2000 & 2500 & 2700 & 2500 & 4000 \\
+            \hline
+        \end{tabular}
+    }
+\end{center}
+\textcolor{gray}{(1) 求 $y$ 对 $x$ 的线性回归方程；(2) 对所求回归方程作相关系数检验和 $F$ 检验（$\alpha=0.01,\ r_{0.01}(6)=0.834,\ F_{0.01}(1,6)=13.75$）；(3) 在人均年生产总值为 3000 美元时预测人均年耗能量的范围（$\alpha=0.05,\ t_{0.025}(6)=2.4469$）。}
+}
+
+\subsection{线性回归方程}
+
+由 $n=8$，计算汇总量：
+\[ \sum_{i=1}^{8} x_i=37800,\ \barline{x}=4725,\ \sum_{i=1}^{8} y_i=16800,\ \barline{y}=2100 \]
+\[ \sum_{i=1}^{8} x_i^2=2.5252\times 10^8,\ \sum_{i=1}^{8} y_i^2=4.324\times 10^7,\ \sum_{i=1}^{8} x_iy_i=9.998\times 10^7 \]
+
+离差平方和：
+\[ L_{xx}=2.5252\times 10^8-8\times 4725^2=7.3915\times 10^7 \]
+\[ L_{yy}=4.324\times 10^7-8\times 2100^2=7.96\times 10^6 \]
+\[ L_{xy}=9.998\times 10^7-8\times 4725\times 2100=2.06\times 10^7 \]
+
+故：
+\[ \hat{b}=\dfrac{L_{xy}}{L_{xx}}=\dfrac{2.06\times 10^7}{7.3915\times 10^7}\approx 0.2787,\quad \hat{a}=\barline{y}-\hat{b}\,\barline{x}=2100-0.2787\times 4725\approx 783.14 \]
+
+回归方程为：
+\[ \hat{y}\approx 0.2787x+783.14 \]
+
+\subsection{相关系数检验与 $F$ 检验}
+
+\textbf{相关系数检验}：
+\[ r=\dfrac{L_{xy}}{\sqrt{L_{xx}\cdot L_{yy}}}=\dfrac{2.06\times 10^7}{\sqrt{7.3915\times 10^7\times 7.96\times 10^6}}\approx 0.8493 \]
+
+由于 $|r|\approx 0.8493>r_{0.01}(6)=0.834$，故拒绝 $H_0$，回归方程显著。
+
+\textbf{$F$ 检验}：假设 $H_0:\ \beta=0$ vs $H_1:\ \beta\neq 0$。
+\[ SS_R=\hat{b}\,L_{xy}\approx 0.2787\times 2.06\times 10^7\approx 5.7412\times 10^6,\quad SS_E=L_{yy}-SS_R\approx 2.2188\times 10^6 \]
+\[ F=\dfrac{SS_R/1}{SS_E/(n-2)}=\dfrac{5.7412\times 10^6}{2.2188\times 10^6/6}\approx 15.52 \]
+
+由于 $F\approx 15.52>F_{0.01}(1,6)=13.75$，落入拒绝域，故拒绝 $H_0$，回归方程显著。两种检验结果一致。
+
+\subsection{预测人均年耗能量}
+
+当 $x_0=3000$ 时：
+\[ \hat{y}_0=0.2787\times 3000+783.14\approx 1619.24 \]
+
+剩余标准差：
+\[ \hat{\sigma}=\sqrt{\dfrac{SS_E}{n-2}}=\sqrt{\dfrac{2.2188\times 10^6}{6}}\approx 608.11 \]
+
+预测区间因子：
+\[ \sqrt{1+\dfrac{1}{n}+\dfrac{(x_0-\barline{x})^2}{L_{xx}}}=\sqrt{1+\dfrac{1}{8}+\dfrac{(3000-4725)^2}{7.3915\times 10^7}}\approx 1.0795 \]
+
+故 $95\%$ 预测区间为：
+\[ \hat{y}_0\pm t_{0.025}(6)\,\hat{\sigma}\,\sqrt{1+\dfrac{1}{n}+\dfrac{(x_0-\barline{x})^2}{L_{xx}}}=1619.24\pm 2.4469\times 608.11\times 1.0795 \]
+\[ \approx 1619.24\pm 1606.23\ \Rightarrow\ (13.01,\ 3225.47)\ \text{公斤} \]
+
+
+
+\section{Q-5.7}
+\textit{\textcolor{gray}{对某地建材行业的年销售额进行研究，发现建材行业年销售额 $y$（亿元）与当地基建总投资 $x_1$（亿元）、人均收入 $x_2$（千元）可能有关。根据过去 10 年的数据，经线性回归分析得到如下结果：}
+\[ \hat{y}=6.25+0.124x_1+0.048x_2 \]
+\[ s(\hat{b}_1)=0.02,\ s(\hat{b}_2)=0.012,\ R^2=0.99,\ F=51.76 \]
+\textcolor{gray}{(1) 说明回归方程中 $x_2$ 的回归系数 $b_2$ 的意义；(2) 说明复判决系数 $R^2=0.99$ 的意义；(3) 写出回归效果显著性检验的原假设和备择假设，并对回归效果进行显著性检验（$\alpha=0.05$，$F_{0.05}(2,7)=4.74$）；(4) 对 $x_2$ 与 $y$ 的线性相关性进行显著性检验（$\alpha=0.05$，$t_{0.025}(7)=2.365$）；(5) 对回归系数求其 $95\%$ 的置信区间（$\alpha=0.05$）；(6) 预测基建总投资为 5 亿元、人均收入为 5 万元时该地建材行业的年销售额。}
+}
+
+\subsection{$b_2$ 的意义}
+
+在 $x_1$ 保持不变的条件下，人均收入 $x_2$ 每增加 1 千元，年销售额 $y$ 平均增加 $0.048$ 亿元。
+
+\subsection{$R^2=0.99$ 的意义}
+
+复判决系数 $R^2$ 表示回归方程能解释的因变量 $y$ 的变差占总变差的比例。$R^2=0.99$ 说明回归模型解释了 $y$ 总变异的 $99\%$，模型对数据的拟合程度极好。
+
+\subsection{回归效果的显著性检验}
+
+假设 $H_0:\ \beta_1=\beta_2=0$ vs $H_1:\ \beta_1,\ \beta_2$ 不全为零。
+
+构造 $F$ 统计量 $F\sim F(2,n-3)=F(2,7)$，拒绝域 $F\geqslant F_{0.05}(2,7)=4.74$。
+
+已知 $F=51.76\gg 4.74$，落入拒绝域，故拒绝 $H_0$，认为回归方程显著。
+
+\subsection{$x_2$ 的显著性检验}
+
+假设 $H_0:\ \beta_2=0$ vs $H_1:\ \beta_2\neq 0$。
+
+构造 $t$ 统计量：
+\[ t_2=\dfrac{\hat{b}_2}{s(\hat{b}_2)}=\dfrac{0.048}{0.012}=4 \]
+
+由于 $|t_2|=4>t_{0.025}(7)=2.365$，落入拒绝域，故拒绝 $H_0$，认为 $x_2$ 与 $y$ 存在显著的线性关系。
+
+\subsection{回归系数的 $95\%$ 置信区间}
+
+\[ \beta_1:\ \hat{b}_1\pm t_{0.025}(7)\,s(\hat{b}_1)=0.124\pm 2.365\times 0.02=0.124\pm 0.0473\ \Rightarrow\ (0.0767,\ 0.1713) \]
+\[ \beta_2:\ \hat{b}_2\pm t_{0.025}(7)\,s(\hat{b}_2)=0.048\pm 2.365\times 0.012=0.048\pm 0.0284\ \Rightarrow\ (0.0196,\ 0.0764) \]
+
+\subsection{预测年销售额}
+
+当 $x_1=5,\ x_2=5$ 时：
+\[ \hat{y}=6.25+0.124\times 5+0.048\times 5=6.25+0.62+0.24=7.11\ \text{亿元} \]
+
+
+
+\section{Q-5.8}
+\textit{\textcolor{gray}{某矿脉中，在开掘点附近不同距离上的 10 个样本点处，探测到某种伴生金属的含量数据如下：}
+\begin{center}
+    % \renewcommand{\arraystretch}{1.2}
+    \setlength{\tabcolsep}{3pt}
+    \color{gray}{
+        \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
+            \hline
+            距离 $x$（百米） & 2 & 3 & 4 & 5 & 7 & 8 & 10 & 11 & 14 & 15 \\
+            \hline
+            含量 $y$（吨） & 106.4 & 108.2 & 109.6 & 109.5 & 110.0 & 109.9 & 110.5 & 110.6 & 110.6 & 110.9 \\
+            \hline
+        \end{tabular}
+    }
+\end{center}
+\textcolor{gray}{请用曲线 $y=a+b\sqrt{x}$ 拟合出金属含量 $y$ 关于距离 $x$ 的回归方程，并使用判决系数检验回归效果的显著性。}
+}
+
+令 $u=\sqrt{x}$，则模型化为线性回归 $y=a+bu$。由 $n=10$，计算汇总量：
+\[ \sum_{i=1}^{10} u_i\approx 26.9501,\ \barline{u}\approx 2.6950,\ \sum_{i=1}^{10} y_i=1096.2,\ \barline{y}=109.62 \]
+\[ \sum_{i=1}^{10} u_i^2=\sum_{i=1}^{10} x_i=79,\ \sum_{i=1}^{10} y_i^2=120182.40,\ \sum_{i=1}^{10} u_iy_i\approx 2963.398 \]
+
+离差平方和：
+\[ L_{uu}=79-10\times 2.6950^2\approx 6.3693,\quad L_{yy}=120182.40-10\times 109.62^2\approx 16.956 \]
+\[ L_{uy}=2963.398-10\times 2.6950\times 109.62\approx 9.1331 \]
+
+回归系数：
+\[ \hat{b}=\dfrac{L_{uy}}{L_{uu}}=\dfrac{9.1331}{6.3693}\approx 1.434,\quad \hat{a}=\barline{y}-\hat{b}\,\barline{u}=109.62-1.434\times 2.6950\approx 105.755 \]
+
+故所求回归方程为：
+\[ \hat{y}\approx 105.755+1.434\sqrt{x} \]
+
+\paragraph*{判决系数检验}~{}
+
+\[ SS_R=\hat{b}\,L_{uy}\approx 1.434\times 9.1331\approx 13.097,\quad SS_E=L_{yy}-SS_R\approx 3.859 \]
+\[ R^2=\dfrac{SS_R}{L_{yy}}=\dfrac{13.097}{16.956}\approx 0.7724 \]
+
+进一步构造 $F$ 统计量：
+\[ F=\dfrac{SS_R/1}{SS_E/(n-2)}=\dfrac{13.097}{3.859/8}\approx 27.15 \]
+
+判决系数 $R^2\approx 0.7724$，说明该曲线模型解释了 $y$ 总变差的约 $77.24\%$；又 $F\approx 27.15>F_{0.05}(1,8)=5.32$，故在 $\alpha=0.05$ 下拒绝 $H_0$，认为回归方程显著，曲线 $\hat{y}\approx 105.755+1.434\sqrt{x}$ 拟合效果良好。
+
+
+
+\end{document}
