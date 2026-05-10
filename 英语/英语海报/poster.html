@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Student's t-Distribution — A Practitioner's Critical Value Table</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- MathJax 3 (SVG output) -->
+<script>
+window.MathJax = {
+    tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'none',
+        macros: { B: '{\\mathrm{B}}', d: '{\\mathrm{d}}' }
+    },
+    svg: { fontCache: 'global', scale: 1.0 },
+    startup: {
+        ready: () => {
+            MathJax.startup.defaultReady();
+            MathJax.startup.promise.then(() => {
+                document.body.classList.add('math-ready');
+                const flag = document.getElementById('math-loading');
+                if (flag) flag.style.display = 'none';
+            });
+        }
+    }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+<!-- QR generator (SVG, vector) -->
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+
+<style>
+@page { size: 594mm 841mm; margin: 0; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+    width: 594mm; height: 841mm;
+    background: #F4ECDB;
+    font-family: 'EB Garamond', 'Times New Roman', serif;
+    color: #1C1A17;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+#math-loading {
+    position: fixed;
+    top: 6mm; right: 6mm;
+    background: #5C2218; color: #F4ECDB;
+    padding: 2mm 5mm; border-radius: 2mm;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10pt;
+    z-index: 999;
+}
+@media print { #math-loading { display: none !important; } }
+
+.poster {
+    position: relative;
+    width: 594mm; height: 841mm;
+    background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(170,140,90,0.10) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 0% 100%, rgba(170,140,90,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(170,140,90,0.08) 0%, transparent 60%),
+        #F4ECDB;
+    padding: 18mm 24mm 12mm;
+    overflow: hidden;
+}
+.poster::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image:
+        radial-gradient(circle at 20% 30%, rgba(120,90,40,0.06) 0.4mm, transparent 0.5mm),
+        radial-gradient(circle at 70% 80%, rgba(120,90,40,0.05) 0.3mm, transparent 0.4mm),
+        radial-gradient(circle at 85% 15%, rgba(120,90,40,0.05) 0.5mm, transparent 0.6mm),
+        radial-gradient(circle at 30% 85%, rgba(120,90,40,0.05) 0.4mm, transparent 0.5mm);
+    background-size: 40mm 40mm, 35mm 35mm, 50mm 50mm, 45mm 45mm;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.frame {
+    position: absolute;
+    top: 9mm; left: 9mm; right: 9mm; bottom: 9mm;
+    border: 0.8mm solid #5C2218;
+    pointer-events: none;
+    z-index: 1;
+}
+.frame::before {
+    content: "";
+    position: absolute;
+    top: 2.2mm; left: 2.2mm; right: 2.2mm; bottom: 2.2mm;
+    border: 0.3mm solid #5C2218;
+}
+.corner {
+    position: absolute;
+    width: 13mm; height: 13mm;
+    z-index: 1;
+    color: #5C2218;
+}
+.c-tl { top: 7mm; left: 7mm; }
+.c-tr { top: 7mm; right: 7mm; transform: scaleX(-1); }
+.c-bl { bottom: 7mm; left: 7mm; transform: scaleY(-1); }
+.c-br { bottom: 7mm; right: 7mm; transform: scale(-1, -1); }
+
+.content { position: relative; z-index: 2; }
+
+/* MASTHEAD — Cormorant Garamond 700 (elegant bold) */
+.masthead {
+    text-align: center;
+    padding-top: 1mm;
+    padding-bottom: 3mm;
+    border-bottom: 0.5mm double #5C2218;
+}
+.kicker {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-weight: 600;
+    font-size: 22pt; letter-spacing: 4px;
+    color: #8B2D2D; text-transform: uppercase;
+    margin-bottom: 3mm;
+}
+.kicker .ornament { margin: 0 4mm; color: #5C2218; }
+h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 116pt;
+    line-height: 0.92;
+    letter-spacing: -1.2px;
+    color: #1C1A17;
+    margin-bottom: 1mm;
+}
+h1 .italic {
+    font-style: italic;
+    color: #5C2218;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+.tagline {
+    font-style: italic;
+    font-size: 30pt;
+    color: #4A4036;
+    margin-top: 3mm;
+    font-weight: 500;
+}
+.attribution {
+    font-size: 18pt;
+    color: #5C2218;
+    margin-top: 3mm;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+.attribution .sep { margin: 0 4mm; }
+
+/* SECTION HEADS — single-line compact */
+.section-head {
+    text-align: center;
+    margin: 6mm 0 3mm;
+    padding-bottom: 2mm;
+    border-bottom: 0.5mm double #5C2218;
+}
+.section-head .roman {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 28pt;
+    color: #8B2D2D;
+    font-weight: 600;
+    letter-spacing: 5px;
+    margin-right: 6mm;
+    vertical-align: baseline;
+}
+.section-head h2 {
+    display: inline-block;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 44pt;
+    letter-spacing: -0.2px;
+    color: #1C1A17;
+    vertical-align: baseline;
+}
+.section-head h2 em {
+    font-style: italic;
+    font-weight: 600;
+    color: #8B2D2D;
+    font-size: 0.8em;
+}
+
+/* INTRO */
+.intro {
+    text-align: justify;
+    font-size: 22pt;
+    line-height: 1.4;
+    color: #2A2620;
+    column-count: 2;
+    column-gap: 11mm;
+    column-rule: 0.2mm solid #C9B89A;
+    margin: 2mm 4mm 0;
+}
+.intro p { margin-bottom: 2.5mm; text-indent: 6mm; }
+.intro p:first-child { text-indent: 0; }
+.intro p:first-child::first-letter {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 80pt;
+    float: left; line-height: 0.85;
+    color: #8B2D2D;
+    margin-right: 3mm; margin-top: 1mm;
+}
+.intro em { font-style: italic; }
+.intro strong { color: #5C2218; font-weight: 700; }
+
+/* FORMULA STRIP */
+.formula-strip {
+    text-align: center;
+    margin: 3mm auto 0;
+    padding: 2mm 4mm 3mm;
+    border-top: 0.3mm solid #C9B89A;
+    border-bottom: 0.3mm solid #C9B89A;
+    font-size: 24pt;
+}
+.formula-strip mjx-container { font-size: 135% !important; }
+
+.def-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5mm;
+    margin-top: 3mm;
+    font-size: 17pt;
+    line-height: 1.3;
+}
+.def { text-align: center; padding: 0 1mm; }
+.def .sym {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 30pt;
+    color: #8B2D2D;
+    display: block;
+    margin-bottom: 1mm;
+    font-weight: 600;
+}
+
+/* MATH SECTION */
+.math-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 8mm;
+    margin-top: 1mm;
+    align-items: start;
+}
+.formula-stack { display: flex; flex-direction: column; gap: 3.5mm; }
+.formula-card {
+    background: #FBF6E9;
+    border: 0.3mm solid #C9B89A;
+    padding: 2.5mm 5mm 2mm;
+    position: relative;
+}
+.formula-card .tag {
+    position: absolute;
+    top: -3mm;
+    left: 5mm;
+    background: #F4ECDB;
+    padding: 0 3mm;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14.5pt;
+    color: #8B2D2D;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+.formula-card.bridge {
+    background: linear-gradient(to right, #FBF6E9, #FFF0E5);
+    border: 0.7mm solid #8B2D2D;
+}
+.formula-card.bridge .tag { color: #5C2218; font-weight: 700; }
+.formula-card .body {
+    text-align: center;
+    padding: 1mm 0 0.5mm;
+    font-size: 15pt;
+}
+.formula-card .body mjx-container { font-size: 110% !important; margin: 0.5mm 0 !important; }
+.formula-card.bridge .body mjx-container { font-size: 120% !important; }
+.formula-card .caption {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 13.5pt;
+    color: #6B5C4A;
+    text-align: center;
+    margin-top: 1mm;
+    line-height: 1.35;
+}
+.formula-card .num-tag {
+    position: absolute;
+    right: 5mm; top: 3mm;
+    font-family: 'EB Garamond', serif;
+    font-size: 15pt;
+    color: #8B2D2D;
+    font-weight: 700;
+}
+
+.plot-side { display: flex; flex-direction: column; gap: 2.5mm; }
+.plot-svg {
+    width: 100%;
+    background: #FBF6E9;
+    border: 0.3mm solid #C9B89A;
+    padding: 2mm 3mm 1.5mm;
+}
+.plot-caption {
+    font-size: 14.5pt;
+    line-height: 1.45;
+    color: #2A2620;
+    text-align: justify;
+}
+.plot-caption strong { color: #5C2218; font-weight: 700; }
+.plot-caption em { font-style: italic; color: #8B2D2D; }
+.plot-caption p { margin-bottom: 1.5mm; }
+.plot-caption p:last-child { margin-bottom: 0; }
+
+/* TABLE */
+.table-wrap {
+    margin-top: 1mm;
+    background: #FBF6E9;
+    border: 0.5mm solid #5C2218;
+    padding: 4mm 5mm 3mm;
+    position: relative;
+}
+.table-wrap::before {
+    content: "";
+    position: absolute;
+    top: 1.7mm; left: 1.7mm; right: 1.7mm; bottom: 1.7mm;
+    border: 0.2mm solid #8B2D2D;
+    pointer-events: none;
+}
+.table-title { text-align: center; margin-bottom: 2.5mm; }
+.table-title .label {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 19pt;
+    color: #8B2D2D;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+.table-title h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 30pt;
+    margin-top: 0.5mm;
+}
+.table-title .sub {
+    font-style: italic;
+    font-size: 15pt;
+    color: #6B5C4A;
+    margin-top: 1mm;
+}
+
+.t-table-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7mm; }
+table.t-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15.5pt;
+}
+table.t-table thead tr.alpha-banner th {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 16pt;
+    color: #8B2D2D;
+    padding: 1.5mm 1mm 1mm;
+    text-align: center;
+    border-bottom: 0.2mm solid #C9B89A;
+    font-weight: 600;
+}
+table.t-table thead tr.alpha-row th {
+    font-family: 'EB Garamond', serif;
+    font-size: 14pt;
+    font-weight: 600;
+    font-style: italic;
+    color: #5C2218;
+    padding: 1.3mm 1mm;
+    border-bottom: 0.4mm solid #5C2218;
+    text-align: center;
+}
+table.t-table th.df-col,
+table.t-table td.df-col {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 17pt;
+    font-weight: 700;
+    color: #5C2218;
+    text-align: right;
+    padding-right: 4mm;
+    border-right: 0.3mm solid #C9B89A;
+    width: 16%;
+}
+table.t-table td {
+    padding: 1.2mm 1mm;
+    text-align: center;
+    font-weight: 500;
+}
+table.t-table tr:nth-child(even) td { background: rgba(170,140,90,0.07); }
+table.t-table .highlight {
+    background: rgba(139, 45, 45, 0.22) !important;
+    color: #5C2218;
+    font-weight: 700;
+}
+table.t-table tr.special td.df-col,
+table.t-table tr.special td {
+    border-top: 0.3mm solid #C9B89A;
+}
+table.t-table tr.infinity td { color: #5C2218; font-weight: 700; }
+table.t-table tr.infinity td.df-col { font-size: 21pt; }
+
+.table-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: 2.5mm;
+    padding-top: 2mm;
+    border-top: 0.2mm dashed #C9B89A;
+    font-size: 13pt;
+    font-style: italic;
+    color: #6B5C4A;
+    gap: 8mm;
+}
+.table-foot .legend { display: flex; gap: 6mm; align-items: baseline; flex-shrink: 0; }
+.table-foot .legend span { display: inline-flex; align-items: center; gap: 2mm; }
+.table-foot .swatch {
+    display: inline-block;
+    width: 5mm; height: 4mm;
+    background: rgba(139, 45, 45, 0.22);
+    border: 0.25mm solid #8B2D2D;
+}
+
+.divider {
+    text-align: center;
+    margin: 4mm 0 3mm;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22pt;
+    color: #8B2D2D;
+    letter-spacing: 6px;
+}
+
+/* COLOPHON with QR */
+.colophon {
+    margin-top: 2mm;
+    padding-top: 3mm;
+    border-top: 0.5mm double #5C2218;
+}
+.colophon-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10mm;
+    align-items: center;
+}
+.colophon-text { text-align: left; padding-left: 2mm; }
+.colophon-text .quote {
+    font-style: italic;
+    font-size: 20pt;
+    color: #2A2620;
+    margin-bottom: 2.5mm;
+    line-height: 1.4;
+}
+.colophon-text .signature {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 16pt;
+    color: #8B2D2D;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+.qr-block {
+    display: flex;
+    align-items: center;
+    gap: 5mm;
+    padding: 3mm 4mm;
+    background: #FBF6E9;
+    border: 0.5mm solid #5C2218;
+    position: relative;
+}
+.qr-block::before {
+    content: "";
+    position: absolute;
+    top: 1.2mm; left: 1.2mm; right: 1.2mm; bottom: 1.2mm;
+    border: 0.2mm solid #8B2D2D;
+    pointer-events: none;
+}
+.qr-block #qrcode {
+    width: 34mm; height: 34mm;
+    flex-shrink: 0;
+    background: #FFF;
+    padding: 1.2mm;
+    border: 0.4mm solid #C9B89A;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.qr-block #qrcode svg {
+    width: 31mm !important;
+    height: 31mm !important;
+    display: block;
+}
+.qr-block #qrcode svg path { fill: #5C2218; }
+.qr-block #qrcode svg rect { fill: #FFFFFF; }
+.qr-label {
+    font-family: 'EB Garamond', serif;
+    font-size: 13.5pt;
+    color: #2A2620;
+    line-height: 1.4;
+    max-width: 56mm;
+}
+.qr-label .arrow {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 17pt;
+    color: #8B2D2D;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 1.5mm;
+    letter-spacing: 0.3px;
+}
+.qr-label .url {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5pt;
+    color: #8B7B5E;
+    word-break: break-all;
+    margin-top: 1.5mm;
+    line-height: 1.3;
+}
+.colophon .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10pt;
+    color: #8B7B5E;
+    margin-top: 5mm;
+    letter-spacing: 0.4px;
+    text-align: center;
+    padding-top: 2mm;
+    border-top: 0.2mm dashed #C9B89A;
+}
+</style>
+</head>
+<body>
+<div id="math-loading">⧗ rendering math …</div>
+<div class="poster">
+    <div class="frame"></div>
+
+    <svg class="corner c-tl" viewBox="0 0 60 60"><g fill="none" stroke="currentColor" stroke-width="0.7"><path d="M 0 30 Q 0 0 30 0"/><path d="M 6 30 Q 6 6 30 6"/><circle cx="30" cy="30" r="2.5" fill="currentColor"/><path d="M 12 30 Q 12 12 30 12"/><path d="M 0 8 L 8 0 M 0 14 L 14 0" stroke-width="0.4"/></g></svg>
+    <svg class="corner c-tr" viewBox="0 0 60 60"><g fill="none" stroke="currentColor" stroke-width="0.7"><path d="M 0 30 Q 0 0 30 0"/><path d="M 6 30 Q 6 6 30 6"/><circle cx="30" cy="30" r="2.5" fill="currentColor"/><path d="M 12 30 Q 12 12 30 12"/><path d="M 0 8 L 8 0 M 0 14 L 14 0" stroke-width="0.4"/></g></svg>
+    <svg class="corner c-bl" viewBox="0 0 60 60"><g fill="none" stroke="currentColor" stroke-width="0.7"><path d="M 0 30 Q 0 0 30 0"/><path d="M 6 30 Q 6 6 30 6"/><circle cx="30" cy="30" r="2.5" fill="currentColor"/><path d="M 12 30 Q 12 12 30 12"/><path d="M 0 8 L 8 0 M 0 14 L 14 0" stroke-width="0.4"/></g></svg>
+    <svg class="corner c-br" viewBox="0 0 60 60"><g fill="none" stroke="currentColor" stroke-width="0.7"><path d="M 0 30 Q 0 0 30 0"/><path d="M 6 30 Q 6 6 30 6"/><circle cx="30" cy="30" r="2.5" fill="currentColor"/><path d="M 12 30 Q 12 12 30 12"/><path d="M 0 8 L 8 0 M 0 14 L 14 0" stroke-width="0.4"/></g></svg>
+
+    <div class="content">
+
+        <!-- MASTHEAD -->
+        <div class="masthead">
+            <div class="kicker">An Introduction<span class="ornament">·</span>on<span class="ornament">·</span>the<span class="ornament">·</span>Student's<span class="ornament">·</span>t-Distribution</div>
+            <h1>Critical Values<br><span class="italic">of the t-Statistic.</span></h1>
+            <div class="tagline">From the Regularized Incomplete Beta Function to a Practitioner's Reference Table.</div>
+            <div class="attribution">After W.S. Gosset<span class="sep">·</span>"Student"<span class="sep">·</span>Biometrika, 1908</div>
+        </div>
+
+        <!-- §I — single-line head -->
+        <div class="section-head">
+            <span class="roman">§ I</span>
+            <h2>The Statistic &amp; Its Pedigree</h2>
+        </div>
+
+        <div class="intro">
+            <p>When the population variance σ² is unknown — which it almost always is — the standardised mean of a sample of size <em>n</em> no longer follows the Gaussian distribution law. <strong>Student</strong>, writing in 1908 under a pseudonym imposed by his employer (the Guinness Brewery), worked out the exact distribution of this awkward quantity, and so handed the world its first practical small-sample inferential tool.</p>
+            <p>The <strong>t-statistic</strong> replaces <strong><em>σ</em></strong> with the sample standard deviation <strong><em>s</em></strong>; the price is heavier tails, controlled by a single integer parameter <em>ν</em> — the <em>degrees of freedom</em>. As ν → ∞ the distribution converges, gracefully, to the standard normal distribution.</p>
+            <p>What follows unpacks this elegant little distribution — its <em>shape</em>, its <em>tails</em>, and the inference that it quietly powers <strong>more than a century later</strong>.</p>
+        </div>
+
+        <div class="formula-strip">
+            $$t \;=\; \dfrac{\bar{x} - \mu_0}{s/\sqrt{n}} \;\sim\; t_\nu, \qquad \nu = n - 1 \qquad\qquad (1)$$
+            <div class="def-row">
+                <div class="def"><span class="sym">x̄</span><span>sample mean</span></div>
+                <div class="def"><span class="sym">μ<sub style="font-style:normal">0</sub></span><span>hypothesised mean under H<sub>0</sub></span></div>
+                <div class="def"><span class="sym">s</span><span>sample standard deviation</span></div>
+                <div class="def"><span class="sym">ν</span><span>degrees of freedom</span></div>
+            </div>
+        </div>
+
+        <!-- §II -->
+        <div class="section-head">
+            <span class="roman">§ II</span>
+            <h2>The Mathematics Beneath the Table</h2>
+        </div>
+
+        <div class="math-grid">
+
+            <div class="formula-stack">
+                <div class="formula-card">
+                    <div class="tag">probability density</div>
+                    <span class="num-tag">(2)</span>
+                    <div class="body">
+                        $$f(x;\nu)=\dfrac{\Gamma\left(\dfrac{\nu+1}{2}\right)}{\sqrt{\nu\pi}\Gamma\left(\dfrac{\nu}{2}\right)}\left(1+\dfrac{x^2}{\nu}\right)^{-\dfrac{\nu+1}{2}}$$
+                    </div>
+                    <div class="caption">— the t-density, built from the Gamma function —</div>
+                </div>
+
+                <div class="formula-card">
+                    <div class="tag">Regularised · Incomplete · Beta</div>
+                    <span class="num-tag">(3-4)</span>
+                    <div class="body">
+                        $$\beta(a,b)=\int_{0}^{1}t^{a-1}(1-t)^{b-1}\mathrm{d}t=\displaystyle\dfrac{\Gamma(a)\Gamma(b)}{\Gamma(a+b)},\quad I(x;a,b)=\dfrac{\beta(x;a,b)}{\beta(a,b)}$$
+                    </div>
+                    <div class="caption">— Euler's Beta and its regularised cousin on $[0,1]$, with the symmetry $I(x;a,b)=1-I(1-x;b,a)$ —</div>
+                </div>
+
+                <div class="formula-card bridge">
+                    <div class="tag">★ the bridge to t distribution</div>
+                    <span class="num-tag">(5)</span>
+                    <div class="body">
+                        $$F(t;\nu)=\Pr(X\leqslant t)=1-\dfrac{1}{2}I\left(\dfrac{\nu}{\nu+t^2};\dfrac{\nu}{2},\dfrac{1}{2}\right),\qquad t>0$$
+                    </div>
+                    <div class="caption" style="color:#5C2218">— the t-CDF reduces to one call to the regularised incomplete beta —</div>
+                </div>
+
+                <div class="formula-card">
+                    <div class="tag">Lentz continued fraction</div>
+                    <span class="num-tag">(6)</span>
+                    <div class="body">
+                        $$I(x;a,b)=\dfrac{x^a(1-x)^b}{a\beta(a,b)}\cdot\dfrac{1}{1+\dfrac{d_1}{1+\dfrac{d_2}{1+\dfrac{d_3}{1+\dots}}}}$$
+                    </div>
+                    <div class="caption">
+                        $d_{2m}=\dfrac{m(b-m)x}{(a+2m-1)(a+2m)}$ &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp; $d_{2m+1}=-\dfrac{(a+m)(a+b+m)x}{(a+2m)(a+2m+1)}$
+                    </div>
+                </div>
+
+                <div class="formula-card">
+                    <div class="tag">inverse CDF · Newton-Raphson method</div>
+                    <span class="num-tag">(7)</span>
+                    <div class="body">
+                        $$x_{n+1}=x_n-\dfrac{\text{CDF}(x_n;\nu)-p}{\text{PDF}(x_n;\nu)}$$
+                    </div>
+                    <div class="caption">— iterate to recover any quantile $t_{\alpha,\nu}$ tabulated below —</div>
+                </div>
+            </div>
+
+            <div class="plot-side">
+                <svg class="plot-svg" viewBox="0 0 380 220" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <pattern id="grid" width="38" height="22" patternUnits="userSpaceOnUse">
+                            <path d="M 38 0 L 0 0 0 22" fill="none" stroke="#C9B89A" stroke-width="0.3" opacity="0.5"/>
+                        </pattern>
+                    </defs>
+                    <rect x="30" y="14" width="330" height="166" fill="url(#grid)"/>
+
+                    <path d="M 30 180 L 30 174 L 50 174 L 65 175 L 80 175.5 L 95 176 L 110 177 L 125 178 L 140 179 L 150 180 Z" fill="#8B2D2D" opacity="0.20"/>
+                    <path d="M 360 180 L 360 174 L 340 174 L 325 175 L 310 175.5 L 295 176 L 280 177 L 265 178 L 250 179 L 240 180 Z" fill="#8B2D2D" opacity="0.20"/>
+
+                    <path d="M 30 178 C 80 176, 145 165, 175 138 C 188 110, 192 100, 195 98 C 198 100, 202 110, 215 138 C 245 165, 310 176, 360 178" fill="none" stroke="#A8312A" stroke-width="1.2" opacity="0.65" stroke-dasharray="4 3"/>
+                    <path d="M 30 180 C 75 180, 140 167, 172 122 C 185 85, 192 62, 195 60 C 198 62, 205 85, 218 122 C 250 167, 315 180, 360 180" fill="none" stroke="#5C7AAF" stroke-width="1.4" opacity="0.85" stroke-dasharray="6 3"/>
+                    <path d="M 30 180 C 80 180, 145 172, 175 100 C 187 52, 192 34, 195 32 C 198 34, 203 52, 215 100 C 245 172, 310 180, 360 180" fill="none" stroke="#1C1A17" stroke-width="1.8"/>
+
+                    <line x1="30" y1="180" x2="360" y2="180" stroke="#1C1A17" stroke-width="0.8"/>
+                    <line x1="30" y1="180" x2="30" y2="14" stroke="#1C1A17" stroke-width="0.6"/>
+
+                    <g font-family="EB Garamond, serif" font-size="10" fill="#1C1A17" text-anchor="middle">
+                        <line x1="30" y1="180" x2="30" y2="184" stroke="#1C1A17"/><text x="30" y="195" font-style="italic">−4</text>
+                        <line x1="71" y1="180" x2="71" y2="184" stroke="#1C1A17"/><text x="71" y="195" font-style="italic">−3</text>
+                        <line x1="113" y1="180" x2="113" y2="184" stroke="#1C1A17"/><text x="113" y="195" font-style="italic">−2</text>
+                        <line x1="154" y1="180" x2="154" y2="184" stroke="#1C1A17"/><text x="154" y="195" font-style="italic">−1</text>
+                        <line x1="195" y1="180" x2="195" y2="184" stroke="#1C1A17"/><text x="195" y="195" font-weight="600">0</text>
+                        <line x1="236" y1="180" x2="236" y2="184" stroke="#1C1A17"/><text x="236" y="195" font-style="italic">1</text>
+                        <line x1="277" y1="180" x2="277" y2="184" stroke="#1C1A17"/><text x="277" y="195" font-style="italic">2</text>
+                        <line x1="319" y1="180" x2="319" y2="184" stroke="#1C1A17"/><text x="319" y="195" font-style="italic">3</text>
+                        <line x1="360" y1="180" x2="360" y2="184" stroke="#1C1A17"/><text x="360" y="195" font-style="italic">4</text>
+                    </g>
+                    <text x="372" y="184" font-family="Cormorant Garamond, serif" font-style="italic" font-size="13" fill="#1C1A17">x</text>
+                    <text x="30" y="10" font-family="Cormorant Garamond, serif" font-style="italic" font-size="12" fill="#1C1A17" text-anchor="middle">f(x;ν)</text>
+
+                    <line x1="287" y1="180" x2="287" y2="42" stroke="#8B2D2D" stroke-width="0.5" stroke-dasharray="2 2"/>
+                    <line x1="103" y1="180" x2="103" y2="42" stroke="#8B2D2D" stroke-width="0.5" stroke-dasharray="2 2"/>
+                    <text x="287" y="38" font-family="EB Garamond, serif" font-style="italic" font-size="10" fill="#8B2D2D" text-anchor="middle">+t*</text>
+                    <text x="103" y="38" font-family="EB Garamond, serif" font-style="italic" font-size="10" fill="#8B2D2D" text-anchor="middle">−t*</text>
+                    <text x="65" y="170" font-family="EB Garamond, serif" font-style="italic" font-size="10" fill="#8B2D2D">α/2</text>
+                    <text x="320" y="170" font-family="EB Garamond, serif" font-style="italic" font-size="10" fill="#8B2D2D">α/2</text>
+
+                    <g font-family="EB Garamond, serif" font-size="10" fill="#1C1A17">
+                        <line x1="245" y1="74" x2="270" y2="74" stroke="#A8312A" stroke-width="1.2" stroke-dasharray="4 3"/>
+                        <text x="275" y="77" font-style="italic">ν = 1</text>
+                        <line x1="245" y1="89" x2="270" y2="89" stroke="#5C7AAF" stroke-width="1.4" stroke-dasharray="6 3"/>
+                        <text x="275" y="92" font-style="italic">ν = 5</text>
+                        <line x1="245" y1="104" x2="270" y2="104" stroke="#1C1A17" stroke-width="1.8"/>
+                        <text x="275" y="107" font-style="italic">ν = 30 ≈ 𝒩</text>
+                    </g>
+                </svg>
+
+                <div class="plot-caption">
+                    <p><strong>From PDF to table.</strong> Density (2) is symmetric &amp; bell-shaped, with <strong>tails heavier than the normal</strong>. No closed-form antiderivative exists.</p>
+                    <p>Equation <strong>(5)</strong> reduces the integral to one call to $I(x;a,b)$, evaluated by the <em>Lentz continued fraction</em> (6).</p>
+                    <p>Inverting via Newton-Raphson method <strong>(7)</strong> recovers any quantile $t_{\alpha,\nu}$ — every entry tabulated below.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- §III -->
+        <div class="section-head">
+            <span class="roman">§ III</span>
+            <h2>Critical Values <em>— the Table —</em></h2>
+        </div>
+
+        <div class="table-wrap">
+            <div class="table-title">
+                <div class="label">Table</div>
+                <h3>Upper-tail Critical Values $t_{\alpha,\nu}$</h3>
+                <div class="sub">$\Pr(X > t_{\alpha,\nu}) = \alpha$ &nbsp;|&nbsp; for two-tailed tests use the column $\alpha/2$ &nbsp;|&nbsp; computed from <strong>(5)-(7)</strong></div>
+            </div>
+
+            <div class="t-table-grid">
+
+                <table class="t-table">
+                    <thead>
+                        <tr class="alpha-banner"><th class="df-col">ν</th><th colspan="6">significance level &nbsp; α</th></tr>
+                        <tr class="alpha-row"><th class="df-col">df</th><th>0.10</th><th>0.05</th><th>0.025</th><th>0.01</th><th>0.005</th><th>0.001</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="df-col">1</td><td>3.078</td><td>6.314</td><td>12.706</td><td>31.821</td><td>63.657</td><td>318.31</td></tr>
+                        <tr><td class="df-col">2</td><td>1.886</td><td>2.920</td><td>4.303</td><td>6.965</td><td>9.925</td><td>22.327</td></tr>
+                        <tr><td class="df-col">3</td><td>1.638</td><td>2.353</td><td>3.182</td><td>4.541</td><td>5.841</td><td>10.215</td></tr>
+                        <tr><td class="df-col">4</td><td>1.533</td><td>2.132</td><td>2.776</td><td>3.747</td><td>4.604</td><td>7.173</td></tr>
+                        <tr><td class="df-col">5</td><td>1.476</td><td>2.015</td><td>2.571</td><td>3.365</td><td>4.032</td><td>5.893</td></tr>
+                        <tr><td class="df-col">6</td><td>1.440</td><td>1.943</td><td>2.447</td><td>3.143</td><td>3.707</td><td>5.208</td></tr>
+                        <tr><td class="df-col">7</td><td>1.415</td><td>1.895</td><td>2.365</td><td>2.998</td><td>3.499</td><td>4.785</td></tr>
+                        <tr><td class="df-col">8</td><td>1.397</td><td>1.860</td><td>2.306</td><td>2.896</td><td>3.355</td><td>4.501</td></tr>
+                        <tr><td class="df-col">9</td><td>1.383</td><td>1.833</td><td>2.262</td><td>2.821</td><td>3.250</td><td>4.297</td></tr>
+                        <tr><td class="df-col">10</td><td>1.372</td><td>1.812</td><td class="highlight">2.228</td><td>2.764</td><td>3.169</td><td>4.144</td></tr>
+                        <tr><td class="df-col">12</td><td>1.356</td><td>1.782</td><td>2.179</td><td>2.681</td><td>3.055</td><td>3.930</td></tr>
+                        <tr><td class="df-col">15</td><td>1.341</td><td>1.753</td><td>2.131</td><td>2.602</td><td>2.947</td><td>3.733</td></tr>
+                    </tbody>
+                </table>
+
+                <table class="t-table">
+                    <thead>
+                        <tr class="alpha-banner"><th class="df-col">ν</th><th colspan="6">significance level &nbsp; α</th></tr>
+                        <tr class="alpha-row"><th class="df-col">df</th><th>0.10</th><th>0.05</th><th>0.025</th><th>0.01</th><th>0.005</th><th>0.001</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="df-col">18</td><td>1.330</td><td>1.734</td><td>2.101</td><td>2.552</td><td>2.878</td><td>3.610</td></tr>
+                        <tr><td class="df-col">20</td><td>1.325</td><td>1.725</td><td>2.086</td><td>2.528</td><td>2.845</td><td>3.552</td></tr>
+                        <tr><td class="df-col">22</td><td>1.321</td><td>1.717</td><td>2.074</td><td>2.508</td><td>2.819</td><td>3.505</td></tr>
+                        <tr><td class="df-col">25</td><td>1.316</td><td>1.708</td><td>2.060</td><td>2.485</td><td>2.787</td><td>3.450</td></tr>
+                        <tr><td class="df-col">28</td><td>1.313</td><td>1.701</td><td>2.048</td><td>2.467</td><td>2.763</td><td>3.408</td></tr>
+                        <tr><td class="df-col">30</td><td>1.310</td><td>1.697</td><td>2.042</td><td>2.457</td><td>2.750</td><td>3.385</td></tr>
+                        <tr class="special"><td class="df-col">40</td><td>1.303</td><td>1.684</td><td>2.021</td><td>2.423</td><td>2.704</td><td>3.307</td></tr>
+                        <tr><td class="df-col">50</td><td>1.299</td><td>1.676</td><td>2.009</td><td>2.403</td><td>2.678</td><td>3.261</td></tr>
+                        <tr><td class="df-col">60</td><td>1.296</td><td>1.671</td><td>2.000</td><td>2.390</td><td>2.660</td><td>3.232</td></tr>
+                        <tr><td class="df-col">100</td><td>1.290</td><td>1.660</td><td>1.984</td><td>2.364</td><td>2.626</td><td>3.174</td></tr>
+                        <tr><td class="df-col">120</td><td>1.289</td><td>1.658</td><td>1.980</td><td>2.358</td><td>2.617</td><td>3.160</td></tr>
+                        <tr class="infinity special"><td class="df-col">∞</td><td>1.282</td><td>1.645</td><td>1.960</td><td>2.326</td><td>2.576</td><td>3.090</td></tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div class="table-foot">
+                <span>Entries via the inverse regularised incomplete beta &nbsp; $I^{-1}\left(x;\dfrac{\nu}{2},\dfrac{1}{2}\right)$ &nbsp; per (5)-(7).</span>
+                <span class="legend"><span><span class="swatch"></span>e.g. $t_{0.025,\,10} = 2.228$ — two-tailed α = 0.05 with n = 11.</span></span>
+            </div>
+        </div>
+
+        <div class="divider">· · · · ✦ · · · ·</div>
+
+        <!-- COLOPHON with QR -->
+        <div class="colophon">
+            <div class="colophon-grid">
+                <div class="colophon-text">
+                    <div class="quote">"Every experiment may be said to exist only in order to give the facts a chance of disproving the null hypothesis."</div>
+                    <div class="signature">— R. A. Fisher, <em>The Design of Experiments</em>, 1935 —</div>
+                </div>
+                <div class="qr-block">
+                    <div id="qrcode"></div>
+                    <div class="qr-label">
+                        <span class="arrow">⤳ &nbsp;Read the full math derivation</span>
+                        Scan for my blog: numerical method for the regularised incomplete beta &amp; the t-CDF.
+                        <div class="url">https://www.orzzz.net</div>
+                    </div>
+                </div>
+            </div>
+            <div class="meta">Illusionna &nbsp;·&nbsp; HTML &nbsp;·&nbsp; CSS &nbsp;·&nbsp; JavaScript &nbsp;·&nbsp; EB Garamond &nbsp;·&nbsp; Cormorant Garamond &nbsp;·&nbsp; MathJax v3 (SVG) &nbsp;·&nbsp; A1 (594 × 841 mm) &nbsp;·&nbsp; 300 dpi &nbsp;·&nbsp; MMXXVI</div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+window.addEventListener('load', function () {
+    var qr = qrcode(0, 'H');
+    qr.addData('https://www.orzzz.net/directory/mathematics/NumericalAnalysis/incbeta/index.html');
+    qr.make();
+    document.getElementById('qrcode').innerHTML = qr.createSvgTag({ scalable: true, margin: 0 });
+});
+</script>
+</body>
+</html>
