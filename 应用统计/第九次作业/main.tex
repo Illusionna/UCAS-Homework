@@ -1,0 +1,185 @@
+\documentclass{article}
+
+\usepackage{bm}
+\usepackage[fontset = fandol]{ctex}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{setspace}
+\usepackage{datetime}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\usepackage{nicematrix}
+\usepackage{amsmath, amssymb, amsfonts, mathrsfs}
+\usepackage[fontsize = 12pt]{fontsize}
+
+\renewcommand{\thesubsection}{(\alph{subsection})}
+\newcommand{\diff}[2]{\dfrac{\mathrm{d}#1}{\mathrm{d}#2}}
+\newcommand{\diffn}[3]{\dfrac{\mathrm{d}^{#3}#1}{\mathrm{d}#2^{#3}}}
+\newcommand{\piff}[2]{\dfrac{\partial{#1}}{\partial{#2}}}
+\newcommand{\eval}[2]{\left.#1\right|_{#2}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\barline}[1]{\overline{#1\rule{0pt}{1.5ex}}}
+
+\geometry{
+    a4paper,
+    left = 1.25in,
+    right = 1.25in,
+    top = 1in,
+    bottom = 1in
+}
+
+\setitemize[1]{
+    itemsep = 7pt,
+    partopsep = 0pt,
+    parsep = \parskip,
+    topsep = 5pt
+}
+
+\title{\vspace*{-3em}应用统计：第九次作业}
+\author{Illusionna \quad 2025...............004 \quad 人工智能学院}
+\date{\currenttime,\ \today}
+
+
+
+\begin{document}
+
+\maketitle
+
+\section{Q-5.6}
+
+\textcolor{gray}{(1) 说明多元线性回归分析中复判决系数 $R^2$ 的取值范围；(2) 说明复判决系数 $R^2$ 所描述的意义，并解释 $R^2=1$ 和 $R^2=0$ 的含义；(3) 解释为什么要定义修正的复判决系数？}
+
+\subsection{$R^2$ 的取值范围}
+
+对含截距项的多元线性回归模型，记
+\[
+    SST=\sum_{i=1}^{n}(y_i-\barline{y})^2,\quad
+    SSR=\sum_{i=1}^{n}(\hat{y}_i-\barline{y})^2,\quad
+    SSE=\sum_{i=1}^{n}(y_i-\hat{y}_i)^2 .
+\]
+由平方和分解 $SST=SSR+SSE$，复判决系数为
+\[
+    R^2=\dfrac{SSR}{SST}=1-\dfrac{SSE}{SST}.
+\]
+因 $SSR\geqslant 0,\ SSE\geqslant 0$，故
+\[
+    0\leqslant R^2\leqslant 1.
+\]
+
+\subsection{$R^2$ 的意义}
+
+$R^2$ 表示回归方程解释的因变量总变差在总变差中所占的比例，即样本中因变量 $y$ 的变异有多少可由所有自变量的线性回归关系解释。$R^2$ 越接近 $1$，样本拟合程度越高；越接近 $0$，线性解释能力越弱。
+
+当 $R^2=1$ 时，$SSE=0$，所有样本点均落在回归超平面上，回归方程完全拟合样本数据。
+
+当 $R^2=0$ 时，$SSR=0$，含截距模型下所有拟合值均等于 $\barline{y}$，自变量对 $y$ 的线性解释不优于直接用样本均值预测。
+
+\subsection{修正复判决系数}
+
+普通 $R^2$ 随自变量个数增加不会下降，即使加入无实际解释作用的变量，也可能使 $R^2$ 被动增大。为比较含不同自变量个数的模型，需要对变量个数进行惩罚，故定义修正的复判决系数
+\[
+    \barline{R}^{\,2}
+    =1-\dfrac{SSE/(n-p-1)}{SST/(n-1)}
+    =1-(1-R^2)\dfrac{n-1}{n-p-1},
+\]
+其中 $p$ 为自变量个数。若新增变量不能充分降低残差平方和，$\barline{R}^{\,2}$ 会下降，因此它比 $R^2$ 更适合用于不同复杂度模型的比较。
+
+
+
+\section{Q-6.1}
+
+\textcolor{gray}{试验 4 种不同的农药，观察它们的杀虫率有无明显不同，试验结果如下。}
+
+\begin{center}
+    \setlength{\tabcolsep}{18pt}
+    \renewcommand{\arraystretch}{1.25}
+    \color{gray}{
+        \begin{tabular}{|c|c|c|c|c|}
+            \hline
+            农药 & 样本 1 & 样本 2 & 样本 3 & 样本 4 \\
+            \hline
+            $A_1$ & 87.4 & 85 & 80.2 &  \\
+            \hline
+            $A_2$ & 90 & 88.5 & 87.3 & 94.7 \\
+            \hline
+            $A_3$ & 56.2 & 62.4 &  &  \\
+            \hline
+            $A_4$ & 55 & 48.2 &  &  \\
+            \hline
+        \end{tabular}
+    }
+\end{center}
+
+\textcolor{gray}{问在显著性水平 $\alpha=0.01$ 下，这四种农药的杀虫率有无显著差异？}
+\[
+    \textcolor{gray}{F_{0.01}(3,7)=8.45}
+\]
+
+\subsection{建立假设}
+
+设四种农药的平均杀虫率分别为 $\mu_1,\mu_2,\mu_3,\mu_4$。检验假设为
+\[
+    H_0:\mu_1=\mu_2=\mu_3=\mu_4,\qquad
+    H_1:\mu_1,\mu_2,\mu_3,\mu_4\ \text{不全相等}.
+\]
+这是单因素方差分析，处理数 $k=4$，总样本量 $n=11$。
+
+\subsection{计算方差分析量}
+
+各组均值与总均值为
+\[
+\begin{aligned}
+    \barline{y}_{1\cdot}&=\dfrac{87.4+85+80.2}{3}=84.2,\\
+    \barline{y}_{2\cdot}&=\dfrac{90+88.5+87.3+94.7}{4}=90.125,\\
+    \barline{y}_{3\cdot}&=\dfrac{56.2+62.4}{2}=59.3,\\
+    \barline{y}_{4\cdot}&=\dfrac{55+48.2}{2}=51.6,
+\end{aligned}
+\qquad
+    \barline{y}=\dfrac{834.9}{11}=75.9 .
+\]
+
+组间平方和与组内平方和为
+\[
+\begin{aligned}
+    SSA&=\sum_{j=1}^{4}n_j(\barline{y}_{j\cdot}-\barline{y})^2\\
+       &=3(84.2-75.9)^2+4(90.125-75.9)^2+2(59.3-75.9)^2+2(51.6-75.9)^2\\
+       &\approx 2748.1725,
+\end{aligned}
+\]
+\[
+\begin{aligned}
+    SSE&=\sum_{j=1}^{4}\sum_{i=1}^{n_j}(y_{ij}-\barline{y}_{j\cdot})^2\\
+       &\approx 26.8800+31.5675+19.2200+23.1200=100.7875.
+\end{aligned}
+\]
+
+故
+\[
+\begin{aligned}
+    MSA&=\dfrac{SSA}{k-1}=\dfrac{2748.1725}{3}\approx 916.0575,\\
+    MSE&=\dfrac{SSE}{n-k}=\dfrac{100.7875}{7}\approx 14.3982.
+\end{aligned}
+\]
+检验统计量为
+\[
+    F=\dfrac{MSA}{MSE}
+     =\dfrac{916.0575}{14.3982}
+     \approx 63.62 .
+\]
+
+\subsection{显著性判断}
+
+由于
+\[
+    F\approx 63.62>F_{0.01}(3,7)=8.45,
+\]
+故在显著性水平 $\alpha=0.01$ 下拒绝 $H_0$。因此，四种农药的平均杀虫率存在显著差异。
+
+
+
+\end{document}
