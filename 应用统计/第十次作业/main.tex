@@ -1,0 +1,340 @@
+\documentclass{article}
+
+\usepackage{bm}
+\usepackage[fontset = fandol]{ctex}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{setspace}
+\usepackage{datetime}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\usepackage{nicematrix}
+\usepackage{amsmath, amssymb, amsfonts, mathrsfs}
+\usepackage[fontsize = 12pt]{fontsize}
+
+\renewcommand{\thesubsection}{(\alph{subsection})}
+\newcommand{\diff}[2]{\dfrac{\mathrm{d}#1}{\mathrm{d}#2}}
+\newcommand{\diffn}[3]{\dfrac{\mathrm{d}^{#3}#1}{\mathrm{d}#2^{#3}}}
+\newcommand{\piff}[2]{\dfrac{\partial{#1}}{\partial{#2}}}
+\newcommand{\eval}[2]{\left.#1\right|_{#2}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\barline}[1]{\overline{#1\rule{0pt}{1.5ex}}}
+
+\geometry{
+    a4paper,
+    left = 1.25in,
+    right = 1.25in,
+    top = 1in,
+    bottom = 1in
+}
+
+\setitemize[1]{
+    itemsep = 7pt,
+    partopsep = 0pt,
+    parsep = \parskip,
+    topsep = 5pt
+}
+
+\title{\vspace*{-3em}应用统计：第十次作业}
+\author{Illusionna \quad 2025.........004 \quad 人工智能学院}
+\date{\currenttime,\ \today}
+
+
+
+\begin{document}
+
+\maketitle
+
+\section{Q-6.2}
+
+\textcolor{gray}{为了验证某化工产品的得率与反应温度及反应时间的相关程度，研究人员设置了三种温度、三种反应时间，搭配进行试验。试验数据如下。}
+
+\begin{center}
+    \setlength{\tabcolsep}{8pt}
+    \renewcommand{\arraystretch}{1.25}
+    \color{gray}{
+        \begin{tabular}{|c|c|c|c|c|c|}
+            \hline
+            温度 & $B_1(80\text{秒})$ & $B_2(120\text{秒})$ & $B_3(150\text{秒})$ & $T_{i\cdot}$ & $\barline{X}_{i\cdot}$ \\
+            \hline
+            $A_1(80^\circ\mathrm{C})$ & 31 & 50 & 63 & 144 & 48 \\
+            \hline
+            $A_2(85^\circ\mathrm{C})$ & 51 & 49 & 65 & 165 & 55 \\
+            \hline
+            $A_3(90^\circ\mathrm{C})$ & 35 & 45 & 67 & 147 & 49 \\
+            \hline
+            $T_{\cdot j}$ & 117 & 144 & 195 & 456 &  \\
+            \hline
+            $\barline{X}_{\cdot j}$ & 39 & 48 & 65 &  & $\barline{X}=50.7$ \\
+            \hline
+        \end{tabular}
+    }
+\end{center}
+
+\textcolor{gray}{请检验温度和化学反应时间是否对该化工产品的得率有显著影响。取 $\alpha=0.05$，$F_{0.05}(2,4)=6.94$。}
+
+\subsection{建立假设}
+
+这是无重复双因素方差分析。设温度因素为 $A$，反应时间因素为 $B$，其中 $a=3,\ b=3$。由于每个搭配下只有一次观测，不能单独估计交互作用，故误差项包含随机误差及可能的交互作用。
+
+对温度因素 $A$，检验假设为
+\[
+    H_{0A}:\mu_{1\cdot}=\mu_{2\cdot}=\mu_{3\cdot},\qquad
+    H_{1A}:\mu_{1\cdot},\mu_{2\cdot},\mu_{3\cdot}\ \text{不全相等}.
+\]
+对反应时间因素 $B$，检验假设为
+\[
+    H_{0B}:\mu_{\cdot 1}=\mu_{\cdot 2}=\mu_{\cdot 3},\qquad
+    H_{1B}:\mu_{\cdot 1},\mu_{\cdot 2},\mu_{\cdot 3}\ \text{不全相等}.
+\]
+
+\subsection{计算平方和}
+
+总和为
+\[
+    T=456,\qquad \barline{X}=\dfrac{456}{9}=50.6667.
+\]
+校正项为
+\[
+    C=\dfrac{T^2}{ab}=\dfrac{456^2}{9}=23104.
+\]
+又
+\[
+    \sum_{i=1}^{3}\sum_{j=1}^{3}x_{ij}^{2}
+    =31^2+50^2+\cdots+67^2=24396,
+\]
+故总平方和为
+\[
+    SST=\sum x_{ij}^{2}-C=24396-23104=1292.
+\]
+
+温度因素平方和为
+\[
+\begin{aligned}
+    SSA&=\dfrac{144^2+165^2+147^2}{3}-C\\
+       &=23190-23104=86.
+\end{aligned}
+\]
+反应时间因素平方和为
+\[
+\begin{aligned}
+    SSB&=\dfrac{117^2+144^2+195^2}{3}-C\\
+       &=24150-23104=1046.
+\end{aligned}
+\]
+误差平方和为
+\[
+    SSE=SST-SSA-SSB=1292-86-1046=160.
+\]
+
+\subsection{方差分析表}
+
+\begin{center}
+    \setlength{\tabcolsep}{14pt}
+    \renewcommand{\arraystretch}{1.25}
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        来源 & 平方和 & 自由度 & 均方 & $F$ 值 \\
+        \hline
+        温度 $A$ & 86 & 2 & 43 & $43/40=1.08$ \\
+        \hline
+        反应时间 $B$ & 1046 & 2 & 523 & $523/40=13.08$ \\
+        \hline
+        误差 & 160 & 4 & 40 &  \\
+        \hline
+        总和 & 1292 & 8 &  &  \\
+        \hline
+    \end{tabular}
+\end{center}
+
+\subsection{显著性判断}
+
+对温度因素，
+\[
+    F_A=1.08<F_{0.05}(2,4)=6.94,
+\]
+故不拒绝 $H_{0A}$，认为温度对该化工产品得率没有显著影响。
+
+对反应时间因素，
+\[
+    F_B=13.08>F_{0.05}(2,4)=6.94,
+\]
+故拒绝 $H_{0B}$，认为化学反应时间对该化工产品得率有显著影响。
+
+
+
+\section{Q-6.3}
+
+\textcolor{gray}{对 $3$ 种小麦品种 $A_1,A_2,A_3$ 和 $4$ 种肥料因素 $B_1,B_2,B_3,B_4$，在相同条件的试验田里作了两季亩产试验。结果见下表，问小麦品种和肥料以及它们的交互作用对小麦产量有无显著影响？取 $\alpha=0.01$。}
+\[
+    \textcolor{gray}{F_{0.01}(2,12)=6.93,\quad F_{0.01}(3,12)=5.95,\quad F_{0.01}(6,12)=4.82.}
+\]
+
+\begin{center}
+    \setlength{\tabcolsep}{4pt}
+    \renewcommand{\arraystretch}{1.25}
+    \resizebox{\textwidth}{!}{
+        \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+            \hline
+            \textcolor{gray}{品种} &
+            \multicolumn{2}{c|}{\textcolor{gray}{$B_1$}} &
+            \textcolor{gray}{$\barline{X}_{i1\cdot}$} &
+            \multicolumn{2}{c|}{\textcolor{gray}{$B_2$}} &
+            \textcolor{gray}{$\barline{X}_{i2\cdot}$} &
+            \multicolumn{2}{c|}{\textcolor{gray}{$B_3$}} &
+            \textcolor{gray}{$\barline{X}_{i3\cdot}$} &
+            \multicolumn{2}{c|}{\textcolor{gray}{$B_4$}} &
+            \textcolor{gray}{$\barline{X}_{i4\cdot}$} &
+            \textcolor{gray}{均值 $\barline{X}_{i\cdot\cdot}$} \\
+            \hline
+            \textcolor{gray}{$A_1$} &
+            \textcolor{gray}{173} & \textcolor{gray}{172} & \textcolor{red}{172.5} &
+            \textcolor{gray}{174} & \textcolor{gray}{176} & \textcolor{red}{175} &
+            \textcolor{gray}{177} & \textcolor{gray}{179} & \textcolor{red}{178} &
+            \textcolor{gray}{172} & \textcolor{gray}{173} & \textcolor{red}{172.5} &
+            \textcolor{red}{174.5} \\
+            \hline
+            \textcolor{gray}{$A_2$} &
+            \textcolor{gray}{175} & \textcolor{gray}{173} & \textcolor{red}{174} &
+            \textcolor{gray}{178} & \textcolor{gray}{177} & \textcolor{red}{177.5} &
+            \textcolor{gray}{174} & \textcolor{gray}{175} & \textcolor{red}{174.5} &
+            \textcolor{gray}{170} & \textcolor{gray}{171} & \textcolor{red}{170.5} &
+            \textcolor{red}{174.1} \\
+            \hline
+            \textcolor{gray}{$A_3$} &
+            \textcolor{gray}{177} & \textcolor{gray}{175} & \textcolor{red}{176} &
+            \textcolor{gray}{174} & \textcolor{gray}{174} & \textcolor{red}{174} &
+            \textcolor{gray}{174} & \textcolor{gray}{173} & \textcolor{red}{173.5} &
+            \textcolor{gray}{169} & \textcolor{gray}{169} & \textcolor{red}{169} &
+            \textcolor{red}{173.1} \\
+            \hline
+            \textcolor{gray}{求和} &
+            \textcolor{red}{525} & \textcolor{red}{520} & \textcolor{red}{1045} &
+            \textcolor{red}{526} & \textcolor{red}{527} & \textcolor{red}{1053} &
+            \textcolor{red}{525} & \textcolor{red}{527} & \textcolor{red}{1052} &
+            \textcolor{red}{511} & \textcolor{red}{513} & \textcolor{red}{1024} &
+             \\
+            \hline
+            \textcolor{gray}{均值} &
+            \textcolor{red}{175} & \textcolor{red}{173.3} & \textcolor{red}{174.2} &
+            \textcolor{red}{175.3} & \textcolor{red}{175.7} & \textcolor{red}{175.5} &
+            \textcolor{red}{175} & \textcolor{red}{175.7} & \textcolor{red}{175.3} &
+            \textcolor{red}{170.3} & \textcolor{red}{171} & \textcolor{red}{170.7} &
+            \textcolor{red}{173.92} \\
+            \hline
+        \end{tabular}
+    }
+\end{center}
+
+\subsection{建立假设}
+
+这是有重复双因素方差分析。设品种因素为 $A$，肥料因素为 $B$，每个组合重复 $r=2$ 次，故
+\[
+    a=3,\qquad b=4,\qquad r=2,\qquad N=abr=24.
+\]
+需要分别检验
+\[
+    H_{0A}:\text{小麦品种对产量无显著影响},
+\]
+\[
+    H_{0B}:\text{肥料因素对产量无显著影响},
+\]
+\[
+    H_{0AB}:\text{品种与肥料之间不存在显著交互作用}.
+\]
+
+\subsection{计算平方和}
+
+由图片表格可得
+\[
+    T=4174,\qquad \barline{X}=173.92,\qquad
+    C=\dfrac{T^2}{N}=\dfrac{4174^2}{24}=725928.1667.
+\]
+原始平方和与总平方和为
+\[
+    \sum x_{ijk}^{2}=726090,\qquad
+    SST=726090-725928.1667=161.8333.
+\]
+各品种总和、各肥料总和为
+\[
+    T_{1\cdot\cdot}=1396,\quad T_{2\cdot\cdot}=1393,\quad T_{3\cdot\cdot}=1385.
+\]
+\[
+    T_{\cdot 1\cdot}=1045,\quad T_{\cdot 2\cdot}=1053,\quad
+    T_{\cdot 3\cdot}=1052,\quad T_{\cdot 4\cdot}=1024.
+\]
+于是
+\[
+\begin{aligned}
+    SSA&=\dfrac{1396^2+1393^2+1385^2}{8}-C=8.0833,\\
+    SSB&=\dfrac{1045^2+1053^2+1052^2+1024^2}{6}-C=90.8333.
+\end{aligned}
+\]
+
+各组合总和平方项为
+\[
+    \sum_{i=1}^{3}\sum_{j=1}^{4}\dfrac{T_{ij\cdot}^{2}}{r}=726079.
+\]
+故
+\[
+\begin{aligned}
+    SSAB
+    &=\sum_{i=1}^{3}\sum_{j=1}^{4}\dfrac{T_{ij\cdot}^{2}}{r}
+      -\dfrac{\sum_i T_{i\cdot\cdot}^{2}}{br}
+      -\dfrac{\sum_j T_{\cdot j\cdot}^{2}}{ar}
+      +C\\
+    &=726079-725936.25-726019+725928.1667=51.9167,
+\end{aligned}
+\]
+\[
+    SSE=\sum x_{ijk}^{2}-\sum_{i=1}^{3}\sum_{j=1}^{4}\dfrac{T_{ij\cdot}^{2}}{r}
+       =726090-726079=11.
+\]
+
+\subsection{方差分析表}
+
+\begin{center}
+    \setlength{\tabcolsep}{10pt}
+    \renewcommand{\arraystretch}{1.25}
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        来源 & 平方和 & 自由度 & 均方 & $F$ 值 & 临界值 \\
+        \hline
+        品种 $A$ & 8.0833 & 2 & 4.0417 & 4.41 & 6.93 \\
+        \hline
+        肥料 $B$ & 90.8333 & 3 & 30.2778 & 33.03 & 5.95 \\
+        \hline
+        交互作用 $A\times B$ & 51.9167 & 6 & 8.6528 & 9.44 & 4.82 \\
+        \hline
+        误差 & 11.0000 & 12 & 0.9167 &  &  \\
+        \hline
+        总和 & 161.8333 & 23 &  &  &  \\
+        \hline
+    \end{tabular}
+\end{center}
+
+\subsection{显著性判断}
+
+\[
+    F_A=4.41<6.93,
+\]
+故不拒绝 $H_{0A}$，小麦品种对产量没有显著影响。
+\[
+    F_B=33.03>5.95,
+\]
+故拒绝 $H_{0B}$，肥料因素对小麦产量有显著影响。
+\[
+    F_{AB}=9.44>4.82,
+\]
+故拒绝 $H_{0AB}$，小麦品种和肥料之间存在显著交互作用。
+
+综上，在显著性水平 $\alpha=0.01$ 下，小麦品种主效应不显著，肥料因素主效应显著，品种与肥料的交互作用显著。
+
+
+
+\end{document}
