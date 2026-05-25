@@ -1,0 +1,286 @@
+\documentclass{article}
+
+\usepackage{bm}
+\usepackage[fontset = fandol]{ctex}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{setspace}
+\usepackage{datetime}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\usepackage{nicematrix}
+\usepackage{amsmath, amssymb, amsfonts, mathrsfs}
+\usepackage[fontsize = 12pt]{fontsize}
+
+\renewcommand{\thesubsection}{(\alph{subsection})}
+\newcommand{\diff}[2]{\dfrac{\mathrm{d}#1}{\mathrm{d}#2}}
+\newcommand{\diffn}[3]{\dfrac{\mathrm{d}^{#3}#1}{\mathrm{d}#2^{#3}}}
+\newcommand{\piff}[2]{\dfrac{\partial{#1}}{\partial{#2}}}
+\newcommand{\eval}[2]{\left.#1\right|_{#2}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\barline}[1]{\overline{#1\rule{0pt}{1.5ex}}}
+
+\geometry{
+    a4paper,
+    left = 2cm,
+    right = 2cm,
+    top = 2.4cm,
+    bottom = 2.4cm
+}
+
+\setitemize[1]{
+    itemsep = 7pt,
+    partopsep = 0pt,
+    parsep = \parskip,
+    topsep = 5pt
+}
+
+\title{应用统计：第十一次作业}
+\author{Illusionna \quad 2025............004 \quad 人工智能学院}
+\date{\currenttime,\ \today}
+
+
+
+\begin{document}
+
+\maketitle\vspace*{-1.5em}
+
+
+
+\section{Q-7.3}
+\textit{\textcolor{gray}{某公司过去五年春、夏、秋、冬四个季度销售收入的同季平均数为 230, 140, 180, 250(万元)。求该公司销售收入的季节指数，并指出销售收入受季节因素影响最大的是哪个季节。}}
+
+四个季度同季平均数的总平均数为：
+\[
+    \barline{x}=\dfrac{230+140+180+250}{4}=200
+\]
+
+以总平均数为基准，季节指数为：
+\[
+    S_i=\dfrac{\text{第 }i\text{ 季度同季平均数}}{\barline{x}}\times100\%
+\]
+
+由此可得：
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.5}
+    \setlength{\tabcolsep}{7pt}{
+        \begin{tabular}{c|c|c|c}
+            \hline
+            季节 & 同季平均数/万元 & 季节指数 & 与 $100\%$ 的差异 \\
+            \hline
+            春季 & 230 & $115\%$ & $+15\%$ \\
+            夏季 & 140 & $70\%$ & $-30\%$ \\
+            秋季 & 180 & $90\%$ & $-10\%$ \\
+            冬季 & 250 & $125\%$ & $+25\%$ \\
+            \hline
+        \end{tabular}
+    }
+\end{table}
+
+因为夏季季节指数偏离 $100\%$ 的幅度最大，$|70\%-100\%|=30\%$，所以销售收入受季节因素影响最大的是夏季；若只看正向拉动，冬季的销售收入最高，季节指数最大。
+
+
+
+\section{Q-7.4}
+\textit{\textcolor{gray}{下表是某公司三年的产品季度销售量。}}
+
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.5}
+    \setlength{\tabcolsep}{7pt}{
+        \begin{tabular}{c|ccc}
+            \hline
+            季节 & 第一年 & 第二年 & 第三年 \\
+            \hline
+            一季度 & 1690 & 1800 & 1850 \\
+            二季度 & 940 & 900 & 1100 \\
+            三季度 & 2626 & 2900 & 2934 \\
+            四季度 & 2500 & 2360 & 2616 \\
+            \hline
+        \end{tabular}
+    }
+\end{table}
+
+\textit{\textcolor{gray}{(1) 用按季平均法求季节指数，并作季节调整。}}
+
+各季度同季平均数为：
+\[
+\begin{aligned}
+    \barline{x}_1&=\dfrac{1690+1800+1850}{3}=1780,\\
+    \barline{x}_2&=\dfrac{940+900+1100}{3}=980,\\
+    \barline{x}_3&=\dfrac{2626+2900+2934}{3}=2820,\\
+    \barline{x}_4&=\dfrac{2500+2360+2616}{3}=2492.
+\end{aligned}
+\]
+
+总平均数为：
+\[
+    \barline{x}=\dfrac{1780+980+2820+2492}{4}=2018
+\]
+
+按季平均法的季节指数为：
+\[
+    S_i=\dfrac{\barline{x}_i}{\barline{x}}\times100\%
+\]
+
+季节调整值按
+\[
+    \text{调整后销售量}=\dfrac{\text{原销售量}}{S_i/100}
+\]
+计算，结果如下：
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.5}
+    \setlength{\tabcolsep}{7pt}{
+        \begin{tabular}{c|c|c|ccc}
+            \hline
+            季度 & 同季平均数 & 季节指数 & 第一年调整值 & 第二年调整值 & 第三年调整值 \\
+            \hline
+            一季度 & 1780 & $88.21\%$ & 1915.97 & 2040.67 & 2097.36 \\
+            二季度 & 980 & $48.56\%$ & 1935.63 & 1853.27 & 2265.10 \\
+            三季度 & 2820 & $139.74\%$ & 1879.17 & 2075.25 & 2099.58 \\
+            四季度 & 2492 & $123.49\%$ & 2024.48 & 1911.11 & 2118.41 \\
+            \hline
+        \end{tabular}
+    }
+\end{table}
+
+\textit{\textcolor{gray}{(2) 用趋势剔除法计算季节指数，并对原数据列进行季节调整。}}
+
+将原数据按时间顺序排列为：
+\[
+    1690,\ 940,\ 2626,\ 2500,\ 1800,\ 900,\ 2900,\ 2360,\ 1850,\ 1100,\ 2934,\ 2616
+\]
+
+先计算四项移动平均数，再求中心化移动平均数作为趋势值 $T_t$。可得到 $t=3,\ldots,10$ 的趋势值及比率：
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.5}
+    \setlength{\tabcolsep}{5pt}{
+        \begin{tabular}{c|cccccccc}
+            \hline
+            $t$ & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
+            \hline
+            季度 & 三 & 四 & 一 & 二 & 三 & 四 & 一 & 二 \\
+            $Y_t$ & 2626 & 2500 & 1800 & 900 & 2900 & 2360 & 1850 & 1100 \\
+            $T_t$ & 1952.75 & 1961.50 & 1990.75 & 2007.50 & 1996.25 & 2027.50 & 2056.75 & 2093.00 \\
+            $\dfrac{Y_t}{T_t}\times100\%$ & 134.48 & 127.45 & 90.42 & 44.83 & 145.27 & 116.40 & 89.95 & 52.56 \\
+            \hline
+        \end{tabular}
+    }
+\end{table}
+
+按季度对比率求平均：
+\[
+\begin{aligned}
+    \barline{R}_1&=\dfrac{90.42+89.95}{2}=90.18,\\
+    \barline{R}_2&=\dfrac{44.83+52.56}{2}=48.69,\\
+    \barline{R}_3&=\dfrac{134.48+145.27}{2}=139.87,\\
+    \barline{R}_4&=\dfrac{127.45+116.40}{2}=121.93.
+\end{aligned}
+\]
+
+由于
+\[
+    90.18+48.69+139.87+121.93=400.67
+\]
+与 $400$ 略有差异，需作修正。修正系数为：
+\[
+    k=\dfrac{400}{400.67}\approx0.9983
+\]
+
+趋势剔除法的修正季节指数 $S_t$ 为：
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.5}
+    \setlength{\tabcolsep}{7pt}{
+        \begin{tabular}{c|c|c}
+            \hline
+            季度 & 未修正季节指数 & 修正后季节指数 \\
+            \hline
+            一季度 & $90.18\%$ & $90.03\%$ \\
+            二季度 & $48.69\%$ & $48.61\%$ \\
+            三季度 & $139.87\%$ & $139.64\%$ \\
+            四季度 & $121.93\%$ & $121.72\%$ \\
+            \hline
+        \end{tabular}
+    }
+\end{table}
+
+用修正后的季节指数对原数据进行季节调整：
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.5}
+    \setlength{\tabcolsep}{7pt}{
+        \begin{tabular}{c|c|ccc}
+            \hline
+            季度 & 修正后季节指数 & 第一年调整值 & 第二年调整值 & 第三年调整值 \\
+            \hline
+            一季度 & $90.03\%$ & 1877.15 & 1999.33 & 2054.86 \\
+            二季度 & $48.61\%$ & 1933.70 & 1851.41 & 2262.83 \\
+            三季度 & $139.64\%$ & 1880.58 & 2076.80 & 2101.15 \\
+            四季度 & $121.72\%$ & 2053.89 & 1938.87 & 2149.19 \\
+            \hline
+        \end{tabular}
+    }
+\end{table}
+
+\textit{\textcolor{gray}{(3) 哪一个季度的销售量受季节影响最大？}}
+
+按趋势剔除法修正后的季节指数，四个季度与 $100\%$ 的偏离程度分别为：
+\[
+\begin{aligned}
+    |90.03\%-100\%|&=9.97\%,\\
+    |48.61\%-100\%|&=51.39\%,\\
+    |139.64\%-100\%|&=39.64\%,\\
+    |121.72\%-100\%|&=21.72\%.
+\end{aligned}
+\]
+
+因此，二季度的销售量受季节因素影响最大，且明显低于平均水平。
+
+\textit{\textcolor{gray}{(4) 用乘余法测定季度销售量的循环波动。}}
+
+采用乘法模型
+\[
+    Y_t=T_tS_tC_tI_t
+\]
+其中 $T_t$ 为趋势值，$S_t$ 为季节指数。用乘余法计算循环波动及不规则波动合成指数：
+\[
+    C_tI_t=\dfrac{Y_t}{T_t(S_t/100)}\times100\%
+\]
+
+利用第 (2) 问中的中心化移动平均趋势值和修正后季节指数，得到：
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.5}
+    \setlength{\tabcolsep}{7pt}{
+        \begin{tabular}{c|c|c|c|c|c}
+            \hline
+            $t$ & 时期 & $Y_t$ & $T_t$ & $S_t$ & $C_tI_t$ \\
+            \hline
+            3 & 第一年三季度 & 2626 & 1952.75 & $139.64\%$ & $96.30\%$ \\
+            4 & 第一年四季度 & 2500 & 1961.50 & $121.72\%$ & $104.71\%$ \\
+            5 & 第二年一季度 & 1800 & 1990.75 & $90.03\%$ & $100.43\%$ \\
+            6 & 第二年二季度 & 900 & 2007.50 & $48.61\%$ & $92.22\%$ \\
+            7 & 第二年三季度 & 2900 & 1996.25 & $139.64\%$ & $104.04\%$ \\
+            8 & 第二年四季度 & 2360 & 2027.50 & $121.72\%$ & $95.63\%$ \\
+            9 & 第三年一季度 & 1850 & 2056.75 & $90.03\%$ & $99.91\%$ \\
+            10 & 第三年二季度 & 1100 & 2093.00 & $48.61\%$ & $108.11\%$ \\
+            \hline
+        \end{tabular}
+    }
+\end{table}
+
+首尾两端时期无法得到中心化移动平均趋势值，所以循环波动指数只列出 $t=3,\ldots,10$。从结果看，循环波动指数大致围绕 $100\%$ 上下波动。
+
+
+
+\end{document}
