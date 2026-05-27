@@ -1,0 +1,2728 @@
+\documentclass[UTF8,zihao=-4,fontset=fandol]{ctexart}
+
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{booktabs,longtable,array}
+\usepackage{enumitem}
+\usepackage[most]{tcolorbox}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{hyperref}
+\usepackage{datetime}
+\usetikzlibrary{arrows.meta,calc,positioning}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  urlcolor=blue!55!black
+}
+
+\setlist[itemize]{leftmargin=1.8em,itemsep=0.25em,topsep=0.25em}
+\setlist[enumerate]{leftmargin=2em,itemsep=0.25em,topsep=0.25em}
+\renewcommand{\arraystretch}{1.25}
+
+\definecolor{mainblue}{RGB}{35,82,124}
+\definecolor{softblue}{RGB}{237,246,255}
+\definecolor{softgreen}{RGB}{240,249,244}
+\definecolor{softyellow}{RGB}{255,248,226}
+\definecolor{softred}{RGB}{255,241,240}
+
+\tcbset{
+  enhanced,
+  breakable,
+  boxrule=0.5pt,
+  arc=2mm,
+  left=1.4mm,
+  right=1.4mm,
+  top=1mm,
+  bottom=1mm
+}
+
+\newtcolorbox{keybox}[1]{
+  colback=softblue,
+  colframe=mainblue!65!black,
+  title=\textbf{#1}
+}
+
+\newtcolorbox{methodbox}[1]{
+  colback=softgreen,
+  colframe=green!45!black,
+  title=\textbf{#1}
+}
+
+\newtcolorbox{warnbox}[1]{
+  colback=softred,
+  colframe=red!55!black,
+  title=\textbf{#1}
+}
+
+\newtcolorbox{sourcebox}[1]{
+  colback=softyellow,
+  colframe=orange!65!black,
+  title=\textbf{#1}
+}
+
+\newcommand{\E}{\mathbb{E}}
+
+\title{\textbf{应用统计学考点知识清单}}
+\author{Illusionna · CodeX · Claude Code}
+\date{\currenttime,\ \today}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{截图 1：矩估计法}
+
+\begin{sourcebox}{来源}
+第三章“参数的点估计”，截图页码：6/61。
+\end{sourcebox}
+
+\subsection{总体矩与样本矩}
+
+设 $X_1,X_2,\ldots,X_n$ 是来自总体 $X$ 的一个样本。
+
+\begin{keybox}{四类矩}
+\begin{enumerate}
+  \item 总体 $k$ 阶原点矩：
+  \[
+  \mu_k=\E(X^k),\qquad k=1,2,\ldots
+  \]
+  特别地，总体均值 $\E(X)$ 是总体一阶原点矩 $\mu_1$。
+
+  \item 总体 $k$ 阶中心矩：
+  \[
+  \nu_k=\E[(X-\E X)^k],\qquad k=1,2,\ldots
+  \]
+  特别地，总体方差
+  \[
+  \sigma^2=\E[(X-\E X)^2]
+  \]
+  是总体二阶中心矩。
+
+  \item 样本 $k$ 阶原点矩：
+  \[
+  A_k=\frac{1}{n}\sum_{i=1}^{n}X_i^k,\qquad k=1,2,\ldots
+  \]
+  特别地，样本均值
+  \[
+  \bar{X}=\frac{1}{n}\sum_{i=1}^{n}X_i
+  \]
+  是样本一阶原点矩 $A_1$。
+
+  \item 样本 $k$ 阶中心矩：
+  \[
+  B_k=\frac{1}{n}\sum_{i=1}^{n}(X_i-\bar{X})^k,\qquad k=1,2,\ldots
+  \]
+\end{enumerate}
+\end{keybox}
+
+\subsection{样本方差与样本原点矩}
+
+\begin{keybox}{关键关系式}
+\[
+S^2
+=\frac{1}{n-1}\sum_{i=1}^{n}(X_i-\bar{X})^2
+=\frac{1}{n-1}\left(\sum_{i=1}^{n}X_i^2-n\bar{X}^2\right)
+=\frac{n}{n-1}(A_2-A_1^2)
+\]
+其中
+\[
+A_1=\bar{X},\qquad
+A_2=\frac{1}{n}\sum_{i=1}^{n}X_i^2.
+\]
+\end{keybox}
+
+\begin{methodbox}{这张截图的记忆重点}
+矩估计法的核心是：用样本矩估计总体矩。若未知参数能由总体矩表示，就把总体矩换成相应样本矩，解出参数估计量。
+\end{methodbox}
+
+\begin{warnbox}{易错点}
+\begin{itemize}
+  \item 原点矩是 $\E(X^k)$，中心矩是 $\E[(X-\E X)^k]$，不要混用。
+  \item 样本二阶中心矩 $B_2$ 的分母是 $n$；样本方差 $S^2$ 的分母是 $n-1$。
+  \item $S^2=\frac{n}{n-1}(A_2-A_1^2)$，多出的 $\frac{n}{n-1}$ 是常见丢分点。
+\end{itemize}
+\end{warnbox}
+
+\section{截图 2：区间估计总结}
+
+\begin{sourcebox}{来源}
+第三章“区间估计总结”，截图页码：52/61。
+\end{sourcebox}
+
+\subsection{记号约定}
+
+以下 $z_{\alpha}$、$t_{\alpha}(\nu)$、$\chi^2_{\alpha}(\nu)$ 表示对应分布的上 $\alpha$ 分位点。双侧置信区间通常使用 $\alpha/2$。
+
+\subsection{区间估计公式表}
+
+\begin{longtable}{p{0.23\linewidth}p{0.27\linewidth}p{0.42\linewidth}}
+\toprule
+\textbf{估计对象} & \textbf{条件} & \textbf{置信区间} \\
+\midrule
+单个正态总体均值 $\mu$
+&
+$X\sim N(\mu,\sigma^2)$，$\sigma^2$ 已知
+&
+\[
+\bar{X}\pm z_{\alpha/2}\frac{\sigma}{\sqrt{n}}
+\]
+\\
+\addlinespace
+单个正态总体均值 $\mu$
+&
+$X\sim N(\mu,\sigma^2)$，$\sigma^2$ 未知
+&
+\[
+\bar{X}\pm t_{\alpha/2}(n-1)\frac{S}{\sqrt{n}}
+\]
+\\
+\addlinespace
+单个总体均值 $\mu$
+&
+总体分布未知，但 $n$ 较大
+&
+\[
+\bar{X}\pm z_{\alpha/2}\frac{S}{\sqrt{n}}
+\]
+\\
+\addlinespace
+单个正态总体方差 $\sigma^2$
+&
+$X\sim N(\mu,\sigma^2)$
+&
+\[
+\left(
+\frac{(n-1)S^2}{\chi^2_{\alpha/2}(n-1)},
+\frac{(n-1)S^2}{\chi^2_{1-\alpha/2}(n-1)}
+\right)
+\]
+\\
+\addlinespace
+两个正态总体均值差 $\mu_1-\mu_2$
+&
+$\sigma_1^2,\sigma_2^2$ 已知
+&
+\[
+\bar{X}-\bar{Y}
+\pm z_{\alpha/2}
+\sqrt{\frac{\sigma_1^2}{n_1}+\frac{\sigma_2^2}{n_2}}
+\]
+\\
+\addlinespace
+两个正态总体均值差 $\mu_1-\mu_2$
+&
+$\sigma_1^2=\sigma_2^2$，但未知
+&
+\[
+\bar{X}-\bar{Y}
+\pm t_{\alpha/2}(n_1+n_2-2)S_w
+\sqrt{\frac{1}{n_1}+\frac{1}{n_2}}
+\]
+\\
+\addlinespace
+两个正态总体均值差 $\mu_1-\mu_2$
+&
+$\sigma_1^2,\sigma_2^2$ 未知，但 $n_1,n_2$ 较大
+&
+\[
+\bar{X}-\bar{Y}
+\pm z_{\alpha/2}
+\sqrt{\frac{S_1^2}{n_1}+\frac{S_2^2}{n_2}}
+\]
+\\
+\addlinespace
+单个总体比率 $p$
+&
+$X\sim B(1,p)$，大样本近似
+&
+\[
+\hat{p}\pm z_{\alpha/2}
+\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
+\]
+\\
+\addlinespace
+两个总体比率差 $p_1-p_2$
+&
+$X\sim B(1,p_1)$，$Y\sim B(1,p_2)$，大样本近似
+&
+\[
+\hat{p}_1-\hat{p}_2
+\pm z_{\alpha/2}
+\sqrt{
+\frac{\hat{p}_1(1-\hat{p}_1)}{n_1}
++\frac{\hat{p}_2(1-\hat{p}_2)}{n_2}
+}
+\]
+\\
+\bottomrule
+\end{longtable}
+
+\subsection{对应统计量}
+
+\begin{keybox}{常用统计量}
+\[
+Z=\frac{\bar{X}-\mu}{\sigma/\sqrt{n}}\sim N(0,1)
+\]
+\[
+T=\frac{\bar{X}-\mu}{S/\sqrt{n}}\sim t(n-1)
+\]
+\[
+\chi^2=\frac{(n-1)S^2}{\sigma^2}\sim \chi^2(n-1)
+\]
+\[
+Z=
+\frac{\bar{X}-\bar{Y}-(\mu_1-\mu_2)}
+{\sqrt{\frac{\sigma_1^2}{n_1}+\frac{\sigma_2^2}{n_2}}}
+\sim N(0,1)
+\]
+\[
+T=
+\frac{\bar{X}-\bar{Y}-(\mu_1-\mu_2)}
+{S_w\sqrt{\frac{1}{n_1}+\frac{1}{n_2}}}
+\sim t(n_1+n_2-2)
+\]
+\end{keybox}
+
+\begin{keybox}{合并方差}
+当两个正态总体方差未知但相等时，使用合并方差：
+\[
+S_w^2=
+\frac{(n_1-1)S_1^2+(n_2-1)S_2^2}{n_1+n_2-2}.
+\]
+\end{keybox}
+
+\subsection{单侧置信区间}
+
+\begin{keybox}{单侧区间规则}
+\begin{itemize}
+  \item 若由样本构造的随机下限 $\theta_1$ 满足
+  \[
+  P(\theta>\theta_1)=1-\alpha,
+  \]
+  则 $(\theta_1,+\infty)$ 是置信度为 $1-\alpha$ 的单侧置信区间，$\theta_1$ 是单侧置信下限。
+  \item 若由样本构造的随机上限 $\theta_2$ 满足
+  \[
+  P(\theta<\theta_2)=1-\alpha,
+  \]
+  则 $(-\infty,\theta_2)$ 是置信度为 $1-\alpha$ 的单侧置信区间，$\theta_2$ 是单侧置信上限。
+  \item 双侧区间把错误概率分到两端，用 $\alpha/2$；单侧区间只看一端，通常把公式中的 $\alpha/2$ 改为 $\alpha$。
+\end{itemize}
+\end{keybox}
+
+\begin{warnbox}{易错点}
+\begin{itemize}
+  \item 均值区间中，$\sigma$ 已知用 $Z$；$\sigma$ 未知且小样本正态用 $t$。
+  \item 方差区间必须使用 $\chi^2$ 分布，且上下限的分母容易写反。
+  \item 两总体均值差要先判断方差是否已知、是否相等、样本量是否大。
+  \item 比率区间来自 $0$-$1$ 分布的大样本正态近似。
+  \item 单侧置信区间不要继续使用 $\alpha/2$。
+\end{itemize}
+\end{warnbox}
+
+\section{截图 3：假设检验总结}
+
+\begin{sourcebox}{来源}
+第四章“假设检验总结”，截图页码：33/38。
+\end{sourcebox}
+
+\subsection{检验方向与拒绝域}
+
+\begin{keybox}{双侧、右侧、左侧}
+\begin{itemize}
+  \item 双侧检验：
+  \[
+  H_0:\theta=\theta_0,\qquad H_1:\theta\ne\theta_0,
+  \]
+  拒绝域通常写成 $|Z|>z_{\alpha/2}$ 或 $|T|>t_{\alpha/2}$。
+  \item 右侧检验：
+  \[
+  H_0:\theta\le \theta_0,\qquad H_1:\theta>\theta_0,
+  \]
+  拒绝域通常写成 $Z>z_{\alpha}$ 或 $T>t_{\alpha}$。
+  \item 左侧检验：
+  \[
+  H_0:\theta\ge \theta_0,\qquad H_1:\theta<\theta_0,
+  \]
+  拒绝域通常写成 $Z<-z_{\alpha}$ 或 $T<-t_{\alpha}$。
+\end{itemize}
+\end{keybox}
+
+\subsection{假设检验公式表}
+
+\begin{longtable}{p{0.24\linewidth}p{0.32\linewidth}p{0.34\linewidth}}
+\toprule
+\textbf{情况} & \textbf{拒绝域} & \textbf{使用统计量} \\
+\midrule
+单个正态总体 $X\sim N(\mu,\sigma^2)$，检验均值 $\mu$；$\sigma^2$ 已知
+&
+双侧：$|Z|>z_{\alpha/2}$\newline
+右侧：$Z>z_{\alpha}$\newline
+左侧：$Z<-z_{\alpha}$
+&
+\[
+Z=\frac{\bar{X}-\mu_0}{\sigma/\sqrt{n}}\sim N(0,1)
+\]
+\\
+\addlinespace
+单个正态总体 $X\sim N(\mu,\sigma^2)$，检验均值 $\mu$；$\sigma^2$ 未知
+&
+双侧：$|T|>t_{\alpha/2}(n-1)$\newline
+右侧：$T>t_{\alpha}(n-1)$\newline
+左侧：$T<-t_{\alpha}(n-1)$
+&
+\[
+T=\frac{\bar{X}-\mu_0}{S/\sqrt{n}}\sim t(n-1)
+\]
+\\
+\addlinespace
+单个总体检验均值 $\mu$；大样本
+&
+使用大样本正态近似。\newline
+一般要求 $n\ge 30$。
+&
+若 $\sigma$ 已知，用 $\sigma$；若 $\sigma$ 未知，常用 $S$ 代替 $\sigma$。总体分布未知时，也可按中心极限定理作近似处理。
+\\
+\addlinespace
+单个正态总体 $X\sim N(\mu,\sigma^2)$，检验方差 $\sigma^2$
+&
+双侧：$\chi^2<\chi^2_{1-\alpha/2}(n-1)$ 或 $\chi^2>\chi^2_{\alpha/2}(n-1)$\newline
+右侧：$\chi^2>\chi^2_{\alpha}(n-1)$\newline
+左侧：$\chi^2<\chi^2_{1-\alpha}(n-1)$
+&
+\[
+\chi^2=\frac{(n-1)S^2}{\sigma_0^2}\sim \chi^2(n-1)
+\]
+\\
+\addlinespace
+两个正态总体，检验均值差 $\mu_1-\mu_2$；$\sigma_1^2,\sigma_2^2$ 已知
+&
+双侧：$|Z|>z_{\alpha/2}$\newline
+右侧：$Z>z_{\alpha}$\newline
+左侧：$Z<-z_{\alpha}$
+&
+\[
+Z=
+\frac{\bar{X}-\bar{Y}-a}
+{\sqrt{\sigma_1^2/n_1+\sigma_2^2/n_2}}
+\sim N(0,1)
+\]
+\\
+\addlinespace
+两个正态总体，检验均值差 $\mu_1-\mu_2$；$\sigma_1^2=\sigma_2^2=\sigma^2$ 但未知
+&
+双侧：$|T|>t_{\alpha/2}(n_1+n_2-2)$\newline
+右侧：$T>t_{\alpha}(n_1+n_2-2)$\newline
+左侧：$T<-t_{\alpha}(n_1+n_2-2)$
+&
+\[
+T=
+\frac{\bar{X}-\bar{Y}-a}
+{S_w\sqrt{1/n_1+1/n_2}}
+\sim t(n_1+n_2-2)
+\]
+\\
+\addlinespace
+两个正态总体，检验均值差 $\mu_1-\mu_2$；大样本
+&
+使用大样本正态近似。\newline
+一般要求 $n_1,n_2\ge 30$。
+&
+大样本时可在 $Z$ 统计量中用 $S_1^2,S_2^2$ 代替 $\sigma_1^2,\sigma_2^2$；总体分布未知时，也可按近似情况处理。
+\\
+\addlinespace
+单个总体 $X\sim B(1,p)$，检验比率 $p$
+&
+双侧：$|Z|>z_{\alpha/2}$\newline
+右侧：$Z>z_{\alpha}$\newline
+左侧：$Z<-z_{\alpha}$
+&
+\[
+Z=
+\frac{\bar{X}-p_0}
+{\sqrt{p_0(1-p_0)/n}}
+\approx N(0,1)
+\]
+\\
+\addlinespace
+两个总体 $X\sim B(1,p_1)$，$Y\sim B(1,p_2)$，检验两个比率是否相等 $p_1=p_2$
+&
+双侧：$|Z|>z_{\alpha/2}$\newline
+右侧：$Z>z_{\alpha}$\newline
+左侧：$Z<-z_{\alpha}$
+&
+\[
+\hat{p}=\frac{n_1\bar{X}+n_2\bar{Y}}{n_1+n_2},
+\]
+\[
+Z=
+\frac{\bar{X}-\bar{Y}}
+{\sqrt{\hat{p}(1-\hat{p})\left(\frac{1}{n_1}+\frac{1}{n_2}\right)}}
+\approx N(0,1)
+\]
+\\
+\bottomrule
+\end{longtable}
+
+\begin{keybox}{合并方差}
+两总体均值差检验中，若方差相等但未知：
+\[
+S_w^2=
+\frac{(n_1-1)S_1^2+(n_2-1)S_2^2}{n_1+n_2-2}.
+\]
+\end{keybox}
+
+\begin{warnbox}{截图中的条件提醒}
+\begin{itemize}
+  \item 大样本均值检验一般要求样本量至少约为 $30$。
+  \item 单个比率检验要求原假设下的近似条件满足，例如 $np_0>5$，$n(1-p_0)>5$；做比率区间估计时通常检查 $n\hat p$ 与 $n(1-\hat p)$。
+  \item 两个比率相等检验使用合并样本比率 $\hat p$；做两个比率差的区间估计时通常使用各自的样本比率。
+  \item 单侧检验的分位点用 $\alpha$，双侧检验用 $\alpha/2$。
+\end{itemize}
+\end{warnbox}
+
+\section{截图 4：假设检验与区间估计的关系}
+
+\begin{sourcebox}{来源}
+第四章“假设检验与区间估计的关系”，截图页码：30/38。
+\end{sourcebox}
+
+\subsection{核心关系}
+
+\begin{keybox}{置信区间与不拒绝域的对应}
+对给定的显著性水平 $\alpha$，双侧假设检验的拒绝域与置信度为 $1-\alpha$ 的区间估计有密切关系。
+
+对假设
+\[
+H_0:\theta=\theta_0
+\]
+而言，若 $\theta_0$ 落在参数 $\theta$ 的置信度为 $1-\alpha$ 的双侧置信区间内，则不拒绝 $H_0$；若 $\theta_0$ 落在该置信区间外，则拒绝 $H_0$。
+\end{keybox}
+
+\subsection{单个正态总体方差已知时的例子}
+
+在单个正态总体、方差 $\sigma^2$ 已知时，检验
+\[
+H_0:\mu=\mu_0,\qquad H_1:\mu\ne\mu_0.
+\]
+拒绝域为
+\[
+\left|
+\frac{\sqrt{n}(\bar{X}-\mu_0)}{\sigma}
+\right|>z_{\alpha/2}.
+\]
+因此不拒绝域为
+\[
+\left|
+\frac{\sqrt{n}(\bar{X}-\mu_0)}{\sigma}
+\right|\le z_{\alpha/2}.
+\]
+将其改写为关于 $\mu_0$ 的不等式：
+\[
+\bar{X}-\frac{\sigma}{\sqrt{n}}z_{\alpha/2}
+\le
+\mu_0
+\le
+\bar{X}+\frac{\sigma}{\sqrt{n}}z_{\alpha/2}.
+\]
+
+\begin{methodbox}{结论}
+上式正是未知参数 $\mu$ 的置信度为 $1-\alpha$ 的置信区间。因此，对给定显著性水平 $\alpha$，双侧假设检验
+\[
+H_0:\theta=\theta_0
+\]
+中“使原假设不被拒绝的 $\theta_0$ 取值集合”就是参数 $\theta$ 的置信度为 $1-\alpha$ 的双侧置信区间。
+\end{methodbox}
+
+\section{截图 5：相关关系与回归}
+
+\begin{sourcebox}{来源}
+第五章“5.1 相关关系与回归”，截图页码：8/62。
+\end{sourcebox}
+
+\subsection{回归的含义}
+
+\begin{keybox}{定义}
+所谓回归，就是用一个函数 $y=f(x)$ 近似描述随机变量 $Y$ 与非随机变量 $x$ 之间的关系。
+
+从几何上看，就是希望找到一条曲线 $y=f(x)$，近似反映观察到的点
+\[
+(x_1,y_1),(x_2,y_2),\ldots,(x_n,y_n)
+\]
+的变化规律。这样就可以通过函数式 $y=f(x)$ 算出任一点 $x$ 处随机变量 $Y$ 的均值的近似值。
+\end{keybox}
+
+\begin{keybox}{回归模型}
+对每个观察点 $x_i$，按函数式算出的值 $f(x_i)$ 与 $Y$ 的实际值可能会有误差。由于 $Y$ 的随机性，在 $x_i$ 处得到的样本 $Y_i$ 及其与 $f(x_i)$ 的误差
+\[
+\varepsilon_i=Y_i-f(x_i)
+\]
+都是随机变量。
+
+表达式
+\[
+Y_i=f(x_i)+\varepsilon_i,\qquad i=1,2,\ldots,n
+\]
+称为回归模型。
+\end{keybox}
+
+\subsection{回归分析的基本做法}
+
+\begin{methodbox}{从样本点到回归方程}
+\begin{enumerate}
+  \item 通过试验或观测得到变量 $x$ 和 $y$ 的观测值：
+  \[
+  (x_1,y_1),(x_2,y_2),\ldots,(x_n,y_n).
+  \]
+  \item 据此画出散点图。
+  \item 根据散点图的形状，确定能够大体反映散点分布规律的函数类型。
+  \item 据此设出函数式 $y=f(x)$，其中含待定参数；这个函数式称为回归模型的理论方程。
+  \item 根据某种规则求出函数表达式 $f(x)$ 中的待定参数，这些参数称为回归系数。
+  \item 得到由观测值估计出的回归方程 $\hat{y}=\hat{f}(x)$。
+\end{enumerate}
+\end{methodbox}
+
+\section{截图 6：回归分析总结}
+
+\begin{sourcebox}{来源}
+第五章“回归分析总结”，截图页码：57/62。
+\end{sourcebox}
+
+\begin{methodbox}{回归分析的主要思路}
+\begin{enumerate}
+  \item 设出回归方程。
+  \item 根据给定的样本数据，求回归方程中的系数，即使用最小二乘法确定出回归方程。
+  \item 利用相关系数检验变量的线性相关性是否显著。
+  \item 使用 $F$ 检验法对回归效果进行显著性检验。
+  \item 预测：利用得到的回归方程预测某点处的 $y$ 值，并给出其在给定置信度下的预测区间。
+  \item 控制：要将 $y$ 的值控制在某个范围内，计算自变量的值的取值范围。
+\end{enumerate}
+\end{methodbox}
+
+\section{截图 7：回归系数的 F 检验}
+
+\begin{sourcebox}{来源}
+第五章“5.2 一元线性回归”，截图页码：26/62。
+\end{sourcebox}
+
+\subsection{检验目的}
+
+\begin{keybox}{回归系数是否显著}
+当考虑用线性函数
+\[
+y=a+bx
+\]
+近似表达 $x$ 和 $y$ 的线性相关关系时，$x$ 的系数 $b$ 是否可能为零十分关键。
+
+如果 $b$ 大概率等于零，则可以认为 $y$ 与 $x$ 不存在显著的线性相关关系。因此，在使用最小二乘法得到回归方程
+\[
+\hat{y}=\hat{a}+\hat{b}x
+\]
+后，需要进行假设检验：
+\[
+H_0:b=0,\qquad H_1:b\ne 0.
+\]
+\end{keybox}
+
+\subsection{检验统计量}
+
+\begin{keybox}{$F$ 统计量的推导}
+由定理 5.7 的 (3)，
+\[
+\hat{b}\sim N\left(b,\frac{\sigma^2}{L_{xx}}\right),
+\]
+得
+\[
+\frac{\hat{b}-b}{\sigma/\sqrt{L_{xx}}}\sim N(0,1),
+\]
+从而
+\[
+\frac{(\hat{b}-b)^2}{\sigma^2/L_{xx}}\sim \chi^2(1).
+\]
+
+再由定理 5.7 的 (6)，
+\[
+\frac{S_E}{\sigma^2}\sim \chi^2(n-2).
+\]
+
+因此，
+\[
+F=
+\frac{(\hat{b}-b)^2L_{xx}}{S_E/(n-2)}
+\sim F(1,n-2).
+\]
+当原假设 $H_0:b=0$ 成立时，
+\[
+F=
+\frac{\hat{b}^{\,2}L_{xx}}{S_E/(n-2)}
+=
+\frac{(n-2)L_{xy}^{2}}{L_{xx}L_{yy}-L_{xy}^{2}}.
+\]
+\end{keybox}
+
+\subsection{拒绝域与结论}
+
+\begin{methodbox}{判定规则}
+对于给定的显著性水平 $\alpha$，由 $F$ 分布上 $\alpha$ 分位点的概念，
+\[
+P\{F\ge F_{\alpha}(1,n-2)\}=\alpha.
+\]
+因此在原假设 $H_0:b=0$ 下，$F\ge F_{\alpha}(1,n-2)$ 是一个小概率事件，原假设的拒绝域为
+\[
+F\ge F_{\alpha}(1,n-2).
+\]
+
+当
+\[
+F\ge F_{\alpha}(1,n-2)
+\]
+时，否定原假设，认为回归效果显著；当
+\[
+F< F_{\alpha}(1,n-2)
+\]
+时，不拒绝原假设，认为尚不能说明回归效果显著。
+\end{methodbox}
+
+\begin{keybox}{等价形式}
+因
+\[
+S_R=\hat{b}^{\,2}L_{xx},
+\]
+故
+\[
+F=\frac{\hat{b}^{\,2}L_{xx}}{S_E/(n-2)}
+=
+\frac{S_R}{S_E/(n-2)}.
+\]
+\end{keybox}
+
+\section{截图 8：相关系数检验法}
+
+\begin{sourcebox}{来源}
+第五章“5.2 一元线性回归”，截图页码：28/62。
+\end{sourcebox}
+
+\subsection{偏差平方和分解}
+
+\begin{keybox}{$S_T=S_R+S_E$}
+由关系式
+\[
+S_T=S_R+S_E
+\]
+可以看出，总偏差平方和
+\[
+S_T=\sum_{i=1}^{n}(y_i-\bar{y})^2
+\]
+由两部分组成：
+\[
+S_R=\sum_{i=1}^{n}(\hat{y}_i-\bar{y})^2,\qquad
+S_E=\sum_{i=1}^{n}(y_i-\hat{y}_i)^2.
+\]
+其中 $S_R$ 是线性相关部分的偏差，$S_E$ 是由观测随机性造成的偏差。
+\end{keybox}
+
+\subsection{判决系数与相关系数}
+
+\begin{keybox}{定义}
+可以用线性相关部分的偏差占总偏差的比重，反映变量 $y$ 与 $x$ 之间线性相关程度的高低，即定义
+\[
+r^2=
+\frac{S_R}{S_T}
+=
+\frac{\sum_{i=1}^{n}(\hat{y}_i-\bar{y})^2}
+{\sum_{i=1}^{n}(y_i-\bar{y})^2},
+\]
+\[
+r=\operatorname{sgn}(L_{xy})\sqrt{\frac{S_R}{S_T}}
+=
+\operatorname{sgn}(L_{xy})
+\sqrt{
+\frac{\sum_{i=1}^{n}(\hat{y}_i-\bar{y})^2}
+{\sum_{i=1}^{n}(y_i-\bar{y})^2}
+}.
+\]
+即 $r$ 的符号与 $L_{xy}$（亦即与 $\hat{b}$）同号。
+\end{keybox}
+
+\begin{methodbox}{含义}
+显然
+\[
+0\le r^2\le 1,\qquad -1\le r\le 1.
+\]
+当 $r>0$ 时，$y$ 与 $x$ 之间正相关；当 $r<0$ 时，$y$ 与 $x$ 之间负相关。$r$ 越接近 $0$，变量 $y$ 与 $x$ 之间的线性相关程度越低。
+
+为了区分 $r^2$ 和 $r$，通常将 $r^2$ 称为判决系数，而将 $r$ 称为相关系数。
+\end{methodbox}
+
+\subsection{相关系数检验}
+
+\begin{methodbox}{判定规则}
+实际检验时，可根据给定的显著性水平 $\alpha$，查相关系数临界值表得到相关系数临界值
+\[
+r_{\alpha}(n-2).
+\]
+将计算出的相关系数与临界值 $r_{\alpha}(n-2)$ 进行比较。如果
+\[
+|r|>r_{\alpha}(n-2),
+\]
+则认为在显著性水平 $\alpha$ 上，$y$ 与 $x$ 之间存在显著的线性相关关系，线性回归效果显著。
+\end{methodbox}
+
+\section{截图 9：定理 5.6}
+
+\begin{sourcebox}{来源}
+第五章“5.2 一元线性回归”，截图页码：29/62。
+\end{sourcebox}
+
+\begin{keybox}{定理 5.6}
+\[
+r^2=\frac{L_{xy}^{2}}{L_{xx}L_{yy}},
+\qquad
+r=\frac{L_{xy}}{\sqrt{L_{xx}L_{yy}}}.
+\]
+即
+\[
+r=
+\frac{\sum_{i=1}^{n}(x_i-\bar{x})(y_i-\bar{y})}
+{\sqrt{\sum_{i=1}^{n}(x_i-\bar{x})^2
+\sum_{i=1}^{n}(y_i-\bar{y})^2}}
+=
+\frac{\sum_{i=1}^{n}x_iy_i-n\bar{x}\bar{y}}
+{\sqrt{
+\left(\sum_{i=1}^{n}x_i^2-n\bar{x}^{\,2}\right)
+\left(\sum_{i=1}^{n}y_i^2-n\bar{y}^{\,2}\right)
+}}.
+\]
+\end{keybox}
+
+\begin{warnbox}{公式订正提醒}
+相关系数分母应为两个平方和的乘积后再开方：
+\[
+r=
+\frac{\sum_{i=1}^{n}(x_i-\bar{x})(y_i-\bar{y})}
+{\sqrt{\sum_{i=1}^{n}(x_i-\bar{x})^2
+\sum_{i=1}^{n}(y_i-\bar{y})^2}}
+\]
+中的两个平方和之间应理解为乘积。实际使用时写作
+\[
+r=
+\frac{\sum_{i=1}^{n}(x_i-\bar{x})(y_i-\bar{y})}
+{\sqrt{
+\left[\sum_{i=1}^{n}(x_i-\bar{x})^2\right]
+\left[\sum_{i=1}^{n}(y_i-\bar{y})^2\right]
+}}.
+\]
+\end{warnbox}
+
+\subsection{证明}
+
+\begin{keybox}{由偏差平方和推出}
+因
+\[
+r^2=\frac{S_R}{S_T},
+\qquad
+S_R=\frac{L_{xy}^{2}}{L_{xx}},
+\qquad
+S_T=L_{yy},
+\]
+所以
+\[
+r^2=\frac{S_R}{S_T}
+=
+\frac{L_{xy}^{2}}{L_{xx}L_{yy}}.
+\]
+\end{keybox}
+
+\begin{keybox}{三个常用离差和}
+又因
+\[
+L_{xx}
+=\sum_{i=1}^{n}(x_i-\bar{x})^2
+=\sum_{i=1}^{n}x_i^2-n\bar{x}^{\,2},
+\]
+\[
+L_{yy}
+=\sum_{i=1}^{n}(y_i-\bar{y})^2
+=\sum_{i=1}^{n}y_i^2-n\bar{y}^{\,2},
+\]
+\[
+L_{xy}
+=\sum_{i=1}^{n}(x_i-\bar{x})(y_i-\bar{y})
+=\sum_{i=1}^{n}x_iy_i-n\bar{x}\bar{y}.
+\]
+故
+\[
+r
+=\operatorname{sgn}(L_{xy})\sqrt{\frac{S_R}{S_T}}
+=
+\frac{L_{xy}}{\sqrt{L_{xx}L_{yy}}}
+=
+\frac{\sum_{i=1}^{n}(x_i-\bar{x})(y_i-\bar{y})}
+{\sqrt{
+\left[\sum_{i=1}^{n}(x_i-\bar{x})^2\right]
+\left[\sum_{i=1}^{n}(y_i-\bar{y})^2\right]
+}}
+\]
+\[
+=
+\frac{\sum_{i=1}^{n}x_iy_i-n\bar{x}\bar{y}}
+{\sqrt{
+\left(\sum_{i=1}^{n}x_i^2-n\bar{x}^{\,2}\right)
+\left(\sum_{i=1}^{n}y_i^2-n\bar{y}^{\,2}\right)
+}}.
+\]
+\end{keybox}
+
+\section{截图 10：定理 5.8}
+
+\begin{sourcebox}{来源}
+第五章“5.2 一元线性回归”，截图页码：32/62。
+\end{sourcebox}
+
+\subsection{预测区间}
+
+\begin{keybox}{定理 5.8}
+上述关于单个未来观测值 $y_0$ 的预测问题，其置信度为 $1-\alpha$ 的预测区间为
+\[
+(\hat{y}_0-d,\ \hat{y}_0+d),
+\]
+其中
+\[
+d=
+\sqrt{\frac{S_E}{n-2}}\cdot
+\sqrt{1+\frac{1}{n}+\frac{(x_0-\bar{x})^2}{L_{xx}}}\cdot
+t_{\alpha/2}(n-2).
+\]
+这里 $S_E$ 是剩余偏差平方和，$\bar{x}$ 是样本均值，$t_{\alpha/2}(n-2)$ 是 $t$ 分布的上 $\alpha/2$ 分位点。
+注意：这个公式根号内含有最前面的 $1$，因此是单个未来观测值的预测区间；若估计平均响应 $E(Y\mid x_0)$，根号内应为
+\[
+\frac{1}{n}+\frac{(x_0-\bar{x})^2}{L_{xx}}.
+\]
+\end{keybox}
+
+\subsection{证明}
+
+\begin{keybox}{均值与方差}
+由定理 5.7 知，$\hat{y}_0$ 和 $y_0$ 都服从正态分布，且由定理 5.1 和定理 5.2，
+\[
+\begin{aligned}
+E(y_0-\hat{y}_0)
+&=E(y_0)-E(\hat{y}_0) \\
+&=E(a+bx_0+\varepsilon)-E(\hat{a}+\hat{b}x_0) \\
+&=a+bx_0+E(\varepsilon)-\bigl(E(\hat{a})+E(\hat{b})x_0\bigr) \\
+&=a+bx_0-(a+bx_0)=0.
+\end{aligned}
+\]
+\[
+\begin{aligned}
+D(y_0-\hat{y}_0)
+&=D(y_0)+D(\hat{y}_0) \\
+&=D(a+bx_0+\varepsilon)+D(\hat{a}+\hat{b}x_0) \\
+&=D(\varepsilon)+
+\left(D(\hat{a})+D(\hat{b})x_0^2
+-2x_0\bar{x}\frac{\sigma^2}{L_{xx}}\right) \\
+&=\sigma^2+\frac{\sigma^2}{n}
++\frac{(x_0-\bar{x})^2\sigma^2}{L_{xx}}.
+\end{aligned}
+\]
+故
+\[
+y_0-\hat{y}_0
+\sim
+N\left(
+0,\,
+\sigma^2\left(
+1+\frac{1}{n}+\frac{(x_0-\bar{x})^2}{L_{xx}}
+\right)
+\right).
+\]
+\end{keybox}
+
+\begin{keybox}{$t$ 统计量}
+另外，由定理 5.7，
+\[
+\frac{S_E}{\sigma^2}\sim \chi^2(n-2).
+\]
+故
+\[
+T=
+\frac{y_0-\hat{y}_0}
+{
+\sqrt{\frac{S_E}{n-2}}
+\sqrt{1+\frac{1}{n}+\frac{(x_0-\bar{x})^2}{L_{xx}}}
+}
+\sim t(n-2).
+\]
+用第三章定理 3.2 求区间的方法同样推导，即可得到本定理的预测区间结论。
+\end{keybox}
+
+\begin{warnbox}{近似计算}
+注意到当 $x_0$ 在 $\bar{x}$ 附近时，
+\[
+\sqrt{1+\frac{1}{n}+\frac{(x_0-\bar{x})^2}{L_{xx}}}\approx 1.
+\]
+因此在实际计算时，有时为了简便，可取
+\[
+d=
+\sqrt{\frac{S_E}{n-2}}\cdot t_{\alpha/2}(n-2).
+\]
+\end{warnbox}
+
+\section{截图 11：控制问题的解法}
+
+\begin{sourcebox}{来源}
+第五章“5.2 一元线性回归”，截图页码：36/62。
+\end{sourcebox}
+
+\subsection{精确控制方程}
+
+\begin{keybox}{由预测区间建立控制方程}
+由定理 5.8 知道，按回归方程
+\[
+\hat{y}=\hat{a}+\hat{b}x
+\]
+预测或估计 $x_1$ 处的 $y$ 值时，预测区间为
+\[
+(\hat{y}_1-d(x_1),\ \hat{y}_1+d(x_1)),
+\]
+其中
+\[
+\hat{y}_1=\hat{a}+\hat{b}x_1,
+\qquad
+d(x_1)=
+S\cdot
+\sqrt{1+\frac{1}{n}+\frac{(x_1-\bar{x})^2}{L_{xx}}}
+\cdot t_{\alpha/2}(n-2),
+\]
+\[
+S=\sqrt{\frac{S_E}{n-2}}.
+\]
+
+同样，$x_2$ 处 $y$ 值预测区间为
+\[
+(\hat{y}_2-d(x_2),\ \hat{y}_2+d(x_2)),
+\]
+其中
+\[
+\hat{y}_2=\hat{a}+\hat{b}x_2,
+\qquad
+d(x_2)=
+S\cdot
+\sqrt{1+\frac{1}{n}+\frac{(x_2-\bar{x})^2}{L_{xx}}}
+\cdot t_{\alpha/2}(n-2).
+\]
+\end{keybox}
+
+\begin{methodbox}{控制区间}
+为了使得回归方程计算出的 $y$ 值落在区间 $(y_1,y_2)$ 内，若 $\hat b>0$，可令
+\[
+y_1=\hat{a}+\hat{b}x_1-d(x_1),
+\]
+\[
+y_2=\hat{a}+\hat{b}x_2+d(x_2).
+\]
+理论上说，从此方程组中解出 $x_1$ 和 $x_2$，即可完成控制问题的求解。若 $\hat b<0$，上下端点对应的 $x$ 顺序会反过来，应直接解预测区间落入 $(y_1,y_2)$ 的不等式。
+\end{methodbox}
+
+\subsection{实际近似解法}
+
+\begin{warnbox}{用 $2S$ 或 $3S$ 近似}
+实际上，$d(x_1)$、$d(x_2)$ 的复杂表达式使得上述方程组很难求解。因此实际中一般使用剩余标准差 $S$ 的 $2$ 倍或 $3$ 倍近似代替 $d(x_1)$、$d(x_2)$，即解方程组
+\[
+y_1=\hat{a}+\hat{b}x_1-2S,
+\]
+\[
+y_2=\hat{a}+\hat{b}x_2+2S.
+\]
+
+这是因为当样本点数 $n$ 较大时，
+\[
+\sqrt{1+\frac{1}{n}+\frac{(x_2-\bar{x})^2}{L_{xx}}}\approx 1,
+\]
+且 $t_{\alpha/2}$ 的值在 $2$、$3$ 之间。
+\end{warnbox}
+
+\section{截图 12：多元线性回归正规方程与矩阵解}
+
+\begin{sourcebox}{来源}
+第五章“5.3 多元线性回归”，截图页码：40/62。
+\end{sourcebox}
+
+\subsection{多元线性回归模型}
+
+\begin{keybox}{模型形式}
+多元线性回归分析研究一个随机因变量 $y$ 与多个非随机自变量
+\[
+x_1,x_2,\ldots,x_p
+\]
+之间的相关关系。对第 $i$ 组观测值，模型可写为
+\[
+y_i=b_0+b_1x_{i1}+b_2x_{i2}+\cdots+b_px_{ip}+\varepsilon_i,
+\qquad i=1,2,\ldots,n.
+\]
+其中 $b_0,b_1,\ldots,b_p$ 是回归参数，$\varepsilon_i$ 是随机误差变量。
+\end{keybox}
+
+\subsection{正规方程组}
+
+\begin{keybox}{由最小二乘法得到的正规方程}
+与简单线性回归类似，多元线性回归参数的最小二乘估计，就是求
+\[
+b=(b_0,b_1,\ldots,b_p)^{\mathsf T}
+\]
+使残差平方和
+\[
+Q=\sum_{i=1}^{n}\left[y_i-\left(b_0+b_1x_{i1}+\cdots+b_px_{ip}\right)\right]^2
+\]
+达到最小。令各偏导数为 $0$，可得正规方程组：
+\[
+\begin{aligned}
+nb_0+\left(\sum_{i=1}^{n}x_{i1}\right)b_1+\cdots+
+\left(\sum_{i=1}^{n}x_{ip}\right)b_p
+&=\sum_{i=1}^{n}y_i,\\
+\left(\sum_{i=1}^{n}x_{i1}\right)b_0+
+\left(\sum_{i=1}^{n}x_{i1}^{2}\right)b_1+\cdots+
+\left(\sum_{i=1}^{n}x_{i1}x_{ip}\right)b_p
+&=\sum_{i=1}^{n}x_{i1}y_i,\\
+&\vdots\\
+\left(\sum_{i=1}^{n}x_{ip}\right)b_0+
+\left(\sum_{i=1}^{n}x_{ip}x_{i1}\right)b_1+\cdots+
+\left(\sum_{i=1}^{n}x_{ip}^{2}\right)b_p
+&=\sum_{i=1}^{n}x_{ip}y_i.
+\end{aligned}
+\]
+\end{keybox}
+
+\subsection{矩阵表示}
+
+\begin{keybox}{矩阵形式}
+进一步可以将正规方程组写为
+\[
+(X^{\mathsf T}X)b=X^{\mathsf T}Y,
+\]
+其中
+\[
+X=
+\begin{pmatrix}
+1 & x_{11} & x_{12} & \cdots & x_{1p}\\
+1 & x_{21} & x_{22} & \cdots & x_{2p}\\
+\vdots & \vdots & \vdots & \ddots & \vdots\\
+1 & x_{n1} & x_{n2} & \cdots & x_{np}
+\end{pmatrix},
+\qquad
+Y=
+\begin{pmatrix}
+y_1\\
+y_2\\
+\vdots\\
+y_n
+\end{pmatrix},
+\qquad
+b=
+\begin{pmatrix}
+b_0\\
+b_1\\
+\vdots\\
+b_p
+\end{pmatrix}.
+\]
+当 $X^{\mathsf T}X$ 可逆时，解得
+\[
+\hat{b}=(X^{\mathsf T}X)^{-1}X^{\mathsf T}Y.
+\]
+\end{keybox}
+
+\begin{methodbox}{性质}
+在随机误差满足零均值、同方差、相互独立等通常线性模型假设下，多元线性回归参数的最小二乘估计具有线性性、无偏性；在 Gauss--Markov 条件下，它是最小方差线性无偏估计。
+\end{methodbox}
+
+\section{截图 13：多元线性回归的偏差与判决系数}
+
+\begin{sourcebox}{来源}
+第五章“5.3 多元线性回归”，截图页码：41/62。
+\end{sourcebox}
+
+\subsection{三种偏差平方和}
+
+\begin{keybox}{偏差平方和}
+多元线性回归中，常用三种偏差平方和：
+\[
+S_T=\sum_{i=1}^{n}(y_i-\bar{y})^2
+\]
+称为总偏差平方和；
+\[
+S_R=\sum_{i=1}^{n}(\hat{y}_i-\bar{y})^2
+\]
+称为回归偏差平方和；
+\[
+S_E=\sum_{i=1}^{n}(y_i-\hat{y}_i)^2
+\]
+称为剩余偏差平方和。
+\end{keybox}
+
+\begin{keybox}{三者关系}
+\[
+S_T=S_R+S_E.
+\]
+\end{keybox}
+
+\subsection{平均偏差平方和}
+
+\begin{keybox}{平均平方和}
+设 $p$ 为多元线性回归模型中自变量的个数，对应的平均平方和为
+\[
+\mathrm{MS}_T=\frac{S_T}{n-1},
+\qquad
+\mathrm{MS}_R=\frac{S_R}{p},
+\qquad
+\mathrm{MS}_E=\frac{S_E}{n-p-1}.
+\]
+它们分别称为平均总偏差平方和、平均回归偏差平方和、平均剩余偏差平方和。
+\end{keybox}
+
+\section{截图 14：复判决系数与修正复判决系数}
+
+\begin{sourcebox}{来源}
+第五章“5.3 多元线性回归”，截图页码：42/62。
+\end{sourcebox}
+
+\subsection{复判决系数}
+
+\begin{keybox}{定义}
+复判决系数定义为
+\[
+R^2=\frac{S_R}{S_T}
+=1-\frac{S_E}{S_T}.
+\]
+复判决系数显示的是可用 $y$ 与
+\[
+x_1,x_2,\ldots,x_p
+\]
+的相关关系解释的偏差占总偏差的比重，反映了由于使用回归方程预测 $y_i$ 而使总偏差平方和减少的程度。
+\end{keybox}
+
+\begin{methodbox}{含义}
+显然
+\[
+0\le R^2\le 1.
+\]
+当 $R^2$ 越接近 $1$ 时，线性拟合程度越高。
+\end{methodbox}
+
+\subsection{修正复判决系数}
+
+\begin{warnbox}{为什么要修正}
+在多元回归模型中，$R^2$ 的值与变量的个数有关。随着变量的增多，$R^2$ 有变大的趋势。因此有时需要对 $R^2$ 进行修正，获得修正的复判决系数。
+\end{warnbox}
+
+\begin{keybox}{修正复判决系数}
+\[
+R_a^2
+=1-\frac{\mathrm{MS}_E}{\mathrm{MS}_T}
+=1-\frac{n-1}{n-p-1}\cdot\frac{S_E}{S_T}.
+\]
+\end{keybox}
+
+\section{截图 15：多元线性回归的全检验}
+
+\begin{sourcebox}{来源}
+第五章“5.3 多元线性回归”，截图页码：43/62。
+\end{sourcebox}
+
+\subsection{检验目的}
+
+\begin{keybox}{全检验的假设}
+多元线性回归的全检验用于判断整个线性回归模型是否有意义。需要检验的假设为
+\[
+H_0:b_1=b_2=\cdots=b_p=0,
+\qquad
+H_1:b_1,b_2,\ldots,b_p\text{ 不全为零}.
+\]
+若拒绝 $H_0$，即认为 $b_1,b_2,\ldots,b_p$ 中至少有一个不为零，说明线性回归模型有意义。
+
+否则，不拒绝 $H_0$，说明在当前显著性水平和样本信息下，尚不能认为 $y$ 与 $x_1,x_2,\ldots,x_p$ 之间存在显著线性相关关系。
+\end{keybox}
+
+\subsection{检验统计量}
+
+\begin{keybox}{$F$ 统计量}
+全检验采用统计量
+\[
+F=\frac{\mathrm{MS}_R}{\mathrm{MS}_E},
+\]
+其中通常有
+\[
+\mathrm{MS}_R=\frac{S_R}{p},
+\qquad
+\mathrm{MS}_E=\frac{S_E}{n-p-1}.
+\]
+可以证明，当 $H_0$ 为真时，
+\[
+F\sim F(p,n-p-1).
+\]
+\end{keybox}
+
+\subsection{判定规则}
+
+\begin{methodbox}{全检验的拒绝域}
+对给定的显著性水平 $\alpha$，若
+\[
+F>F_{\alpha}(p,n-p-1),
+\]
+则应拒绝原假设 $H_0$，即认为线性回归效果显著。
+
+若
+\[
+F\le F_{\alpha}(p,n-p-1),
+\]
+则不拒绝原假设 $H_0$，认为尚不能说明线性回归效果显著。
+\end{methodbox}
+
+\section{截图 16：多元线性回归的偏检验}
+
+\begin{sourcebox}{来源}
+第五章“5.3 多元线性回归”，截图页码：44/62。
+\end{sourcebox}
+
+\subsection{检验目的}
+
+\begin{keybox}{偏检验的假设}
+对某个 $k$，其中 $1\le k\le p$，要检验的假设为
+\[
+H_0:b_k=0,
+\qquad
+H_1:b_k\ne 0.
+\]
+偏检验主要用来检验模型中的变量 $x_k$ 与 $y$ 之间是否存在显著的相关关系，也就是判断 $x_k$ 是否应当保留在回归模型中。
+
+若不拒绝 $H_0$，通常认为在控制其他自变量后，$x_k$ 的线性作用不显著，可考虑将 $x_k$ 从模型中删除；若拒绝 $H_0$，则 $x_k$ 通常应保留在模型中。
+\end{keybox}
+
+\subsection{检验统计量}
+
+\begin{keybox}{$t$ 统计量}
+偏检验采用统计量
+\[
+t=\frac{\hat{b}_k}{s(\hat{b}_k)},
+\]
+其中
+\[
+s^2(\hat{b}_k)=\mathrm{MS}_E\cdot c_{kk},
+\]
+$c_{kk}$ 是矩阵 $(X^{\mathsf T}X)^{-1}$ 的第 $k+1$ 个对角线元素（$k=0,1,\ldots,p$）。
+可以证明，当原假设 $H_0$ 为真时，
+\[
+t\sim t(n-p-1).
+\]
+\end{keybox}
+
+\subsection{判定规则}
+
+\begin{methodbox}{偏检验的拒绝域}
+对给定的显著性水平 $\alpha$，如果
+\[
+|t|>t_{\alpha/2}(n-p-1),
+\]
+则应拒绝原假设 $H_0$。
+
+如果
+\[
+|t|\le t_{\alpha/2}(n-p-1),
+\]
+则不拒绝原假设 $H_0$。
+\end{methodbox}
+
+\section{截图 17：用多元线性回归进行估计预测}
+
+\begin{sourcebox}{来源}
+第五章“5.3 多元线性回归”，截图页码：45/62。
+\end{sourcebox}
+
+\subsection{点预测}
+
+\begin{keybox}{多元线性回归预测}
+得到回归方程
+\[
+\hat{y}=\hat{b}_0+\hat{b}_1x_1+\cdots+\hat{b}_px_p
+\]
+后，就可以利用回归方程计算任意点处的 $y$ 值。
+
+对于给定的
+\[
+x_0=(x_1^0,x_2^0,\ldots,x_p^0),
+\]
+对应的 $y$ 值的点预测值为
+\[
+\hat{y}_0
+=
+\hat{b}_0+\hat{b}_1x_1^0+\hat{b}_2x_2^0+\cdots+\hat{b}_px_p^0.
+\]
+\end{keybox}
+
+\subsection{回归系数置信区间}
+
+\begin{keybox}{$b_k$ 的置信区间}
+可以证明，回归系数 $b_k$ 的置信度为 $1-\alpha$ 的置信区间为
+\[
+\left(
+\hat{b}_k-s(\hat{b}_k)t_{\alpha/2}(n-p-1),\
+\hat{b}_k+s(\hat{b}_k)t_{\alpha/2}(n-p-1)
+\right).
+\]
+其中
+\[
+s^2(\hat{b}_k)=\mathrm{MS}_E\cdot c_{kk},
+\]
+$c_{kk}$ 是矩阵 $(X^{\mathsf T}X)^{-1}$ 的第 $k+1$ 个对角线元素。
+\end{keybox}
+
+\section{截图 18：非线性回归的变量代换（一）}
+
+\begin{sourcebox}{来源}
+第五章“5.4 非线性回归”，截图页码：52/62。
+\end{sourcebox}
+
+\subsection{基本思想}
+
+\begin{keybox}{非线性问题的线性化}
+一些非线性拟合问题可以通过变量替换转化为线性拟合问题。完成变量代换后，就可以使用线性回归的方法估计参数、检验显著性、进行预测和计算相关系数。
+\end{keybox}
+
+\subsection{常见非线性曲线的变量代换}
+
+\begin{methodbox}{前五类变量代换}
+\begin{enumerate}[label=(\arabic*),leftmargin=2.4em]
+  \item \textbf{幂函数}
+  \[
+  y=ax^b.
+  \]
+  两边取对数，得
+  \[
+  \ln y=\ln a+b\ln x.
+  \]
+  令
+  \[
+  y'=\ln y,\qquad x'=\ln x,\qquad a'=\ln a,
+  \]
+  则得到线性方程
+  \[
+  y'=a'+bx'.
+  \]
+
+  \item \textbf{指数函数}
+  \[
+  y=ae^{bx}.
+  \]
+  两边取对数，得
+  \[
+  \ln y=\ln a+bx.
+  \]
+  令
+  \[
+  y'=\ln y,\qquad a'=\ln a,
+  \]
+  则得到线性方程
+  \[
+  y'=a'+bx.
+  \]
+
+  \item \textbf{指数函数}
+  \[
+  y=ae^{\frac{b}{x}}.
+  \]
+  两边取对数，得
+  \[
+  \ln y=\ln a+b\frac{1}{x}.
+  \]
+  令
+  \[
+  y'=\ln y,\qquad x'=\frac{1}{x},\qquad a'=\ln a,
+  \]
+  则得到线性方程
+  \[
+  y'=a'+bx'.
+  \]
+
+  \item \textbf{对数函数}
+  \[
+  y=a+b\lg x.
+  \]
+  令
+  \[
+  x'=\lg x,
+  \]
+  则得到线性方程
+  \[
+  y=a+bx'.
+  \]
+
+  \item \textbf{双曲线函数}
+  \[
+  \frac{1}{y}=a+\frac{b}{x}.
+  \]
+  令
+  \[
+  y'=\frac{1}{y},\qquad x'=\frac{1}{x},
+  \]
+  则得到线性方程
+  \[
+  y'=a+bx'.
+  \]
+\end{enumerate}
+\end{methodbox}
+
+\section{截图 19：非线性回归的变量代换（二）}
+
+\begin{sourcebox}{来源}
+第五章“5.4 非线性回归”，截图页码：53/62。
+\end{sourcebox}
+
+\subsection{后三类变量代换}
+
+\begin{methodbox}{后三类变量代换}
+\begin{enumerate}[label=(\arabic*),leftmargin=2.4em,start=6]
+  \item \textbf{S 型曲线函数}
+  \[
+  y=\frac{1}{a+be^{-x}}.
+  \]
+  将原方程变形为
+  \[
+  \frac{1}{y}=a+be^{-x}.
+  \]
+  令
+  \[
+  y'=\frac{1}{y},\qquad x'=e^{-x},
+  \]
+  则得到线性方程
+  \[
+  y'=a+bx'.
+  \]
+
+  \item \textbf{二次函数}
+  \[
+  y=a+bx+cx^2.
+  \]
+  令
+  \[
+  x_1=x,\qquad x_2=x^2,
+  \]
+  则得到二元线性方程
+  \[
+  y=a+bx_1+cx_2.
+  \]
+  这是多元线性回归 ($p=2$) 的特例。
+
+  \item \textbf{多项式函数}
+  \[
+  y=a_0+a_1x+a_2x^2+\cdots+a_nx^n.
+  \]
+  令
+  \[
+  x_1=x,\qquad x_2=x^2,\qquad \ldots,\qquad x_n=x^n,
+  \]
+  则得到多元线性方程
+  \[
+  y=a_0+a_1x_1+a_2x_2+\cdots+a_nx_n.
+  \]
+\end{enumerate}
+\end{methodbox}
+
+\begin{warnbox}{计算数据要使用代换后的数据}
+把非线性问题线性化后，就可以用线性回归的方法求出线性回归方程，并做显著性检验、估计、预测、求相关系数等。需要注意的是，计算中使用的数据是作了变量代换后的数据，而不是原始数据。取对数要求相应变量为正；作倒数代换时，分母变量不能为 $0$。
+\end{warnbox}
+
+\section{截图 20：方差分析的概念}
+
+\begin{sourcebox}{来源}
+第六章“方差分析”，截图页码：4/47 至 6/47。
+\end{sourcebox}
+
+\subsection{方差分析要解决的问题}
+
+\begin{keybox}{核心问题}
+方差分析用于检验一个或多个因素的不同水平对某一试验指标是否有显著影响。指标必须是可以量化的数值；因素的水平可以是数量水平，也可以是类别水平。
+\end{keybox}
+
+\begin{methodbox}{基本语言}
+\begin{itemize}
+  \item \textbf{指标}：试验中被观察或测量的数值结果，如灯泡寿命、杀虫率、得率、产量。
+  \item \textbf{因素}：可能影响指标的条件或原因，如灯丝配料、农药种类、温度、反应时间。
+  \item \textbf{水平}：某一因素的不同取值或不同方案。
+  \item \textbf{单因素方差分析}：只有一个因素。
+  \item \textbf{双因素方差分析}：同时考察两个因素。
+\end{itemize}
+\end{methodbox}
+
+\subsection{单因素方差分析的一般模型}
+
+设因素 $X$ 有 $k$ 个水平 $X_1,X_2,\ldots,X_k$，第 $i$ 个水平下做了 $n_i$ 次试验，观测值为
+\[
+x_{i1},x_{i2},\ldots,x_{in_i},\qquad i=1,2,\ldots,k.
+\]
+记
+\[
+n=\sum_{i=1}^{k}n_i,\qquad
+T_i=\sum_{j=1}^{n_i}x_{ij},\qquad
+\bar{x}_i=\frac{T_i}{n_i},\qquad
+\bar{x}=\frac{1}{n}\sum_{i=1}^{k}T_i.
+\]
+
+\begin{keybox}{基本假设}
+把第 $i$ 个水平下的观测变量记为 $X_{ij}$，假设
+\[
+X_{ij}\sim N(\mu_i,\sigma^2),\qquad i=1,2,\ldots,k,\quad j=1,2,\ldots,n_i,
+\]
+且各观测相互独立。即各水平下总体服从正态分布，且方差相同。
+\end{keybox}
+
+\begin{keybox}{检验假设}
+为了判断因素 $X$ 的 $k$ 个水平是否对指标有显著影响，检验
+\[
+H_0:\mu_1=\mu_2=\cdots=\mu_k;
+\qquad
+H_1:\mu_1,\mu_2,\ldots,\mu_k \text{ 至少有两个不相等}.
+\]
+\end{keybox}
+
+\section{截图 21：单因素方差分析}
+
+\begin{sourcebox}{来源}
+第六章“6.2 单因素方差分析”，截图页码：7/47 至 15/47。
+\end{sourcebox}
+
+\subsection{离差平方和及其分解}
+
+\begin{keybox}{三个平方和}
+\[
+S_T=\sum_{i=1}^{k}\sum_{j=1}^{n_i}(x_{ij}-\bar{x})^2
+\]
+称为总离差平方和，反映全体样本对总均值的离差。
+\[
+S_E=\sum_{i=1}^{k}\sum_{j=1}^{n_i}(x_{ij}-\bar{x}_i)^2
+\]
+称为组内离差平方和或随机误差平方和，反映同一水平内部的随机波动。
+\[
+S_A=\sum_{i=1}^{k}n_i(\bar{x}_i-\bar{x})^2
+\]
+称为组间离差平方和或因素平方和，反映不同水平均值之间的差异。
+\end{keybox}
+
+\begin{keybox}{平方和分解}
+\[
+S_T=S_A+S_E.
+\]
+方差分析的思想就是把总离差分解为“因素水平差异造成的离差”和“随机误差造成的离差”。
+\end{keybox}
+
+\begin{methodbox}{单因素计算型公式}
+按数据表计算时，常先求
+\[
+T=\sum_{i=1}^{k}T_i,\qquad \bar{x}=\frac{T}{n}.
+\]
+平方和也可写成便于代数计算的形式：
+\[
+S_A=\sum_{i=1}^{k}\frac{T_i^2}{n_i}-\frac{T^2}{n},
+\]
+\[
+S_T=\sum_{i=1}^{k}\sum_{j=1}^{n_i}x_{ij}^{2}-\frac{T^2}{n},
+\qquad
+S_E=S_T-S_A.
+\]
+\end{methodbox}
+
+\subsection{检验统计量}
+
+\begin{keybox}{均方差与 F 统计量}
+\[
+MS_A=\frac{S_A}{k-1},\qquad
+MS_E=\frac{S_E}{n-k},
+\]
+\[
+F=\frac{MS_A}{MS_E}
+=\frac{S_A/(k-1)}{S_E/(n-k)}.
+\]
+在 $H_0$ 成立时，
+\[
+F\sim F(k-1,n-k).
+\]
+\end{keybox}
+
+\begin{methodbox}{拒绝域}
+给定显著性水平 $\alpha$，若
+\[
+F>F_{\alpha}(k-1,n-k),
+\]
+则拒绝 $H_0$，认为因素的不同水平对指标有显著影响；否则不拒绝 $H_0$。
+\end{methodbox}
+
+\subsection{单因素方差分析表}
+
+\begin{longtable}{@{}p{0.18\linewidth}p{0.22\linewidth}p{0.13\linewidth}p{0.21\linewidth}p{0.14\linewidth}@{}}
+\toprule
+\textbf{方差来源} & \textbf{平方和} & \textbf{自由度} & \textbf{均方差} & \textbf{F 值} \\
+\midrule
+组间离差 & $S_A$ & $k-1$ & $MS_A=\dfrac{S_A}{k-1}$ & $\dfrac{MS_A}{MS_E}$ \\
+组内离差 & $S_E$ & $n-k$ & $MS_E=\dfrac{S_E}{n-k}$ & \\
+总离差 & $S_T$ & $n-1$ & & \\
+\bottomrule
+\end{longtable}
+
+\begin{keybox}{F 检验的直观解释}
+$S_A$ 表示组间差异，$S_E$ 表示组内随机差异。当 $F=MS_A/MS_E$ 明显大于 $1$ 时，说明组间差异相对于组内随机波动已经足够大，因此倾向于拒绝原假设。
+\end{keybox}
+
+\begin{keybox}{期望均方的理解}
+单因素方差分析中，
+\[
+\E(MS_E)=\sigma^2,
+\]
+\[
+\E(MS_A)=\sigma^2+\frac{1}{k-1}\sum_{i=1}^{k}n_i(\mu_i-\mu)^2,
+\qquad
+\mu=\frac{1}{n}\sum_{i=1}^{k}n_i\mu_i.
+\]
+当 $H_0$ 成立时，$\mu_1=\mu_2=\cdots=\mu_k$，于是 $\E(MS_A)=\E(MS_E)=\sigma^2$，所以 $F$ 应接近 $1$。
+\end{keybox}
+
+\section{截图 22：多重比较}
+
+\begin{sourcebox}{来源}
+第六章“多重比较”，截图页码：17/47 至 20/47。
+\end{sourcebox}
+
+\subsection{为什么要做多重比较}
+
+\begin{keybox}{多重比较的作用}
+若单因素方差分析拒绝
+\[
+H_0:\mu_1=\mu_2=\cdots=\mu_k,
+\]
+只能说明至少有两个水平的均值有显著差异，但不能直接判断是哪两个水平不同。因此需要进一步作两两显著性检验。
+\end{keybox}
+
+\subsection{LSD 方法}
+
+\begin{methodbox}{Fisher 最小显著差异法}
+对任意两个水平 $i$ 与 $j$：
+\begin{enumerate}
+  \item 提出假设：
+  \[
+  H_0:\mu_i=\mu_j,\qquad H_1:\mu_i\neq\mu_j.
+  \]
+  \item 计算样本均值差：
+  \[
+  |\bar{x}_i-\bar{x}_j|.
+  \]
+  \item 计算
+  \[
+  LSD=t_{\alpha/2}(n-k)
+  \sqrt{MS_E\left(\frac{1}{n_i}+\frac{1}{n_j}\right)}.
+  \]
+  其中 $MS_E=S_E/(n-k)$，所以也可写成
+  \[
+  LSD=t_{\alpha/2}(n-k)
+  \sqrt{\frac{S_E}{n-k}\left(\frac{1}{n_i}+\frac{1}{n_j}\right)}.
+  \]
+  \item 若
+  \[
+  |\bar{x}_i-\bar{x}_j|>LSD,
+  \]
+  则拒绝 $H_0$，认为这两个水平的均值有显著差异；否则不拒绝 $H_0$。
+\end{enumerate}
+\end{methodbox}
+
+\begin{warnbox}{LSD 的使用条件}
+LSD 多重比较通常放在总体方差分析显著之后使用。公式中的 $MS_E$ 是方差分析表里的组内均方差，分布自由度是 $n-k$。
+\end{warnbox}
+
+\section{截图 23：双因素无重复方差分析}
+
+\begin{sourcebox}{来源}
+第六章“6.3.1 无重复的双因素方差分析”，截图页码：21/47 至 28/47。
+\end{sourcebox}
+
+\subsection{模型与假设}
+
+设因素 $A$ 有 $m$ 个水平，因素 $B$ 有 $n$ 个水平。每个水平组合只做一次试验，观测值为
+\[
+x_{ij},\qquad i=1,2,\ldots,m,\quad j=1,2,\ldots,n.
+\]
+记
+\[
+\begin{gathered}
+T_{i\cdot}=\sum_{j=1}^{n}x_{ij},\qquad
+T_{\cdot j}=\sum_{i=1}^{m}x_{ij},\qquad
+T=\sum_{i=1}^{m}\sum_{j=1}^{n}x_{ij},\\
+\bar{x}_{i\cdot}=\frac{1}{n}\sum_{j=1}^{n}x_{ij},\qquad
+\bar{x}_{\cdot j}=\frac{1}{m}\sum_{i=1}^{m}x_{ij},\qquad
+\bar{x}=\frac{1}{mn}\sum_{i=1}^{m}\sum_{j=1}^{n}x_{ij}.
+\end{gathered}
+\]
+
+\begin{keybox}{总体均值与效应记号}
+假定
+\[
+X_{ij}\sim N(\mu_{ij},\sigma^2),
+\]
+且这 $mn$ 个随机变量相互独立。无重复双因素方差分析通常还要求交互作用不存在或可忽略，即均值可近似写为
+\[
+\mu_{ij}=\mu+\alpha_i+\beta_j.
+\]
+记
+\[
+\mu_{i\cdot}=\frac{1}{n}\sum_{j=1}^{n}\mu_{ij},\qquad
+\mu_{\cdot j}=\frac{1}{m}\sum_{i=1}^{m}\mu_{ij},\qquad
+\mu=\frac{1}{mn}\sum_{i=1}^{m}\sum_{j=1}^{n}\mu_{ij},
+\]
+\[
+\alpha_i=\mu_{i\cdot}-\mu,\qquad
+\beta_j=\mu_{\cdot j}-\mu.
+\]
+其中 $\alpha_i$ 表示因素 $A$ 第 $i$ 个水平的效应，$\beta_j$ 表示因素 $B$ 第 $j$ 个水平的效应。
+\end{keybox}
+
+\begin{keybox}{两个检验}
+检验因素 $A$ 是否显著：
+\[
+H_{01}:\alpha_1=\alpha_2=\cdots=\alpha_m=0;
+\qquad
+H_{11}:\alpha_1,\alpha_2,\ldots,\alpha_m \text{ 不全为 }0.
+\]
+检验因素 $B$ 是否显著：
+\[
+H_{02}:\beta_1=\beta_2=\cdots=\beta_n=0;
+\qquad
+H_{12}:\beta_1,\beta_2,\ldots,\beta_n \text{ 不全为 }0.
+\]
+\end{keybox}
+
+\subsection{平方和分解}
+
+\begin{keybox}{双因素无重复的四个平方和}
+\[
+S_T=\sum_{i=1}^{m}\sum_{j=1}^{n}(x_{ij}-\bar{x})^2,
+\]
+\[
+S_A=n\sum_{i=1}^{m}(\bar{x}_{i\cdot}-\bar{x})^2,
+\qquad
+S_B=m\sum_{j=1}^{n}(\bar{x}_{\cdot j}-\bar{x})^2,
+\]
+\[
+S_E=\sum_{i=1}^{m}\sum_{j=1}^{n}
+(x_{ij}-\bar{x}_{i\cdot}-\bar{x}_{\cdot j}+\bar{x})^2.
+\]
+分解式为
+\[
+S_T=S_A+S_B+S_E.
+\]
+\end{keybox}
+
+\begin{methodbox}{双因素无重复计算型公式}
+利用行和、列和与总和，可以快速计算：
+\[
+S_A=\frac{1}{n}\sum_{i=1}^{m}T_{i\cdot}^{2}-\frac{T^2}{mn},
+\]
+\[
+S_B=\frac{1}{m}\sum_{j=1}^{n}T_{\cdot j}^{2}-\frac{T^2}{mn},
+\]
+\[
+S_T=\sum_{i=1}^{m}\sum_{j=1}^{n}x_{ij}^{2}-\frac{T^2}{mn},
+\qquad
+S_E=S_T-S_A-S_B.
+\]
+\end{methodbox}
+
+\subsection{检验统计量与方差分析表}
+
+\begin{longtable}{@{}p{0.17\linewidth}p{0.13\linewidth}p{0.18\linewidth}p{0.25\linewidth}p{0.15\linewidth}@{}}
+\toprule
+\textbf{方差来源} & \textbf{平方和} & \textbf{自由度} & \textbf{均方差} & \textbf{F 值} \\
+\midrule
+因素 $A$ & $S_A$ & $m-1$ & $MS_A=\dfrac{S_A}{m-1}$ & $\dfrac{MS_A}{MS_E}$ \\
+因素 $B$ & $S_B$ & $n-1$ & $MS_B=\dfrac{S_B}{n-1}$ & $\dfrac{MS_B}{MS_E}$ \\
+随机离差 & $S_E$ & $(m-1)(n-1)$ & $MS_E=\dfrac{S_E}{(m-1)(n-1)}$ & \\
+总离差 & $S_T$ & $mn-1$ & & \\
+\bottomrule
+\end{longtable}
+
+\begin{methodbox}{判定规则}
+\[
+F_A>F_{\alpha}(m-1,(m-1)(n-1))
+\]
+时，拒绝 $H_{01}$，认为因素 $A$ 显著。
+\[
+F_B>F_{\alpha}(n-1,(m-1)(n-1))
+\]
+时，拒绝 $H_{02}$，认为因素 $B$ 显著。
+\end{methodbox}
+
+\begin{warnbox}{无重复双因素的易错点}
+每个组合只有一个观测值时，无法单独检验交互作用。若交互作用明显存在，表中的 $S_E$ 会混入交互效应，不再只是随机误差；因此无重复双因素方差分析的 $F$ 检验依赖“无交互或交互可忽略”的前提。
+\end{warnbox}
+
+\section{截图 24：双因素等重复方差分析}
+
+\begin{sourcebox}{来源}
+第六章“6.3.2 等重复的双因素方差分析”，截图页码：29/47 至 39/47。
+\end{sourcebox}
+
+\subsection{模型与三个检验}
+
+设因素 $A$ 有 $m$ 个水平，因素 $B$ 有 $n$ 个水平，每个水平组合下重复 $q$ 次，观测值为
+\[
+x_{ijr},\qquad
+i=1,2,\ldots,m,\quad j=1,2,\ldots,n,\quad r=1,2,\ldots,q.
+\]
+记
+\[
+\bar{x}_{i\cdot\cdot},\qquad
+\bar{x}_{\cdot j\cdot},\qquad
+\bar{x}_{ij\cdot},\qquad
+\bar{x}
+\]
+分别表示因素 $A$ 水平均值、因素 $B$ 水平均值、组合均值和总均值。
+
+\begin{keybox}{需要检验的三个效应}
+\begin{itemize}
+  \item 因素 $A$ 主效应：
+  \[
+  H_{01}:\alpha_1=\alpha_2=\cdots=\alpha_m=0.
+  \]
+  \item 因素 $B$ 主效应：
+  \[
+  H_{02}:\beta_1=\beta_2=\cdots=\beta_n=0.
+  \]
+  \item 交互效应 $AB$：
+  \[
+  H_{03}:(\alpha\beta)_{ij}=0,\qquad i=1,\ldots,m,\quad j=1,\ldots,n.
+  \]
+\end{itemize}
+\end{keybox}
+
+\subsection{平方和分解}
+
+\begin{keybox}{双因素等重复的平方和}
+\[
+S_T=\sum_{i=1}^{m}\sum_{j=1}^{n}\sum_{r=1}^{q}(x_{ijr}-\bar{x})^2,
+\]
+\[
+S_A=nq\sum_{i=1}^{m}(\bar{x}_{i\cdot\cdot}-\bar{x})^2,
+\qquad
+S_B=mq\sum_{j=1}^{n}(\bar{x}_{\cdot j\cdot}-\bar{x})^2,
+\]
+\[
+S_{AB}=q\sum_{i=1}^{m}\sum_{j=1}^{n}
+(\bar{x}_{ij\cdot}-\bar{x}_{i\cdot\cdot}-\bar{x}_{\cdot j\cdot}+\bar{x})^2,
+\]
+\[
+S_E=\sum_{i=1}^{m}\sum_{j=1}^{n}\sum_{r=1}^{q}
+(x_{ijr}-\bar{x}_{ij\cdot})^2.
+\]
+分解式为
+\[
+S_T=S_A+S_B+S_{AB}+S_E.
+\]
+\end{keybox}
+
+\subsection{方差分析表}
+
+\begin{longtable}{@{}p{0.15\linewidth}p{0.13\linewidth}p{0.18\linewidth}p{0.26\linewidth}p{0.16\linewidth}@{}}
+\toprule
+\textbf{方差来源} & \textbf{平方和} & \textbf{自由度} & \textbf{均方差} & \textbf{F 值} \\
+\midrule
+因素 $A$ & $S_A$ & $m-1$ & $MS_A=\dfrac{S_A}{m-1}$ & $\dfrac{MS_A}{MS_E}$ \\
+因素 $B$ & $S_B$ & $n-1$ & $MS_B=\dfrac{S_B}{n-1}$ & $\dfrac{MS_B}{MS_E}$ \\
+交互 $AB$ & $S_{AB}$ & $(m-1)(n-1)$ & $MS_{AB}=\dfrac{S_{AB}}{(m-1)(n-1)}$ & $\dfrac{MS_{AB}}{MS_E}$ \\
+随机离差 & $S_E$ & $mn(q-1)$ & $MS_E=\dfrac{S_E}{mn(q-1)}$ & \\
+总离差 & $S_T$ & $mnq-1$ & & \\
+\bottomrule
+\end{longtable}
+
+\begin{methodbox}{判定规则}
+\[
+F_A>F_{\alpha}(m-1,mn(q-1))\quad \Rightarrow \quad \text{因素 }A\text{ 显著},
+\]
+\[
+F_B>F_{\alpha}(n-1,mn(q-1))\quad \Rightarrow \quad \text{因素 }B\text{ 显著},
+\]
+\[
+F_{AB}>F_{\alpha}((m-1)(n-1),mn(q-1))
+\quad \Rightarrow \quad
+\text{交互作用显著}.
+\]
+\end{methodbox}
+
+\section{截图 25：方差分析做题流程}
+
+\begin{sourcebox}{来源}
+第六章方差分析例题与总结页，截图页码：14/47 至 45/47。
+\end{sourcebox}
+
+\begin{methodbox}{通用计算步骤}
+\begin{enumerate}
+  \item 明确类型：单因素、双因素无重复、双因素等重复。
+  \item 写出原假设和备择假设。
+  \item 计算各水平样本量、求和、均值和总均值。
+  \item 按对应公式计算平方和，并检查总平方和分解是否成立。
+  \item 填方差分析表：平方和、自由度、均方差、F 值。
+  \item 查 $F_{\alpha}$ 上分位点，比较 $F$ 与临界值。
+  \item 得出结论：拒绝原假设表示对应因素或交互作用对指标有显著影响。
+\end{enumerate}
+\end{methodbox}
+
+\begin{warnbox}{常见易错点}
+\begin{itemize}
+  \item $F_{\alpha}(d_1,d_2)$ 使用的是上 $\alpha$ 分位点，自由度顺序不能写反。
+  \item 单因素中总样本量是 $n=\sum n_i$，误差自由度是 $n-k$，不是 $n-1$。
+  \item 双因素无重复不能检验交互作用；双因素等重复才可以检验交互效应。
+  \item 判断结论时，“不拒绝 $H_0$”比“接受 $H_0$”更严谨。
+  \item 若总体方差分析已经显著，再做 LSD 等多重比较来判断具体哪些水平均值不同。
+\end{itemize}
+\end{warnbox}
+
+\section{截图 26：双因素等重复方差分析补充}
+
+\begin{sourcebox}{来源}
+第六章“6.3 双因素方差分析”，截图页码：31/47、34/47、35/47、36/47。
+\end{sourcebox}
+
+\subsection{等重复试验的数据结构}
+
+\begin{keybox}{为什么需要等重复}
+在双因素问题中，因素 $A$ 和因素 $B$ 除了各自可能对指标产生主效应外，还可能联合产生交互效应。若每个组合 $A_iB_j$ 只有一个观测值，则交互效应与随机误差无法分离；若每个组合都重复 $q$ 次，就可以单独检验交互效应。
+\end{keybox}
+
+设因素 $A$ 有 $m$ 个水平 $A_1,A_2,\ldots,A_m$，因素 $B$ 有 $n$ 个水平 $B_1,B_2,\ldots,B_n$。每个组合 $A_iB_j$ 做 $q$ 次试验，观测值记为
+\[
+X_{ijk},\qquad
+i=1,2,\ldots,m,\quad j=1,2,\ldots,n,\quad k=1,2,\ldots,q.
+\]
+常用求和与均值记号为
+\[
+T_{ij\cdot}=\sum_{k=1}^{q}X_{ijk},\qquad
+\bar X_{ij\cdot}=\frac{1}{q}\sum_{k=1}^{q}X_{ijk},
+\]
+\[
+\bar X_{i\cdot\cdot}
+=\frac{1}{nq}\sum_{j=1}^{n}\sum_{k=1}^{q}X_{ijk},
+\qquad
+\bar X_{\cdot j\cdot}
+=\frac{1}{mq}\sum_{i=1}^{m}\sum_{k=1}^{q}X_{ijk},
+\]
+\[
+\bar X
+=\frac{1}{mnq}\sum_{i=1}^{m}\sum_{j=1}^{n}\sum_{k=1}^{q}X_{ijk}.
+\]
+
+\subsection{平方和与自由度}
+
+\begin{keybox}{五个平方和}
+\[
+S_A=nq\sum_{i=1}^{m}(\bar X_{i\cdot\cdot}-\bar X)^2,
+\qquad
+S_B=mq\sum_{j=1}^{n}(\bar X_{\cdot j\cdot}-\bar X)^2,
+\]
+\[
+S_{AB}
+=q\sum_{i=1}^{m}\sum_{j=1}^{n}
+(\bar X_{ij\cdot}-\bar X_{i\cdot\cdot}-\bar X_{\cdot j\cdot}+\bar X)^2,
+\]
+\[
+S_E
+=\sum_{i=1}^{m}\sum_{j=1}^{n}\sum_{k=1}^{q}
+(X_{ijk}-\bar X_{ij\cdot})^2,
+\qquad
+S_T
+=\sum_{i=1}^{m}\sum_{j=1}^{n}\sum_{k=1}^{q}
+(X_{ijk}-\bar X)^2.
+\]
+平方和分解为
+\[
+S_T=S_A+S_B+S_{AB}+S_E.
+\]
+\end{keybox}
+
+\begin{methodbox}{自由度对应关系}
+\[
+\nu_A=m-1,\qquad
+\nu_B=n-1,\qquad
+\nu_{AB}=(m-1)(n-1),
+\]
+\[
+\nu_E=mn(q-1),\qquad
+\nu_T=mnq-1.
+\]
+并且
+\[
+(m-1)+(n-1)+(m-1)(n-1)+mn(q-1)=mnq-1.
+\]
+\end{methodbox}
+
+\subsection{期望平方和与分布结论}
+
+\begin{keybox}{定理 6.13：期望平方和}
+\[
+E(S_A)=(m-1)\sigma^2+nq\sum_{i=1}^{m}\alpha_i^2,
+\qquad
+E(S_B)=(n-1)\sigma^2+mq\sum_{j=1}^{n}\beta_j^2,
+\]
+\[
+E(S_E)=mn(q-1)\sigma^2,
+\qquad
+E(S_{AB})=(m-1)(n-1)\sigma^2
++q\sum_{i=1}^{m}\sum_{j=1}^{n}\gamma_{ij}^{2}.
+\]
+\end{keybox}
+
+\begin{keybox}{定理 6.14：卡方分布}
+\[
+\frac{S_E}{\sigma^2}\sim\chi^2(mn(q-1)).
+\]
+当 $H_{01}$ 成立时，
+\[
+\frac{S_A}{\sigma^2}\sim\chi^2(m-1);
+\]
+当 $H_{02}$ 成立时，
+\[
+\frac{S_B}{\sigma^2}\sim\chi^2(n-1);
+\]
+当 $H_{03}$ 成立时，
+\[
+\frac{S_{AB}}{\sigma^2}\sim\chi^2((m-1)(n-1)).
+\]
+\end{keybox}
+
+\begin{keybox}{定理 6.15：F 分布}
+当相应原假设成立时，有
+\[
+F_A
+=\frac{S_A/(m-1)}{S_E/[mn(q-1)]}
+\sim F(m-1,mn(q-1)),
+\]
+\[
+F_B
+=\frac{S_B/(n-1)}{S_E/[mn(q-1)]}
+\sim F(n-1,mn(q-1)),
+\]
+\[
+F_{AB}
+=\frac{S_{AB}/[(m-1)(n-1)]}{S_E/[mn(q-1)]}
+\sim F((m-1)(n-1),mn(q-1)).
+\]
+\end{keybox}
+
+\subsection{假设检验与方差分析表}
+
+\begin{keybox}{定理 6.16：三个原假设}
+\[
+H_{01}:\alpha_1=\alpha_2=\cdots=\alpha_m=0;
+\qquad
+H_{11}:\alpha_1,\alpha_2,\ldots,\alpha_m\text{ 不全为 }0.
+\]
+\[
+H_{02}:\beta_1=\beta_2=\cdots=\beta_n=0;
+\qquad
+H_{12}:\beta_1,\beta_2,\ldots,\beta_n\text{ 不全为 }0.
+\]
+\[
+H_{03}:\gamma_{ij}=0,\quad i=1,2,\ldots,m,\ j=1,2,\ldots,n;
+\qquad
+H_{13}:\gamma_{ij}\text{ 不全为 }0.
+\]
+\end{keybox}
+
+\begin{longtable}{@{}p{0.17\linewidth}p{0.14\linewidth}p{0.2\linewidth}p{0.24\linewidth}p{0.13\linewidth}@{}}
+\toprule
+\textbf{方差来源} & \textbf{平方和} & \textbf{自由度} & \textbf{均方} & \textbf{F 值} \\
+\midrule
+因素 $A$ & $S_A$ & $m-1$ & $\dfrac{S_A}{m-1}$ & $F_A$ \\
+因素 $B$ & $S_B$ & $n-1$ & $\dfrac{S_B}{n-1}$ & $F_B$ \\
+交互 $AB$ & $S_{AB}$ & $(m-1)(n-1)$ & $\dfrac{S_{AB}}{(m-1)(n-1)}$ & $F_{AB}$ \\
+随机离差 & $S_E$ & $mn(q-1)$ & $\dfrac{S_E}{mn(q-1)}$ & \\
+总离差 & $S_T$ & $mnq-1$ & & \\
+\bottomrule
+\end{longtable}
+
+\begin{methodbox}{判定规则}
+\[
+F_A>F_{\alpha}(m-1,mn(q-1))
+\quad\Rightarrow\quad
+\text{拒绝 }H_{01};
+\]
+\[
+F_B>F_{\alpha}(n-1,mn(q-1))
+\quad\Rightarrow\quad
+\text{拒绝 }H_{02};
+\]
+\[
+F_{AB}>F_{\alpha}((m-1)(n-1),mn(q-1))
+\quad\Rightarrow\quad
+\text{拒绝 }H_{03}.
+\]
+若对应 $F$ 值不超过临界值，则不拒绝相应原假设。
+\end{methodbox}
+
+\begin{warnbox}{做题提醒}
+\begin{itemize}
+  \item 等重复双因素方差分析的误差均方统一为 $MS_E=S_E/[mn(q-1)]$，三个 $F$ 统计量都用它作分母。
+  \item 先检验交互效应 $AB$ 往往更有解释价值；若交互显著，单独解释主效应时要结合具体水平组合。
+  \item 临界值 $F_{\alpha}(d_1,d_2)$ 的第一个自由度来自被检验效应，第二个自由度永远是误差自由度 $mn(q-1)$。
+\end{itemize}
+\end{warnbox}
+
+\section{截图 27：时间序列分析总结}
+
+\begin{sourcebox}{来源}
+第七章“时间序列分析总结”，截图页码：45/52。
+\end{sourcebox}
+
+\subsection{时间序列的四个因素}
+
+\begin{keybox}{乘法模型}
+时间序列分析将原始序列的变化分解为四类因素：
+\[
+Y=T\cdot S\cdot C\cdot I.
+\]
+其中 $Y$ 为原始时间序列观测值，$T$ 为长期趋势，$S$ 为季节变动，$C$ 为循环波动，$I$ 为不规则波动。
+\end{keybox}
+
+\begin{longtable}{@{}p{0.18\linewidth}p{0.72\linewidth}@{}}
+\toprule
+\textbf{因素} & \textbf{含义} \\
+\midrule
+长期趋势 $T$ & 序列在较长时期内持续上升、下降或平稳变化的总体方向。 \\
+季节变动 $S$ & 一年以内按月、季、周或日重复出现的周期性变动。 \\
+循环波动 $C$ & 围绕长期趋势发生的周期性起伏，周期长度和波动幅度通常不固定。 \\
+不规则波动 $I$ & 随机因素、突发事件等导致的无规律变动。 \\
+\bottomrule
+\end{longtable}
+
+\begin{methodbox}{时间序列分析的主要思想}
+时间序列分析的核心是：把长期趋势、季节变动、循环波动和不规则波动对原始数据的影响分离出来，分别度量它们对时间序列的影响程度和变化规律，并在此基础上进行解释和预测。
+\end{methodbox}
+
+\subsection{长期趋势的测定}
+
+\begin{keybox}{常用方法}
+\begin{itemize}
+  \item 图示法：用散点图、折线图等观察序列的整体变化方向。
+  \item 滑动平均法：包括普通滑动平均、中心滑动平均和加权滑动平均，用来削弱短期波动。
+  \item 指数平滑法：用递推平滑序列降低随机波动影响。
+  \item 回归分析法：包括线性回归和可线性化的非线性回归，用趋势方程刻画长期变化。
+\end{itemize}
+\end{keybox}
+
+\begin{methodbox}{中心滑动平均的用途}
+若用按季或按周期滑动平均处理原始序列，在乘法模型下通常可认为短期的季节变动 $S$ 和不规则波动 $I$ 被削弱，从而得到近似的趋势循环项：
+\[
+Y=T\cdot S\cdot C\cdot I
+\quad \xrightarrow{\text{中心滑动平均}} \quad
+T\cdot C.
+\]
+\end{methodbox}
+
+\subsection{季节指数的测定与季节调整}
+
+\begin{methodbox}{滑动平均趋势剔除法}
+\begin{enumerate}
+  \item 对原始序列做中心滑动平均，得到趋势循环项 $T\cdot C$。
+  \item 计算滑动平均百分比：
+  \[
+  \frac{Y}{T\cdot C}\times 100\%
+  =
+  \frac{T\cdot S\cdot C\cdot I}{T\cdot C}\times 100\%
+  =
+  S\cdot I\times 100\%.
+  \]
+  \item 按同月或同季分组，对滑动平均百分比求同季平均数，以削弱不规则波动 $I$。
+  \item 将同季平均数除以全部同季平均数的总平均数，得到季节指数 $S$。
+\end{enumerate}
+\end{methodbox}
+
+\begin{keybox}{季节调整}
+测得季节指数后，可以从原始序列中剔除季节因素：
+\[
+\frac{Y}{S}=T\cdot C\cdot I.
+\]
+若季节指数以百分数形式给出，例如 $S=120\%$，实际计算应写作
+\[
+\frac{Y}{S/100}.
+\]
+季节调整后的序列更适合继续分析长期趋势和循环波动。
+\end{keybox}
+
+\subsection{循环波动的剩余法}
+
+\begin{methodbox}{剩余法流程}
+\begin{enumerate}
+  \item 先测定季节指数 $S$。
+  \item 做季节调整：
+  \[
+  \frac{Y}{S}=T\cdot C\cdot I.
+  \]
+  \item 对季节调整后的序列拟合长期趋势，得到长期趋势估计值 $\hat T$。
+  \item 用季节调整后的序列除以长期趋势估计值，得到循环及随机波动：
+  \[
+  \frac{Y/S}{\hat T}\approx C\cdot I.
+  \]
+  \item 对 $C\cdot I$ 再做滑动平均，削弱不规则波动 $I$，得到循环波动 $C$。
+\end{enumerate}
+\end{methodbox}
+
+\begin{warnbox}{本页易错点}
+\begin{itemize}
+  \item 乘法模型中各因素是相乘关系，不是简单相加关系。
+  \item 月度资料求季节指数时，中心滑动平均通常取 $12$ 个月；季度资料通常取 $4$ 个季度。
+  \item 季节指数若写成百分数，做季节调整时要除以 $S/100$，不是直接除以百分数数字。
+  \item 剩余法的顺序是先剔除季节因素，再估计长期趋势，最后用滑动平均削弱不规则波动。
+\end{itemize}
+\end{warnbox}
+
+\section{截图 28：季节变动与循环波动测定补充}
+
+\begin{sourcebox}{来源}
+第七章“7.3 季节变动的测定”“7.4 循环波动的测定”，截图页码：41/52、51/52、52/52。
+\end{sourcebox}
+
+\subsection{滑动平均趋势剔除法}
+
+\begin{keybox}{为什么要先剔除趋势}
+按月或按季平均法不宜直接用于含有明显长期趋势、循环波动的原始时间序列。因为原序列
+\[
+Y=T\cdot S\cdot C\cdot I
+\]
+中不仅包含季节因素 $S$，还包含长期趋势 $T$、循环波动 $C$ 和不规则波动 $I$。若直接对原序列按季平均，得到的季节指数会混入 $T$ 和 $C$ 的干扰。
+\end{keybox}
+
+\begin{methodbox}{核心思路}
+先对原序列做中心滑动平均，消除季节波动和不规则波动的影响，得到滑动平均趋势值
+\[
+T\cdot C.
+\]
+再用原序列除以滑动平均趋势值，得到滑动平均百分比：
+\[
+\frac{Y}{T\cdot C}\times 100\%
+=\frac{T\cdot C\cdot S\cdot I}{T\cdot C}\times 100\%
+=S\cdot I\times 100\%.
+\]
+该百分比主要包含季节因素 $S$ 和不规则波动 $I$。再按同月或同季求平均，即可削弱不规则波动 $I$，保留季节变动的平均影响。
+\end{methodbox}
+
+\begin{methodbox}{滑动平均趋势剔除法步骤}
+\begin{enumerate}
+  \item 对原数据进行中心滑动平均，求出滑动平均趋势值 $T\cdot C$。
+  \item 将各实际值除以相应趋势值，得到滑动平均百分比。
+  \item 将滑动平均百分比重新按月或按季排列，求出同月或同季平均数。
+  \item 将同月或同季平均数除以总平均数，得到季节指数 $S$。
+\end{enumerate}
+\end{methodbox}
+
+\begin{warnbox}{滑动区间长度}
+\begin{itemize}
+  \item 月度资料通常取 $12$ 个月做中心滑动平均。
+  \item 季度资料通常取 $4$ 个季度做中心滑动平均。
+  \item 一般原则：滑动间隔长度应等于或大于季节变动周期，但不宜大于循环波动周期。
+\end{itemize}
+\end{warnbox}
+
+\subsection{季节指数的计算口径}
+
+\begin{keybox}{同季平均与总平均}
+设第 $j$ 个季节的滑动平均百分比同季平均数为 $\bar R_j$，所有季节的总平均数为 $\bar R$，则季节指数可写为
+\[
+S_j=\frac{\bar R_j}{\bar R}\times 100\%,\qquad j=1,2,\ldots,s,
+\]
+其中 $s=12$ 表示月度资料，$s=4$ 表示季度资料。季节指数通常用百分数表示，反映该月或该季相对于平均水平的季节性偏高或偏低程度。
+\end{keybox}
+
+\begin{methodbox}{季节调整}
+测得季节指数后，对原序列进行季节调整：
+\[
+\frac{Y}{S}
+=\frac{T\cdot S\cdot C\cdot I}{S}
+=T\cdot C\cdot I.
+\]
+若表中季节指数以百分数给出，如 $S=151.67$，计算时应使用
+\[
+\frac{Y}{151.67/100}.
+\]
+\end{methodbox}
+
+\subsection{循环波动的测定：剩余法}
+
+\begin{keybox}{为什么循环波动难测}
+循环波动经常与不规则波动混在一起，且循环周期和波动幅度常呈现非常数情形，因此很难单独测定。通常做法是从原时间序列中依次消去季节变动、长期趋势和不规则波动，剩余部分即作为循环波动的估计。
+\end{keybox}
+
+\begin{methodbox}{剩余法标准步骤}
+\begin{enumerate}
+  \item 求出季节变动指数 $S$。
+  \item 对原序列进行季节调整，消除季节因素影响：
+  \[
+  \frac{Y}{S}
+  =\frac{T\cdot S\cdot C\cdot I}{S}
+  =T\cdot C\cdot I.
+  \]
+  \item 对调整后的数据计算长期趋势 $T$ 的估计值 $\hat y_t$，可用线性回归或大尺度滑动平均等方法。
+  \item 用季节调整后的数据除以长期趋势估计值，消除长期趋势影响：
+  \[
+  \frac{T\cdot C\cdot I}{\hat y_t}\approx C\cdot I.
+  \]
+  \item 对数列 $C\cdot I$ 做滑动平均，消除不规则波动 $I$ 的影响，得到循环波动值 $C$，通常用百分数表示。
+\end{enumerate}
+\end{methodbox}
+
+\begin{warnbox}{答题时的表述重点}
+\begin{itemize}
+  \item 滑动平均趋势剔除法先得到 $T\cdot C$，再得到 $S\cdot I$，最后通过同季平均消除 $I$。
+  \item 剩余法先得到 $T\cdot C\cdot I$，再除以趋势估计值得到 $C\cdot I$，最后滑动平均消除 $I$。
+  \item 若题目问“消除了哪些因素”，滑动平均趋势剔除法的滑动平均阶段消除的是季节波动和不规则波动；同季平均阶段主要消除不规则波动。
+\end{itemize}
+\end{warnbox}
+
+\section{截图 29：统计分析的其它方法简介}
+
+\begin{sourcebox}{来源}
+老师额外补充内容：“统计分析的其它方法简介”，包括列联表分析、聚类分析、主成分分析、生存分析和 ROC 分析。
+\end{sourcebox}
+
+\subsection{列联表分析}
+
+\begin{keybox}{基本概念}
+列联表是将观测数据按两个或更多属性（定性变量）分类后列出的频数表。设总体中每个个体有两种属性 $A$ 和 $B$，其中 $A$ 有 $r$ 个等级
+\[
+A_1,A_2,\ldots,A_r,
+\]
+$B$ 有 $t$ 个等级
+\[
+B_1,B_2,\ldots,B_t.
+\]
+从总体中抽取容量为 $n$ 的样本，若同时属于 $A_i$ 和 $B_j$ 的个体数为 $n_{ij}$，则 $n_{ij}$ 称为频数。将 $r\times t$ 个 $n_{ij}$ 排成 $r$ 行 $t$ 列的矩阵，就得到二维列联表。若属性多于两个，可类似得到多维列联表。
+\end{keybox}
+
+\begin{methodbox}{分析目的}
+列联表主要用于分析离散变量或定性变量之间是否相关，也就是检验两个属性是否独立。例如：“一个人是否色盲”与“性别”是否有关。
+\end{methodbox}
+
+\begin{keybox}{独立性假设}
+在 $r\times t$ 列联表中，设
+\[
+p_{i\cdot}=P(A_i),\qquad p_{\cdot j}=P(B_j),\qquad p_{ij}=P(A_i\cap B_j).
+\]
+若 $A$、$B$ 两个属性无关联，即相互独立，则
+\[
+H_0:\ p_{ij}=p_{i\cdot}p_{\cdot j},
+\qquad i=1,2,\ldots,r,\quad j=1,2,\ldots,t.
+\]
+实际样本中，边际频数为
+\[
+n_{i\cdot}=\sum_{j=1}^{t}n_{ij},\qquad
+n_{\cdot j}=\sum_{i=1}^{r}n_{ij}.
+\]
+在独立性假设下，第 $(i,j)$ 格的理论频数常写为
+\[
+e_{ij}=\frac{n_{i\cdot}n_{\cdot j}}{n}.
+\]
+\end{keybox}
+
+\begin{methodbox}{常用检验}
+\begin{itemize}
+  \item 对二维列联表，可利用卡方分布进行 Pearson 卡方独立性检验：
+  \[
+  \chi^2=\sum_{i=1}^{r}\sum_{j=1}^{t}
+  \frac{(n_{ij}-e_{ij})^2}{e_{ij}},
+  \qquad
+  \nu=(r-1)(t-1).
+  \]
+  \item 对三维列联表或分层资料，可作 Mantel-Haenszel 分层分析，用于控制分层因素后考察两个分类变量之间的关联。
+\end{itemize}
+\end{methodbox}
+
+\begin{warnbox}{本页易错点}
+\begin{itemize}
+  \item $n_{ij}$ 是观测频数，$e_{ij}$ 是独立性假设下的理论频数，不要混用。
+  \item 独立性检验的自由度是 $(r-1)(t-1)$。
+  \item 列联表适用于分类变量；若变量是连续型，通常要先分组或改用相关、回归等方法。
+\end{itemize}
+\end{warnbox}
+
+\subsection{聚类分析}
+
+\begin{keybox}{基本概念}
+聚类是将数据对象划分到不同类或簇的过程，使同一簇中的对象具有较大的相似性，不同簇之间差异较明显。聚类与分类的区别在于：分类的类别通常预先已知，而聚类所要划分的类是未知的。
+\end{keybox}
+
+\begin{methodbox}{常见方法}
+传统统计聚类分析方法包括系统聚类法、分解法、加入法、动态聚类法、有序样品聚类、有重叠聚类和模糊聚类等。常见算法包括 $k$-均值、$k$-中心点等，这些方法已被加入 SPSS、SAS 等统计分析软件包中。
+\end{methodbox}
+
+\begin{keybox}{机器学习视角}
+从机器学习角度看，聚类是寻找簇结构的无监督学习过程。无监督学习不依赖预先定义的类别，也不依赖带类别标记的训练样本，需要由聚类算法根据数据本身的相似性自动形成簇。分类学习则通常使用已有类别标记的样本，因此聚类是观察式学习，而分类更接近示例式学习。
+\end{keybox}
+
+\begin{methodbox}{主要作用}
+聚类分析是数据挖掘的重要任务之一。通过聚类可以了解数据的分布状况，观察每一簇数据的特征，并对特定聚簇进一步分析。
+\end{methodbox}
+
+\begin{warnbox}{本页易错点}
+\begin{itemize}
+  \item 聚类不是先给出类别再判别归类，而是根据数据相似性自动形成类别。
+  \item 聚类结果会受变量量纲和距离度量影响，实际使用时常需要先做标准化。
+  \item $k$-均值中的 $k$ 是预先指定的簇数，不是算法自动保证的“最佳类别数”。
+\end{itemize}
+\end{warnbox}
+
+\subsection{主成分分析}
+
+\begin{keybox}{基本思想}
+在实际问题中，常会遇到许多与研究对象有关的变量。这些变量之间往往存在相关关系，说明它们反映的信息存在重叠。主成分分析（Principal Component Analysis, PCA）的目标是用较少的新变量尽可能多地反映原变量的信息，使问题变得更简单、清晰。
+\end{keybox}
+
+\begin{methodbox}{降维含义}
+主成分分析通过正交变换，将一组可能存在相关性的原变量重新组合成一组线性不相关的新变量，这些新变量称为主成分。每个主成分都是原变量的线性组合，并按解释方差由大到小排列。
+\end{methodbox}
+
+\begin{keybox}{常用数学表示}
+设原变量向量为
+\[
+\mathbf X=(X_1,X_2,\ldots,X_p)'.
+\]
+主成分可写成
+\[
+Z_k=a_{k1}X_1+a_{k2}X_2+\cdots+a_{kp}X_p
+=\mathbf a_k'\mathbf X,\qquad k=1,2,\ldots,p.
+\]
+其中 $\mathbf a_k$ 通常取协方差矩阵或相关系数矩阵的特征向量。对应特征值越大，该主成分解释的方差信息越多。
+\end{keybox}
+
+\begin{methodbox}{发展来源}
+主成分分析最早由皮尔森（Karl Pearson）对非随机变量引入，后来 H. Hotelling 将该方法推广到随机变量情形。
+\end{methodbox}
+
+\begin{warnbox}{本页易错点}
+\begin{itemize}
+  \item PCA 的核心是降维，不是对样本分类。
+  \item 主成分之间强调线性不相关；在一般分布下，线性不相关不必然等于统计独立。
+  \item 若各变量量纲差异较大，通常应基于标准化变量或相关系数矩阵做 PCA。
+\end{itemize}
+\end{warnbox}
+
+\subsection{生存分析}
+
+\begin{keybox}{研究对象}
+生存分析用于研究生存时间的分布规律，以及生存时间与相关因素之间的关系。这里的“生存时间”可泛指从起点事件到终点事件之间的时间，例如患者从治疗开始到死亡或复发的时间，也可以推广到设备寿命、用户流失时间等问题。
+\end{keybox}
+
+\begin{methodbox}{主要研究内容}
+生存分析通常包括：
+\begin{enumerate}
+  \item 描述生存过程，即研究生存时间的分布规律。
+  \item 比较生存过程，即研究两组或多组生存时间的分布规律并进行比较。
+  \item 分析危险因素，即研究危险因素对生存过程的影响。
+  \item 建立数学模型，即用数学式子表示生存时间与相关危险因素之间的依存关系。
+\end{enumerate}
+\end{methodbox}
+
+\begin{keybox}{常用指标与函数}
+设生存时间为 $T$，生存函数常写为
+\[
+S(t)=P(T>t),
+\]
+表示个体生存时间超过 $t$ 的概率。危险函数可理解为在已经生存到 $t$ 的条件下，瞬时发生终点事件的风险。常见描述指标包括生存时间分位数、中位生存期、平均生存时间和生存函数估计等。
+\end{keybox}
+
+\begin{methodbox}{基本做法}
+常见做法包括：估计生存函数，判断生存时间，检验不同分组变量水平对应的生存曲线是否一致，检验危险因素对生存时间的影响，建立生存时间随多个危险因素变化的回归方程，并拟合相应的参数模型等。
+\end{methodbox}
+
+\begin{methodbox}{典型方法}
+\begin{itemize}
+  \item 乘积极限法（PL 法）：也称 Kaplan-Meier 法，用于估计生存函数。
+  \item 寿命表法（LT 法）：按时间区间整理资料并估计生存过程。
+  \item Cox 比例风险回归分析法：用于研究协变量对风险率的影响。
+  \item 参数模型回归分析法：在假定生存时间服从特定分布时建立回归模型。
+\end{itemize}
+\end{methodbox}
+
+\begin{warnbox}{本页易错点}
+\begin{itemize}
+  \item 生存分析不仅研究“是否死亡”，更关注事件发生所需的时间。
+  \item 生存曲线比较常用于多组生存时间分布是否一致的问题。
+  \item Cox 回归研究的是危险因素对风险的影响，不是普通线性回归中的均值变化。
+\end{itemize}
+\end{warnbox}
+
+\subsection{ROC 分析}
+
+\begin{keybox}{基本概念}
+ROC 曲线又称观测者操作特性曲线、接收者操作特性曲线（Receiver Operating Characteristic Curve）或感受性曲线（Sensitivity Curve）。它最初用于评价雷达性能，第二次世界大战期间被用于提高从雷达信号中正确检测飞机的能力，后来广泛应用于医学诊断、机器学习、金融风险评估、垃圾邮件检测等领域，用于评估二分类模型的性能。
+\end{keybox}
+
+\begin{methodbox}{坐标含义}
+ROC 曲线根据一系列不同的二分类方式（分界值或决策阈值）绘制。横坐标为假阳性率（False Positive Rate, FPR），也就是 $1-\text{特异度}$；纵坐标为真阳性率（True Positive Rate, TPR），也就是灵敏度。
+\[
+\mathrm{TPR}=\frac{TP}{TP+FN},\qquad
+\mathrm{FPR}=\frac{FP}{FP+TN}=1-\mathrm{Specificity}.
+\]
+其中 $TP$ 为真阳性，$FN$ 为假阴性，$FP$ 为假阳性，$TN$ 为真阴性。
+\end{methodbox}
+
+\begin{center}
+\begin{tikzpicture}[scale=5.2,>=Stealth]
+  \draw[->] (0,0) -- (1.08,0) node[below] {假阳性率 FPR};
+  \draw[->] (0,0) -- (0,1.08) node[left] {真阳性率 TPR};
+  \draw[gray!65,dashed] (0,0) -- (1,1) node[pos=0.67,below right,font=\scriptsize] {随机分类线};
+  \draw[mainblue,very thick]
+    plot[smooth,tension=0.75] coordinates {(0,0) (0.04,0.45) (0.10,0.72) (0.20,0.86) (0.38,0.94) (0.65,0.98) (1,1)};
+  \draw[orange!80!black,thick]
+    plot[smooth,tension=0.75] coordinates {(0,0) (0.12,0.35) (0.32,0.65) (0.60,0.86) (1,1)};
+  \fill[mainblue] (0.10,0.72) circle (0.012) node[right,font=\scriptsize] {阈值变化点};
+  \node[font=\scriptsize,align=center] at (0.28,1.02) {曲线越靠近左上角\\分类性能越好};
+  \node[font=\scriptsize] at (0.5,-0.08) {$0\leq \mathrm{FPR}\leq1$};
+  \node[font=\scriptsize,rotate=90] at (-0.10,0.52) {$0\leq \mathrm{TPR}\leq1$};
+  \foreach \x/\lab in {0/0,0.5/0.5,1/1}
+    {
+      \draw (\x,0) -- (\x,-0.015) node[below,font=\scriptsize] {\lab};
+      \draw (0,\x) -- (-0.015,\x) node[left,font=\scriptsize] {\lab};
+    }
+\end{tikzpicture}
+\end{center}
+
+\begin{methodbox}{主要用途}
+ROC 曲线是评估分类模型性能和选择最佳阈值的重要工具。以医学诊断为例：
+\begin{enumerate}
+  \item 可以查出任意界限值下对疾病的识别能力。
+  \item 可以选择最佳诊断界限值。ROC 曲线越靠近左上角，试验准确性越高。
+  \item 可以比较两种或两种以上诊断试验的疾病识别能力，通常用 ROC 曲线下面积（AUC）反映诊断系统的准确性。
+\end{enumerate}
+\end{methodbox}
+
+\begin{keybox}{AUC 的直观理解}
+AUC 是 ROC 曲线下方的面积，取值一般在 $0$ 到 $1$ 之间。AUC 越大，模型把正例排在负例前面的能力越强；AUC 接近 $0.5$ 时，分类效果接近随机猜测；AUC 接近 $1$ 时，分类效果较好。
+\end{keybox}
+
+\begin{methodbox}{由不同阈值得到 ROC 曲线}
+一个分类模型通常会输出“属于正类”的概率或评分。改变阈值，就会改变被判为正类的样本数量，从而得到不同的 TPR 和 FPR。把每个阈值对应的点
+\[
+(\mathrm{FPR},\mathrm{TPR})
+\]
+标在坐标系中，并按阈值顺序连接，就得到 ROC 曲线。
+\end{methodbox}
+
+\begin{methodbox}{课件中的图像识别例子}
+选相似的图画页 $500$ 页，分成 $5$ 组，每组 $100$ 张。对每一组页面，主试者设定一个先定概率，并按此先定概率给被试者呈现一定数量的页面，要求被试者把它们当作“信号”记住。
+
+例如，可将五组页面的先定概率分别设为 $0.1,0.3,0.5,0.7,0.9$。对于先定概率为 $0.1$ 的第一组页面，当作“信号”的页面为 $10$ 张，当作“噪音”的页面为 $90$ 张。信号页面呈现完毕后，与同组噪音页面混合，再随机逐张呈现给被试者，要求被试者判断页面是“信号”还是“噪音”，并记录结果。最后统计识别结果的 TPR 和 FPR，将各组对应的 $(\mathrm{FPR},\mathrm{TPR})$ 点连接，即可得到 ROC 曲线。
+\end{methodbox}
+
+\begin{center}
+\begin{tikzpicture}[scale=4.8,>=Stealth]
+  \draw[->] (0,0) -- (1.08,0) node[below] {FPR};
+  \draw[->] (0,0) -- (0,1.08) node[left] {TPR};
+  \draw[gray!65,dashed] (0,0) -- (1,1);
+  \draw[mainblue,thick]
+    plot[smooth,tension=0.8] coordinates {(0,0) (0.04,0.08) (0.09,0.35) (0.22,0.67) (0.38,0.82) (0.62,0.91) (0.93,0.98) (1,1)};
+  \draw[orange!85!black,thick]
+    plot[smooth,tension=0.8] coordinates {(0,0) (0.10,0.32) (0.28,0.60) (0.55,0.82) (0.85,0.94) (1,1)};
+  \foreach \x/\y/\lab in {0.04/0.08/0.1,0.09/0.35/0.3,0.22/0.67/0.5,0.38/0.82/0.7,0.62/0.91/0.9}
+    {
+      \fill[mainblue] (\x,\y) circle (0.012);
+      \node[font=\scriptsize,above right] at (\x,\y) {\lab};
+    }
+  \foreach \x/\y/\lab in {0.10/0.32/0.3,0.28/0.60/0.5,0.55/0.82/0.7,0.85/0.94/0.9}
+    {
+      \fill[orange!85!black] (\x,\y) circle (0.012);
+      \node[font=\scriptsize,below right] at (\x,\y) {\lab};
+    }
+  \node[font=\scriptsize] at (0.63,0.28) {两条曲线可比较不同诊断试验};
+  \foreach \x/\lab in {0/0,0.5/0.5,1/1}
+    {
+      \draw (\x,0) -- (\x,-0.015) node[below,font=\scriptsize] {\lab};
+      \draw (0,\x) -- (-0.015,\x) node[left,font=\scriptsize] {\lab};
+    }
+\end{tikzpicture}
+\end{center}
+
+\begin{keybox}{先定概率与判定阈值}
+先定概率表示实验或样本设计中信号出现的比例；判定阈值则是把模型评分转化为阳性或阴性的分界点，二者不能混为一谈。在分类模型中，阈值越低，模型越容易把样本判为正类，通常 TPR 会升高，但 FPR 也可能升高；阈值越高，模型越谨慎地判为正类，通常 FPR 会降低，但可能带来更多假阴性。
+\end{keybox}
+
+\begin{center}
+\begin{tikzpicture}[x=1.25cm,y=2.2cm,>=Stealth]
+  \foreach \shift/\thr in {0/0.5,4.2/0.1,8.4/0.9}
+    {
+      \draw[->] (\shift,0) -- (\shift+3.1,0) node[below] {样本};
+      \draw[->] (\shift,0) -- (\shift,1.18) node[left] {$P$};
+      \draw[gray!65,dashed,thick] (\shift,\thr) -- (\shift+3.0,\thr)
+        node[right,font=\scriptsize] {阈值 $\thr$};
+      \draw[mainblue!70,dotted,very thick]
+        plot[smooth,tension=0.9] coordinates {(\shift+0.2,0.02) (\shift+0.8,0.05) (\shift+1.3,0.18) (\shift+1.7,0.55) (\shift+2.0,0.86) (\shift+2.4,0.98) (\shift+2.9,1.0)};
+      \foreach \x/\y/\lab/\col in {%
+          0.25/0.01/1/orange!70!black,%
+          0.55/0.02/2/orange!70!black,%
+          1.25/0.10/3/mainblue,%
+          1.55/0.23/4/orange!70!black,%
+          1.90/0.82/5/orange!70!black,%
+          2.25/0.95/6/mainblue,%
+          2.55/0.99/7/mainblue,%
+          2.80/1.00/8/mainblue}
+        {
+          \fill[\col] (\shift+\x,\y) circle (0.035);
+          \node[font=\tiny,below] at (\shift+\x,0) {\lab};
+        }
+      \node[font=\scriptsize] at (\shift+1.55,-0.22) {阈值 $=\thr$};
+    }
+\end{tikzpicture}
+\end{center}
+
+\begin{methodbox}{阈值变化带来的分类结果}
+假设观测到 $8$ 个样本，其中橙色点真实类别为 $i=0$，蓝色点真实类别为 $i=1$。当阈值为 $0.5$ 时，蓝点中 $6,7,8$ 分类正确，$3$ 分类错误；橙色点中 $1,2,4$ 分类正确，$5$ 分类错误。当阈值为 $0.1$ 时，$4$ 个阳性样本都可以被模型识别出来，但会产生 $2$ 个假阳性。当阈值为 $0.9$ 时，$4$ 个阴性样本都能被模型识别出来，但会产生 $1$ 个假阴性。
+\end{methodbox}
+
+\begin{center}
+\begin{tikzpicture}[scale=5.0,>=Stealth]
+  \draw[->] (0,0) -- (1.08,0) node[below] {假阳性率 FPR};
+  \draw[->] (0,0) -- (0,1.08) node[left] {真阳性率 TPR};
+  \draw[gray!65,dashed] (0,0) -- (1,1);
+  \draw[red!70!black,very thick]
+    (0,0) -- (0,0.25) -- (0,0.5) -- (0,0.75)
+    -- (0.25,0.75) -- (0.5,0.75)
+    -- (0.5,1) -- (0.75,1) -- (1,1);
+  \foreach \x/\y/\lab in {0/0/{>1},0/0.25/0.999,0/0.5/0.99,0/0.75/0.9,0.25/0.75/0.8,0.5/0.75/0.2,0.5/1/0.1,0.75/1/0.02,1/1/0.01}
+    {
+      \fill[mainblue] (\x,\y) circle (0.012);
+      \node[draw,fill=white,inner sep=1pt,font=\tiny] at ($( \x,\y )+(0.04,0.05)$) {\lab};
+    }
+  \foreach \x/\lab in {0/0,0.5/0.5,1/1}
+    {
+      \draw (\x,0) -- (\x,-0.015) node[below,font=\scriptsize] {\lab};
+      \draw (0,\x) -- (-0.015,\x) node[left,font=\scriptsize] {\lab};
+    }
+\end{tikzpicture}
+\end{center}
+
+\begin{center}
+\small
+\begin{tabular}{c|ccccccccc}
+\toprule
+阈值 & $0.01$ & $0.02$ & $0.1$ & $0.2$ & $0.8$ & $0.9$ & $0.99$ & $0.999$ & $>1$ \\
+\midrule
+真阳性率 TPR & $1$ & $1$ & $1$ & $0.75$ & $0.75$ & $0.75$ & $0.5$ & $0.25$ & $0$ \\
+假阳性率 FPR & $1$ & $0.75$ & $0.5$ & $0.5$ & $0.25$ & $0$ & $0$ & $0$ & $0$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{warnbox}{本页易错点}
+\begin{itemize}
+  \item ROC 的横轴是 FPR，即 $1-\text{特异度}$；纵轴是 TPR，即灵敏度。
+  \item 阈值改变会同时影响 TPR 和 FPR，不能只看“准确率”。
+  \item ROC 曲线越靠近左上角，一般模型越好；AUC 越大，整体区分能力越强。
+  \item 低阈值更容易判为阳性，常提高灵敏度但增加假阳性；高阈值更保守，常降低假阳性但可能增加假阴性。
+\end{itemize}
+\end{warnbox}
+
+\end{document}
