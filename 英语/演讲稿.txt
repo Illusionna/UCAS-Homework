@@ -1,0 +1,21 @@
+Part four is analysis and conclusion.
+
+第四部分是分析与结论。
+
+This figure shows the architecture of Multimodal Transformer Network. It does not simply concatenate EGG and eye-tracking data. EEG provides brain activity information, and eye-tracking data provides visual attention information. The two features are fused in the hidden layer.
+
+这张图展现了 MTNet 架构。它不是简单地拼接 EEG 和 Eye-tracking。EEG 提供脑部活动信息。Eye-tracking 数据提供视觉注意力信息。两种特质在隐藏层融合。
+
+From the performance comparison, the result shows that the fusion does really improve the accuracy. Eye-tracking only reaches 75.61% accuracy, EEG only reaches 81.62%, and the EEG-only Transformer improves the result to 87.87%. However, the best result comes from Multimodal Transformer Network with intermediate fusion, reaching 91.79%. It shows that the two types of signals are complementary.
+
+从性能对比来看，结果展示了这种融合确实可以提供精确度。Eye-tracking only 抵达 75.61% 精确度。EEG only 抵达 81.62%。EEG-only Transformer 把结果提升至 87.87%。而然，最佳结果来此 MTNet with intermediate fusion，抵达 91.79%。它展现了两种信号是互补的。
+
+For depression detection, reducing missed cases is very important. In the confusion matrices, feature-based fusion misses 4 mild-depression samples, while Multimodal Transformer Network misses only 2. The total number of errors also drops from 8 to 4.
+
+针对抑郁检测，减少误判样本是非常重要的。在混淆矩阵中，feature-based 融合误判 4 个轻度抑郁样本，然而 MTNet 仅误判 2 个样本。这总共的错误数量从 8 降低到 4。
+
+So the conclusion is that Multimodal Transformer Network not only improves accuracy, but also reduces key mistakes. It makes intermediate fusion more balanced and more suitable for mild depression detection.
+
+所以这个结论是 MTNet 不仅提高精确度，而且减少了关键误判。它让 intermediate 融合更平衡更适合轻度抑郁检测。
+
+We are happy to welcome some questions.
