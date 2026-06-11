@@ -1,0 +1,16 @@
+\contentsline {section}{\numberline {1}引言}{2}{section.1}%
+\contentsline {section}{\numberline {2}相关工作}{3}{section.2}%
+\contentsline {section}{\numberline {3}从 SIS 到抗碰撞 Hash}{4}{section.3}%
+\contentsline {section}{\numberline {4}Ring-SIS}{5}{section.4}%
+\contentsline {section}{\numberline {5}SWIFFT 压缩函数}{6}{section.5}%
+\contentsline {section}{\numberline {6}FFT/NTT 变换}{7}{section.6}%
+\contentsline {section}{\numberline {7}安全性边界}{8}{section.7}%
+\contentsline {section}{\numberline {8}实验方法的工程实现}{9}{section.8}%
+\contentsline {section}{\numberline {9}实验结果}{10}{section.9}%
+\contentsline {subsection}{\numberline {9.1}吞吐与 SHA 对比}{10}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}并行扩展}{11}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}NEON 向量化收益}{11}{subsection.9.3}%
+\contentsline {subsection}{\numberline {9.4}Merkle 认证树演示}{12}{subsection.9.4}%
+\contentsline {section}{\numberline {10}局限性与改进方向}{12}{section.10}%
+\contentsline {section}{\numberline {11}结论}{13}{section.11}%
+\contentsline {section}{参考文献}{13}{section*.2}%
