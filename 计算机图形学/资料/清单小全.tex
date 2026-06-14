@@ -1,0 +1,1188 @@
+\documentclass[UTF8,fontset=fandol,11pt]{ctexart}
+\usepackage[a4paper,margin=1.65cm]{geometry}
+\usepackage{amsmath,amssymb,bm}
+\usepackage{booktabs,longtable,array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{multicol}
+
+\hypersetup{colorlinks=true,linkcolor=blue!55!black,urlcolor=blue!55!black}
+\setlist[itemize]{leftmargin=1.4em,itemsep=0.18em,topsep=0.2em}
+\setlist[enumerate]{leftmargin=1.7em,itemsep=0.18em,topsep=0.2em}
+\setcounter{tocdepth}{2}
+\titleformat{\section}{\Large\bfseries}{\thesection}{0.75em}{}
+\titleformat{\subsection}{\bfseries}{\thesubsection}{0.5em}{}
+\titlespacing*{\section}{0pt}{1.2ex plus .2ex}{0.8ex}
+\titlespacing*{\subsection}{0pt}{0.7ex plus .2ex}{0.25ex}
+\pagestyle{fancy}
+\setlength{\headheight}{14pt}
+\fancyhf{}
+\lhead{计算机图形学研究生复习知识清单}
+\rhead{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\newcommand{\key}[1]{\textbf{#1}}
+\newcommand{\subhead}[1]{\vspace{0.35em}\noindent\textbf{#1}\quad}
+\newcommand{\exam}[1]{\textcolor{blue!55!black}{\textbf{#1}}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\dd}{\,\mathrm{d}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+
+\title{\bfseries 计算机图形学研究生复习知识清单\\
+\large 应试、开卷考试与论文基础梳理双导向}
+\author{基于课件第1--16章整理}
+\date{2026年6月}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{模块1：课程定位与图形学研究对象（第1章：课程简介）}
+\subsection{核心定义}
+\begin{itemize}
+  \item \key{计算机图形学}研究图形的表示、生成、处理与显示，核心目标是从几何、材质、光照、相机等描述生成二维图像。
+  \item 课程强调\key{主要概念、算法思想和基本技术}，并通过实验训练三维应用开发与初步研究能力。
+  \item 与相关领域的边界：图形学通常是``描述到图像''；视觉偏向``图像到描述''；图像处理偏向``图像到图像''。
+\end{itemize}
+\subsection{数学基础}
+\begin{itemize}
+  \item 线性代数：向量、矩阵、齐次坐标、特征值、SVD。
+  \item 几何：曲线曲面、三角网格、法向、拓扑、投影与可见性。
+  \item 微积分与概率：辐射度积分、渲染方程、蒙特卡洛采样。
+\end{itemize}
+\subsection{核心算法}
+\begin{itemize}
+  \item 课程主线算法包括：扫描转换、消隐、光照与明暗处理、网格处理、变形、光线跟踪、阴影、纹理、动画与运动捕捉。
+  \item 工程主线是\key{图形管线}：几何建模 $\rightarrow$ 变换 $\rightarrow$ 投影 $\rightarrow$ 光栅化 $\rightarrow$ 着色 $\rightarrow$ 显示。
+\end{itemize}
+\subsection{原理推导}
+复习时应把每个算法都还原为三个问题：数据如何表示、目标函数或判别式是什么、离散实现如何降低计算量。例如 Z-buffer 将可见性变成逐像素深度比较；Bresenham 将直线采样变成整数误差递推；渲染方程将全局光照写成递归积分方程。
+\subsection{重难点}
+\begin{itemize}
+  \item 开卷考试重点不在背诵历史，而在\key{能否快速定位定义、公式、算法步骤、复杂度和适用条件}。
+  \item 研究生深度体现在：理解算法背后的优化问题、离散近似、数值稳定性、硬件友好性和工程取舍。
+\end{itemize}
+\subsection{考点预测}
+\begin{itemize}
+  \item \exam{简答题：}说明计算机图形学与视觉、图像处理的区别；概括图形管线各阶段。
+  \item \exam{综合题：}给定一个渲染任务，说明需要哪些表示、变换、光照、消隐和纹理步骤。
+\end{itemize}
+\subsection{实践关联}
+课程内容对应渲染、建模、虚拟现实、数字人、三维重建、动画、仿真和交互式图形系统。
+
+\section{模块2：虚拟数字人技术（第2章：虚拟数字人技术）}
+\subsection{核心定义}
+\begin{itemize}
+  \item \key{虚拟数字人}是以图形学、视觉、动画、语音和交互技术构建的数字化人物表达。
+  \item 课件区分 2D 虚拟数字人、图像视频与 DeepFake/神经辐射场技术，以及 3D 数字人建模、驱动和渲染。
+\end{itemize}
+\subsection{数学基础}
+\begin{itemize}
+  \item 人体/人脸模型参数化：形状参数、姿态参数、表情参数。
+  \item 运动学与动力学：关节层级、骨骼约束、质量、质心和惯性参数。
+  \item 优化：由图像、深度、关键点或多视角观测拟合数字人模型。
+\end{itemize}
+\subsection{核心算法}
+\begin{itemize}
+  \item \key{建模：}通过扫描、图像/视频、点云或网格构建头脸和身体模型。
+  \item \key{驱动：}由动作捕捉、视频重建或参数模型驱动骨骼、表情与衣物。
+  \item \key{渲染：}结合材质、光照、纹理和实时渲染管线产生可交互形象。
+\end{itemize}
+\subsection{原理推导}
+数字人重建可抽象为最小化观测误差：
+\[
+  \min_{\theta,\beta,\gamma} E_{\text{image}}+E_{\text{keypoint}}+E_{\text{depth}}+E_{\text{regular}},
+\]
+其中 $\theta$ 表示姿态，$\beta$ 表示形状，$\gamma$ 表示表情或外观参数；约束项用于保持人体结构与运动合理性。
+\subsection{重难点}
+\begin{itemize}
+  \item 真实感数字人同时依赖\key{几何精度、材质表达、运动自然性和实时性}。
+  \item 人体动力学参数个体相关且难以测量，是物理驱动数字人的难点。
+\end{itemize}
+\subsection{考点预测}
+\begin{itemize}
+  \item \exam{简答题：}说明 2D 数字人和 3D 数字人的技术路线差异。
+  \item \exam{论述题：}从建模、驱动、渲染、交互四个层面分析虚拟数字人系统。
+\end{itemize}
+\subsection{实践关联}
+数字人是人脸动画、运动捕捉、三维重建、实时渲染和虚拟现实的综合应用。
+
+\section{模块3：虚拟现实概论（第3章：虚拟现实）}
+\subsection{核心定义}
+\begin{itemize}
+  \item \key{VR}强调沉浸式虚拟环境；\key{AR}将计算机生成内容叠加到真实世界视图；\key{MR}进一步强调虚实对象之间的空间关系与交互。
+  \item 课件关注 IEEE VR 研究主题、内容生成、显示设备、交互与应用。
+\end{itemize}
+\subsection{数学基础}
+\begin{itemize}
+  \item 空间跟踪：刚体位姿 $T=[R|t]$、坐标系标定、视点变换。
+  \item 显示：视场角、双目视差、投影矩阵、延迟与刷新率。
+\end{itemize}
+\subsection{核心算法}
+\begin{itemize}
+  \item 头手跟踪、双目渲染、畸变校正、注视点渲染、虚实遮挡处理。
+  \item VR/AR 内容创建依赖三维建模、扫描重建、纹理映射和实时渲染。
+\end{itemize}
+\subsection{原理推导}
+双目显示本质是为左右眼分别设置相机中心 $C_L,C_R$ 与投影矩阵 $P_L,P_R$，在显示平面上产生视差；视差越大，感知深度变化越强。
+\subsection{重难点}
+\begin{itemize}
+  \item VR 系统难点在于\key{实时性、低延迟、稳定跟踪、显示舒适性和真实感渲染}之间的平衡。
+  \item AR/MR 难点是把真实场景几何、光照和虚拟对象正确对齐。
+\end{itemize}
+\subsection{考点预测}
+\begin{itemize}
+  \item \exam{简答题：}比较 VR、AR、MR。
+  \item \exam{应用题：}说明一个 MR 系统需要的跟踪、重建、渲染和交互模块。
+\end{itemize}
+\subsection{实践关联}
+虚拟现实贯穿显示硬件、实时渲染、三维交互、数字人和沉浸式仿真。
+
+\section{模块4：运动捕捉基础（第4章：运动捕捉基础）}
+\subsection{核心定义}
+\begin{itemize}
+  \item \key{运动捕捉}是获取人体或物体运动并转化为可计算运动数据的过程。
+  \item 常见目标是获得骨骼关节的时序位姿，用于动画驱动、运动分析和交互。
+\end{itemize}
+\subsection{数学基础}
+\begin{itemize}
+  \item 刚体运动：旋转矩阵、欧拉角、四元数、平移向量。
+  \item 运动序列：轨迹、速度、加速度、时间采样与插值。
+  \item 骨骼层级：父子关节变换复合，末端位置由链式矩阵乘法决定。
+\end{itemize}
+\subsection{核心算法}
+\begin{itemize}
+  \item \key{标记点捕捉：}检测多相机图像中的标记点，三角化得到三维点并拟合骨骼。
+  \item \key{无标记捕捉：}由图像、深度或关键点估计人体姿态。
+  \item \key{运动重定向：}将捕捉运动映射到不同骨骼比例的角色。
+\end{itemize}
+\subsection{原理推导}
+骨骼链中第 $i$ 个关节的世界变换为
+\[
+  T_i^{world}=T_{parent(i)}^{world}T_i^{local},
+\]
+末端点位置由所有祖先关节的局部旋转和平移复合得到。
+\subsection{重难点}
+\begin{itemize}
+  \item 捕捉数据存在遮挡、噪声、缺失和身份匹配问题。
+  \item 运动重定向必须同时保持脚接触、关节限制、动作风格和角色比例。
+\end{itemize}
+\subsection{考点预测}
+\begin{itemize}
+  \item \exam{简答题：}解释运动捕捉系统的输入、输出和主要误差来源。
+  \item \exam{计算题：}给定骨骼层级局部变换，计算某关节世界坐标。
+\end{itemize}
+\subsection{实践关联}
+运动捕捉支撑角色动画、数字人驱动、VR 交互、体育分析和机器人学习。
+
+\section{模块5：图形学概论与显示系统（第5章：图形学概论）}
+\subsection{核心定义}
+\begin{itemize}
+  \item \key{图形软件系统}通常分层：设备驱动、基础图素与设备管理、功能子程序、应用层。
+  \item \key{光栅扫描显示}用帧缓存存储像素颜色，通过逐行扫描显示图像。
+\end{itemize}
+\subsection{数学基础}
+\begin{itemize}
+  \item 图像离散化：连续二维图像 $f(x,y)$ 采样为像素矩阵。
+  \item 分辨率、可寻址能力、颜色位深、帧缓存容量。
+\end{itemize}
+\subsection{核心算法}
+\begin{itemize}
+  \item 图素生成：点、线、圆、多边形、字符。
+  \item 交互处理：输入设备事件到图形对象更新。
+  \item 基本图形程序包：图素、变换、开窗、裁剪、实时输入和交互处理。
+\end{itemize}
+\subsection{原理推导}
+帧缓存容量可由
+\[
+  \text{memory}=W\times H\times \text{bits per pixel}
+\]
+估算；深度缓存和模板缓存分别增加深度与计数/掩码信息。
+\subsection{重难点}
+\begin{itemize}
+  \item 显示设备和软件层次决定图形算法的实现约束。
+  \item 光栅系统适合面着色和真实感显示，但必须处理采样、量化和走样。
+\end{itemize}
+\subsection{考点预测}
+\begin{itemize}
+  \item \exam{简答题：}说明帧缓存、深度缓存、模板缓存的区别。
+  \item \exam{计算题：}按分辨率和位深计算缓存大小。
+\end{itemize}
+\subsection{实践关联}
+显示系统是 OpenGL/实时渲染、Z-buffer、阴影图和纹理采样的硬件基础。
+
+\section{模块6：图形学基本知识：颜色、网格、光照、变换与管线（第6章：图形学基本知识）}
+\subsection{核心定义}
+\begin{itemize}
+  \item \key{图像}是二维离散函数 $f(x,y)$，像素存储灰度、RGB 或 RGBA。
+  \item \key{三角网格}由顶点集合 $V=(v_1,\ldots,v_n)$ 与面片集合 $F=(f_1,\ldots,f_m)$ 组成，面片 $f_i=(v_a,v_b,v_c)$。
+  \item \key{法向量}垂直于面片平面；顶点法向可由邻接面法向算术平均、面积加权或角度加权得到。
+  \item \key{局部光照}只计算直接光源作用；\key{全局光照}还关注阴影、反射、折射及间接光。
+\end{itemize}
+\subsection{数学基础}
+\begin{itemize}
+  \item CIE XYZ 色度坐标：$x=X/(X+Y+Z),\ y=Y/(X+Y+Z)$。
+  \item Lambert 漫反射：$I_d=K_d I\max(0,N\cdot L)$。
+  \item Phong 光照：$I=I_iK_a+I_iK_d(L\cdot N)+I_iK_s(R\cdot V)^n$。
+  \item 齐次坐标：三维点写作 $(x,y,z,w)$；$w\neq0$ 时归一化为 $(x/w,y/w,z/w,1)$；$w=0$ 表示无穷远方向。
+  \item 透视投影：视点原点、投影平面 $z=d$ 时，$(x,y,z)\mapsto((d/z)x,(d/z)y,d)$。
+\end{itemize}
+\subsection{核心算法}
+\begin{itemize}
+  \item \key{Gouraud 明暗处理：}顶点法向 $\rightarrow$ 顶点光强 $\rightarrow$ 像素颜色插值。高效，但高光可能丢失。
+  \item \key{Phong 明暗处理：}顶点法向插值 $\rightarrow$ 每像素计算光照。高光更准确，代价更高。
+  \item \key{变换管线：}模型坐标 $\rightarrow$ 世界坐标 $\rightarrow$ 相机坐标 $\rightarrow$ 裁剪体积 $\rightarrow$ 屏幕坐标。
+\end{itemize}
+\subsection{原理推导}
+\begin{itemize}
+  \item 二维仿射变换 $p'=Mp+t$ 可通过齐次坐标统一为 $p'=\tilde M p$，平移因此可用矩阵乘法表示。
+  \item 复合变换满足 $p'=TSp$，通常 $TS\neq ST$，因此变换顺序不可交换。
+  \item 法向不能总用原矩阵 $M$ 变换。若切向量 $v_{WS}=Mv_{OS}$ 且 $n_{OS}^Tv_{OS}=0$，为保持垂直性：
+  \[
+    n_{WS}=(M^{-1})^Tn_{OS}.
+  \]
+\end{itemize}
+\subsection{重难点}
+\begin{itemize}
+  \item 区分 \key{Phong 光照模型}与\key{Phong 明暗处理}。
+  \item 掌握齐次坐标、逆转置法向矩阵、投影变换和变换顺序。
+\end{itemize}
+\subsection{考点预测}
+\begin{itemize}
+  \item \exam{计算题：}给定 $K_a,K_d,K_s,N,L,R,V,n$ 计算 Phong 光照。
+  \item \exam{证明题：}推导法向量变换矩阵为 $(M^{-1})^T$。
+  \item \exam{简答题：}比较 Gouraud 与 Phong 明暗处理。
+\end{itemize}
+\subsection{实践关联}
+本模块是所有实时渲染、网格绘制、光照着色、VR 相机和投影系统的基础。
+
+\section{模块7：光栅图形学：扫描转换、填充与消隐（第7章：光栅图形学）}
+\subsection{核心定义}
+\begin{itemize}
+  \item \key{光栅图形}本质是点阵表示，适合面着色、自然明暗和丰富颜色。
+  \item \key{扫描转换}将顶点/几何表示转换为点阵/像素表示。
+  \item \key{消隐}相对于观察者确定可见与不可见的线或面。
+\end{itemize}
+\subsection{数学基础}
+\begin{itemize}
+  \item 直线：$y=mx+h,\ m=\Delta y/\Delta x$。
+  \item 圆：用八对称性，仅计算 $0\le x\le y$ 的八分之一圆弧。
+  \item 多边形内外判别：射线法交点奇偶性。
+  \item 图像空间复杂度 $O(nN)$；物体空间复杂度常为 $O(n^2)$。
+\end{itemize}
+\subsection{核心算法}
+\begin{itemize}
+  \item \key{DDA：}沿 $x$ 每步加 1，$y\leftarrow y+m$，绘制 $(x,\mathrm{round}(y))$。复杂度 $O(\max(|\Delta x|,|\Delta y|))$，含浮点与取整。
+  \item \key{Bresenham 直线：}用整数误差项决定 $y$ 是否递增。初始化 $e=-dx$，每步 $e\leftarrow e+2dy$；若 $e>dx$，则 $y\leftarrow y+1,\ e\leftarrow e-2dx$。复杂度线性，适合硬件。
+  \item \key{中点圆算法：}判别 $d_i=(x_i+1)^2+(y_i-0.5)^2-r^2$。若 $d_i<0$，$d_{i+1}=d_i+2x_i+3$；否则 $d_{i+1}=d_i+2(x_i-y_i)+5,\ y\leftarrow y-1$。
+  \item \key{种子填充：}内部表示按目标颜色递归/栈扩展；边界表示遇边界色停止。适合已知种子点的连通区域。
+  \item \key{扫描线多边形填充：}对每条扫描线求交、排序、配对、区间填色；利用区域、扫描线和边的连贯性。
+  \item \key{Z-buffer：}帧缓存存颜色，深度缓存存每像素最近深度；任意顺序扫描多边形，若新深度更近则更新。
+  \item \key{背面剔除：}由视线 $V$ 与法向 $N$ 判断，课件给出 $N\cdot V<0$ 不可见、$N\cdot V\ge0$ 可见；适合凸多面体预处理。
+  \item \key{表优先级算法：}由远及近绘制，要求物体在深度方向可排序且无复杂交叠。
+\end{itemize}
+\subsection{原理推导}
+\begin{itemize}
+  \item Bresenham 将连续直线与像素中心的距离误差离散化，只保留符号，因此可用加减和移位替代浮点。
+  \item 扫描线算法由\key{交点偶数性}推出内部区间；顶点相交时必须按相邻两边位于扫描线同侧或异侧处理，保证交点计数正确。
+  \item Z-buffer 将三维可见性转为局部比较：若 $z(x,y)>z_{\text{buffer}}(x,y)$，写入颜色并更新深度。
+\end{itemize}
+\subsection{重难点}
+\begin{itemize}
+  \item DDA 与 Bresenham 的误差递推差异。
+  \item 多边形扫描线的奇异顶点处理。
+  \item 图像空间与物体空间消隐的复杂度、精度和适用场景。
+\end{itemize}
+\subsection{考点预测}
+\begin{itemize}
+  \item \exam{计算题：}手算 Bresenham 画线或中点圆算法前若干步。
+  \item \exam{简答题：}说明 Z-buffer 步骤、优点和不足。
+  \item \exam{综合题：}比较背面剔除、表优先级和 Z-buffer。
+\end{itemize}
+\subsection{实践关联}
+光栅化是 GPU 实时渲染的核心，Z-buffer 也是阴影图的直接基础。
+
+\section{模块8：数字几何处理概论（第8章：数字几何处理概论）}
+\subsection{核心定义}
+\begin{itemize}
+  \item \key{数字几何处理}以点云、网格、曲线曲面等离散几何为对象，研究几何表示、分析、重建、编辑、压缩、检索和渲染。
+  \item 课件从点云和网格处理引出后续的配准、法向估计、重建、光顺、简化、细分与变形。
+\end{itemize}
+\subsection{数学基础}
+\begin{itemize}
+  \item 离散微分几何：邻域、法向、曲率、Laplacian。
+  \item 拓扑：连通性、边界、亏格、流形。
+  \item 优化：最小二乘、特征分解、SVD、正则化。
+\end{itemize}
+\subsection{核心算法}
+\begin{itemize}
+  \item 点云处理流程：扫描 $\rightarrow$ 配准 $\rightarrow$ 去噪/平滑 $\rightarrow$ 法向估计 $\rightarrow$ 表面重建。
+  \item 网格处理流程：光顺、简化、细分、变形、检索。
+\end{itemize}
+\subsection{原理推导}
+数字几何处理的统一视角是将连续曲面性质离散化到顶点、边、面及其邻域上，再通过局部或全局优化恢复目标几何。
+\subsection{重难点}
+\begin{itemize}
+  \item 离散化会引入采样密度、噪声、拓扑错误和边界问题。
+  \item 局部算法高效但易受噪声影响；全局优化稳定但计算代价高。
+\end{itemize}
+\subsection{考点预测}
+\begin{itemize}
+  \item \exam{简答题：}说明点云到网格的处理流程。
+  \item \exam{论述题：}从表示、算法和应用角度比较点云与三角网格。
+\end{itemize}
+\subsection{实践关联}
+数字几何处理支撑三维扫描、逆向工程、网格编辑、数字人和 VR 内容制作。
+
+\section{模块9：点云：配准、法向估计、去噪与表面重建（第9章：数字几何处理点云）}
+\subsection{核心定义}
+\begin{itemize}
+  \item \key{点云配准}：给定至少两个部分重叠几何形状，求它们之间的对齐方式。
+  \item \key{ICP}是图形学和计算几何中经典的局部配准算法，通过最近点对应与刚体变换求解交替迭代。
+  \item \key{隐式曲面}由 $f(x)=0$ 定义；点云重建可先拟合隐式函数再提取等值面。
+\end{itemize}
+\subsection{数学基础}
+\begin{itemize}
+  \item 刚体配准目标：
+  \[
+    \min_{R,t}\sum_{i=1}^{N}\norm{Rx_i+t-y_i}_2^2,\quad R^TR=I.
+  \]
+  \item PCA 法向估计：
+  \[
+    C=\sum_{i=1}^{k}(p_i-\bar P)(p_i-\bar P)^T,\quad Cn=\lambda n.
+  \]
+  法向为最小特征值对应特征向量。
+  \item 隐式局部距离：$f(x)=(x-p)^Tn_p$。
+\end{itemize}
+\subsection{核心算法}
+\begin{itemize}
+  \item \key{ICP 点到点：}1）对每个 $x_i$ 找最近点 $y_i$；2）求 $R,t$ 最小化平方距离；3）迭代至误差收敛。最近点暴力复杂度 $O(MN)$，可用空间索引加速。
+  \item \key{SVD 刚体闭式解：}计算均值 $\mu_X,\mu_Y$，构造 $C=\sum(y_i-\mu_Y)(x_i-\mu_X)^T$，SVD $C=U\Sigma V^T$，若 $\det(UV^T)=1$，$R=UV^T$，否则修正最后一维符号；$t=\mu_Y-R\mu_X$。
+  \item \key{ICP 点到平面：}最小化 $\sum_i((Rx_i+t-y_i)^Tn_{y_i})^2$；线性化小旋转后得到 $6\times6$ 线性系统。
+  \item \key{PCA 法向估计：}取 $k$ 邻域或半径 $r$ 球邻域，计算协方差矩阵，取最小特征向量为法向。
+  \item \key{泊松表面重建：}由有向点云法向构造向量场 $V$，拟合指示函数 $\chi$，由 $\nabla\chi\approx V$ 推得 $\Delta\chi=\nabla\cdot V$，再提取等值面。
+  \item \key{Marching Cubes：}在体素网格上根据格点内外符号查表生成等值面片。
+\end{itemize}
+\subsection{原理推导}
+\begin{itemize}
+  \item ICP 每次固定对应求最优变换、固定变换更新对应，使距离误差单调下降，但通常只保证收敛到局部最小。
+  \item PCA 法向由最小化 $\sum_i((p_i-P)^Tn)^2$ 且 $n^Tn=1$ 得到拉格朗日条件 $Cn=\lambda n$。
+  \item 泊松重建中 $V$ 通常不可积，不能直接解 $\nabla\chi=V$，因此两边取散度得到泊松方程。
+\end{itemize}
+\subsection{重难点}
+\begin{itemize}
+  \item ICP 依赖初始化，非均匀采样会影响最近点对应。
+  \item 法向估计邻域半径 $r$ 存在偏差-方差折中：半径大受曲率影响，半径小受噪声影响。
+  \item 泊松重建需要一致定向法向。
+\end{itemize}
+\subsection{考点预测}
+\begin{itemize}
+  \item \exam{推导题：}由 PCA 最小二乘推导法向是最小特征值特征向量。
+  \item \exam{算法题：}写出 ICP 步骤、目标函数和收敛性质。
+  \item \exam{简答题：}解释泊松重建为何需要散度方程。
+\end{itemize}
+\subsection{实践关联}
+点云算法用于三维扫描、SLAM、工业检测、文物数字化和数字人重建。
+
+\section{模块10：网格光顺、简化、细分与检索（第10章：网格光顺、简化、细分与检索）}
+\subsection{核心定义}
+\begin{itemize}
+  \item \key{Laplacian 光顺}用邻域均值与当前点的差近似二阶导数，迭代减少噪声。
+  \item \key{网格简化}用更简单但保持几何特征的表示近似原网格，降低存储、传输和渲染成本。
+  \item \key{细分}从控制网格生成更密、更光滑的曲面。
+  \item \key{层次细节 LOD}近处用精细模型，远处用粗糙模型。
+\end{itemize}
+\subsection{数学基础}
+\begin{itemize}
+  \item 曲线 Laplacian：
+  \[
+    L(p_i)=\frac{p_{i-1}+p_{i+1}}{2}-p_i.
+  \]
+  \item 网格均匀 Laplacian：
+  \[
+    \Delta p_i=\frac{1}{|N_i|}\sum_{j\in N_i}p_j-p_i,\quad
+    p_i^{t+1}=p_i^t+\lambda\Delta p_i^t,\ 0<\lambda<1.
+  \]
+  \item 拓扑：亏格、二维流形、带边界流形、局部邻接。
+\end{itemize}
+\subsection{核心算法}
+\begin{itemize}
+  \item \key{Laplacian 光顺：}对非边界点迭代 $p_i\leftarrow p_i+\lambda L(p_i)$。复杂度每轮 $O(|V|+|E|)$；适合去噪，但会造成网格收缩。
+  \item \key{简化四类技术：}采样、自适应细分、去除、顶点合并。
+  \item \key{基本简化操作：}顶点删除、边压缩、面片收缩。
+  \item \key{长方体滤波：}包围盒均匀剖分，子空间内顶点聚类合并；实时建立 LOD，但易丢高频细节。
+  \item \key{顶点删除：}删除不重要顶点，移除邻接面并对空洞局部三角剖分。
+  \item \key{渐进网格：}由一系列边收缩从 $M_n$ 到 $M_0$，反向用顶点分裂逐步细化。
+  \item \key{Loop 细分：}每条边插入新点，每个三角形分成四个；$n$ 步后一个三角形变为 $4^n$ 个。旧点更新
+  \[
+    p^{k+1}=(1-n\beta)p^k+\beta\sum_{i=0}^{n-1}p_i^k.
+  \]
+  \item \key{$\sqrt{3}$ 细分：}每个三角形中心插点并边翻转，每步生成三个三角形；中心点 $p_m=(p_a+p_b+p_c)/3$。
+\end{itemize}
+\subsection{原理推导}
+\begin{itemize}
+  \item Laplacian 是二阶导数有限差分离散；迭代等价于扩散，会平滑高频噪声，也会收缩体积。
+  \item Loop 细分中 $\beta$ 与顶点度 $n$ 有关，用于保证规则顶点附近高阶连续性、非规则顶点附近较低连续性。
+  \item Schroeder 平坦性准则用邻域面积加权平均法向 $N$ 和中心 $C$，以 $d=N\cdot(v-C)$ 衡量内部顶点可删除性。
+\end{itemize}
+\subsection{重难点}
+\begin{itemize}
+  \item 光顺去噪与几何收缩的矛盾。
+  \item 简化需要同时控制几何误差、拓扑变化、特征保持和渲染效率。
+  \item Loop 与 $\sqrt{3}$ 细分的插点位置、连通性变化和面片增长率。
+\end{itemize}
+\subsection{考点预测}
+\begin{itemize}
+  \item \exam{计算题：}给定邻域坐标，计算一次 Laplacian 光顺。
+  \item \exam{简答题：}比较采样、自适应细分、去除、顶点合并。
+  \item \exam{算法题：}描述 Loop 细分或渐进网格边收缩流程。
+\end{itemize}
+\subsection{实践关联}
+本模块用于实时渲染 LOD、三维模型压缩、扫描模型清理、电影级细分曲面和几何检索。
+
+\section{模块11：网格变形与建模（第11章：网格变形与建模）}
+\subsection{核心定义}
+\begin{itemize}
+  \item \key{网格变形}在用户约束下生成符合直觉的形变，同时尽量保持局部细节。
+  \item \key{曲面变形}定义在曲线/曲面上，与网格表示紧耦合；\key{空间变形}定义在模型邻域，可应用于网格、点云、体数据等表示。
+  \item \key{Laplacian 坐标}是局部差分表示，平移不变但不天然旋转/缩放不变。
+\end{itemize}
+\subsection{数学基础}
+\begin{itemize}
+  \item Laplacian 坐标：
+  \[
+    \delta=LV=(I-D^{-1}A)V,
+  \]
+  其中 $D$ 为度矩阵，$A$ 为邻接矩阵。
+  \item 约束最小二乘：
+  \[
+    V'=\arg\min_{V'}\sum_{i=1}^n\norm{\delta_i-Lv_i'}^2+\sum_{i\in C}\norm{v_i'-u_i}^2.
+  \]
+  \item 正规方程：$A^TAx=A^Tb$，可预分解后逐帧回代。
+\end{itemize}
+\subsection{核心算法}
+\begin{itemize}
+  \item \key{Laplacian 网格编辑：}固定原 Laplacian 坐标，加入控制点位置约束，解稀疏最小二乘。
+  \item \key{旋转不变坐标：}同时估计局部相似变换 $T_i$ 与顶点，使 $LV_i'\approx T_i\delta_i$。
+  \item \key{Deformation Gradient：}在控制点上估计仿射变换 $T(x)=Ax+t$，SVD $A=U\Sigma V^T$ 分解出旋转 $R=UV^T$ 和伸缩/错切 $S=V\Sigma V^T$。
+  \item \key{MLS 变形：}对空间点 $v$，以 $1/\norm{p_i-v}$ 为权重，求使控制点 $p_i$ 到目标 $\hat p_i$ 最匹配的局部仿射/相似/刚体变换，再令 $f(v)=Mv+T$。
+\end{itemize}
+\subsection{原理推导}
+\begin{itemize}
+  \item Laplacian 坐标去掉全局平移后可通过泊松方程 $LV=\delta$ 恢复顶点。
+  \item 旋转处理困难来自 $T_i$ 依赖未知变形后顶点；小尺度旋转可线性化，大尺度旋转需非线性或旋转传播。
+  \item MLS 的本质是在每个空间点构造一个由控制点距离加权的局部最佳变换。
+\end{itemize}
+\subsection{重难点}
+\begin{itemize}
+  \item Laplacian 方法交互高效，但大尺度旋转会失真。
+  \item 空间变形不依赖模型表示，但会影响整个空间，可能出现 Pants 问题：欧式距离近而测地距离远。
+  \item 同时处理大尺度旋转和平移通常需要非线性求解，计算更复杂。
+\end{itemize}
+\subsection{考点预测}
+\begin{itemize}
+  \item \exam{推导题：}写出 Laplacian 变形能量并转化为最小二乘。
+  \item \exam{简答题：}比较曲面变形与空间变形。
+  \item \exam{算法题：}描述 MLS 仿射/相似/刚体变形步骤。
+\end{itemize}
+\subsection{实践关联}
+用于角色建模、医学模型编辑、交互式设计、数字人表情和三维资产编辑。
+
+\section{模块12：光线跟踪与加速（第12章：光线跟踪和加速）}
+\subsection{核心定义}
+\begin{itemize}
+  \item \key{光线投射}从视点经像素发射光线，求最近交点并用局部光照着色，不递归追踪反射折射。
+  \item \key{递归光线跟踪}在交点处生成反射光线、折射光线和阴影光线，递归累积颜色。
+  \item \key{光线}参数式：$P(t)=R_o+tR_d,\ t>0$。
+\end{itemize}
+\subsection{数学基础}
+\begin{itemize}
+  \item 反射方向：$R=I-2(I\cdot N)N$。
+  \item Snell 定律：$\eta_i\sin\theta_i=\eta_t\sin\theta_t$。
+  \item 平面 $n\cdot P+D=0$ 求交：
+  \[
+    t=-\frac{D+n\cdot R_o}{n\cdot R_d}.
+  \]
+  \item 三角形重心坐标：$p=\alpha p_0+\beta p_1+\gamma p_2$，$\alpha,\beta,\gamma\ge0,\ \alpha+\beta+\gamma=1$。
+  \item 球面求交：令 $b=R_d\cdot(R_o-P_c),\ c=(R_o-P_c)\cdot(R_o-P_c)-r^2$，解 $t=-b\pm\sqrt{b^2-c}$。
+\end{itemize}
+\subsection{核心算法}
+\begin{itemize}
+  \item \key{光线投射：}每像素发射主光线，遍历物体求最近交点，局部光照着色。朴素求交每条光线 $O(N)$。
+  \item \key{递归光线跟踪：}最近交点处计算局部光照；对光源发阴影光线；对反射/折射材质递归调用 IntersectColor；按系数累加颜色。
+  \item \key{终止条件：}无交点、交于纯漫射面、贡献很小、达到最大递归深度。
+  \item \key{光线-三角形求交：}解 $[R_d,\ p_0-p_1,\ p_0-p_2]^T(t,\beta,\gamma)^T=p_0-R_o$，检查 $t>0,\ 0\le\beta,\gamma,\ \beta+\gamma\le1$。
+  \item \key{阴影光线：}从交点向光源发射测试光线，若到达光源前被不透明物体遮挡，则该点在阴影中。
+  \item \key{包围盒：}若光线不与包围体相交，则不与内部物体相交。
+  \item \key{BVH：}二叉树内节点为包围盒，叶节点为物体/片元；求交时从根递归，仅访问相交节点。
+  \item \key{Slab AABB 求交：}对三个轴向 slab 计算 $t_i^{min},t_i^{max}$，令 $t_{min}=\max_i t_i^{min}$，$t_{max}=\min_i t_i^{max}$，若 $t_{min}<t_{max}$ 则相交。
+\end{itemize}
+\subsection{原理推导}
+\begin{itemize}
+  \item 光线跟踪利用光路可逆性，从眼睛反向追踪到光源，比从光源正向发射更有效。
+  \item 加速结构的目标是降低每条光线的求交代价：减少求交测试次数和单次测试成本。
+  \item BVH 构建：先求所有物体包围盒，再二分为两组递归构造，直到深度或叶子条件满足。
+\end{itemize}
+\subsection{重难点}
+\begin{itemize}
+  \item 光线投射、Whitted 递归光追、路径追踪的层级关系。
+  \item 光线与平面、三角形、球、包围盒求交公式。
+  \item BVH 的构建、遍历和复杂度收益。
+\end{itemize}
+\subsection{考点预测}
+\begin{itemize}
+  \item \exam{计算题：}求光线与平面/球/三角形交点。
+  \item \exam{算法题：}写递归光线跟踪伪代码和终止条件。
+  \item \exam{简答题：}说明 BVH 和 Slab 算法如何加速求交。
+\end{itemize}
+\subsection{实践关联}
+光追用于电影渲染、实时反射/阴影、透明材质、全局光照和混合渲染管线。
+
+\section{模块13：辐射度、BRDF 与渲染方程（第13章：辐射度与渲染方程）}
+\subsection{核心定义}
+\begin{itemize}
+  \item \key{辐射通量} $\Phi=\dd Q/\dd t$，单位瓦特。
+  \item \key{辐照度} $E=\dd\Phi/\dd A$，表示单位面积接收通量。
+  \item \key{辐射率} $L=\dd\Phi/(\dd A\cos\theta\,\dd\omega)$，表示单位投影面积、单位立体角上的通量。
+  \item \key{BRDF} 描述表面将入射方向 $\omega_i$ 的光反射到出射方向 $\omega_r$ 的能力。
+\end{itemize}
+\subsection{数学基础}
+\begin{itemize}
+  \item 球面坐标：$x=r\sin\theta\cos\phi,\ y=r\sin\theta\sin\phi,\ z=r\cos\theta$。
+  \item 立体角微分：$\dd\omega=\sin\theta\,\dd\theta\dd\phi$。
+  \item 辐照度与辐射率：
+  \[
+    E=\int_{\Omega}L(\omega)\cos\theta\,\dd\omega.
+  \]
+  \item BRDF：
+  \[
+    f(\omega_i\to\omega_r)=\frac{\dd L_r(\omega_r)}{\dd E_i}
+    =\frac{\dd L_r(\omega_r)}{L_i(\omega_i)\cos\theta_i\,\dd\omega_i}.
+  \]
+\end{itemize}
+\subsection{核心算法与模型}
+\begin{itemize}
+  \item \key{BRDF 性质：}线性、Helmholtz 可逆性 $f(\omega_i\to\omega_r)=f(\omega_r\to\omega_i)$、能量守恒。
+  \item \key{Lambert 模型：}各方向 BRDF 为常数，反射率 $\rho=\pi f$。
+  \item \key{Phong BRDF：}$f(l\to v)=\rho_d+\rho_s(r\cdot v)^s/(n\cdot l)$，简洁高效但不满足可逆性。
+  \item \key{Blinn-Phong：}用半角向量 $h=(v+l)/2$，以 $n\cdot h$ 替代 $r\cdot v$ 加速。
+  \item \key{Cook-Torrance：}微平面物理模型，镜面项
+  \[
+    f(l,v)=\frac{F(l,h)G(l,v)D(h)}{4\cos\theta_i\cos\theta_o},
+  \]
+  其中 $F$ 为菲涅耳因子，$D$ 为法向分布，$G$ 为几何衰减。
+  \item \key{BRDF 类型：}经验模型、物理模型、数据驱动模型；各向同性与各向异性。
+  \item \key{蒙特卡洛解渲染方程：}按半球均匀、BRDF 重要性或光源重要性采样。
+\end{itemize}
+\subsection{原理推导}
+\begin{itemize}
+  \item 反射方程：
+  \[
+    L_r(x,\omega_r)=L_e(x,\omega_r)+\int_{\Omega}L_i(x,\omega_i)
+    f(x,\omega_i,\omega_r)\cos\theta_i\,\dd\omega_i.
+  \]
+  \item 多表面相互反射时，$L_i(x,\omega_i)=L_r(x',-\omega_i)$，得到递归渲染方程。
+  \item 算子形式：
+  \[
+    L=E+KL,\quad (I-K)L=E,\quad L=(I-K)^{-1}E=(I+K+K^2+\cdots)E.
+  \]
+  直观上为光源、一次反射、二次反射等连续反射之和。
+  \item 蒙特卡洛估计：
+  \[
+    \int f(\omega)\dd\omega\approx \frac{1}{N}\sum_{j=1}^{N}\frac{f(\omega_j)}{p(\omega_j)}.
+  \]
+\end{itemize}
+\subsection{重难点}
+\begin{itemize}
+  \item 区分辐照度、辐射率、BRDF 的量纲与积分关系。
+  \item 理解 BRDF 为什么定义为辐射率与辐照度之比。
+  \item 渲染方程是第二类 Fredholm 积分方程，解析解困难，需采样或离散化。
+\end{itemize}
+\subsection{考点预测}
+\begin{itemize}
+  \item \exam{推导题：}由辐射率定义推导辐照度半球积分。
+  \item \exam{简答题：}说明 BRDF 的可逆性和能量守恒。
+  \item \exam{综合题：}写出渲染方程并解释各项物理意义和求解思路。
+\end{itemize}
+\subsection{实践关联}
+本模块是物理真实感渲染、PBR 材质、路径追踪和全局光照的理论核心。
+
+\section{模块14：阴影与纹理（第14章：阴影和纹理）}
+\subsection{核心定义}
+\begin{itemize}
+  \item \key{本影}：从点 $P$ 不能看到光源任何部分；\key{半影}：只能看到光源一部分；二者统称阴影。
+  \item \key{附着阴影}由法向背离光源产生；\key{投射阴影}由遮挡物挡住光源产生；\key{自阴影}中接收者和遮挡物来自同一物体。
+  \item \key{纹理映射}用表面映射函数把二维纹理图像映射到模型表面，影响最终颜色。
+\end{itemize}
+\subsection{数学基础}
+\begin{itemize}
+  \item 平面阴影投影：点光源 $l$、点 $v$ 投影到接收平面，投影点位于 $l$ 与 $v$ 连线上并满足平面方程。
+  \item 参数曲面：$p(u,v)=(x(u,v),y(u,v),z(u,v))$。
+  \item 纹理坐标仿射映射：
+  \[
+    u=as+bt+c,\quad v=ds+et+f,\quad ae\neq bd.
+  \]
+\end{itemize}
+\subsection{核心算法}
+\begin{itemize}
+  \item \key{平面投影阴影：}用投影矩阵将遮挡物投到平面，用暗色且无光照绘制；接收者必须是平面，且存在 antishadow/false shadow 失效情况。
+  \item \key{阴影纹理：}从光源绘制黑白遮挡图，再作为投影纹理投到曲面；不能处理自阴影。
+  \item \key{Shadow Volume：}由光源和遮挡物轮廓生成阴影域，用模板缓存统计视线进入/离开次数；计数大于 0 为阴影。
+  \item \key{Shadow Map：}以光源为视点使用 Z-buffer 绘制深度图；从相机渲染时比较当前点到光源距离与阴影图深度。每像素额外一次纹理查询和深度比较。
+  \item \key{纹理映射：}自然参数化适合球、柱、立方体等规则物体；复杂模型通常为顶点手工指定纹理坐标。
+  \item \key{圆柱映射：}$x=r\cos 2\pi s,\ y=r\sin 2\pi s,\ z=ht$。
+  \item \key{球映射：}类似地图映射，必然存在变形，可用于环境映射。
+  \item \key{Mipmapping：}构造预滤波重采样图像金字塔，按屏幕采样率选择层级以减轻纹理走样。
+  \item \key{Bump Mapping：}把纹理图像作为法向方向的高度扰动：
+  \[
+    \tilde p(u,v)=p(u,v)+F(u,v)N(u,v).
+  \]
+\end{itemize}
+\subsection{原理推导}
+\begin{itemize}
+  \item Shadow Map 的判定：若点 $P$ 在光源视图中的深度大于阴影图对应深度，则 $P$ 被更近物体遮挡。
+  \item Shadow Volume 的模板思想等价于沿视线数穿过阴影体的有向次数。
+  \item 纹理滤波源于采样频率不足会丢失高频信息；预滤波将纹理降频后再采样。
+\end{itemize}
+\subsection{重难点}
+\begin{itemize}
+  \item Shadow Map 快且硬件友好，但受分辨率和深度精度影响，产生锯齿和 Z-fighting，需要 Depth Bias。
+  \item Shadow Volume 阴影边界清晰且不依赖图像分辨率，但几何和光栅化代价较高。
+  \item 纹理映射中的逆映射、采样足迹和反走样是考试常问点。
+  \item Bump Mapping 改变法向感知，不改变真实轮廓，不支持自遮挡或自阴影。
+\end{itemize}
+\subsection{考点预测}
+\begin{itemize}
+  \item \exam{简答题：}比较 Shadow Map 与 Shadow Volume。
+  \item \exam{算法题：}写出 Shadow Map 两遍渲染流程。
+  \item \exam{计算题：}给定圆柱/球参数，计算纹理到曲面的坐标。
+  \item \exam{论述题：}解释 Mipmap 为什么能缓解纹理走样。
+\end{itemize}
+\subsection{实践关联}
+阴影与纹理是实时渲染真实感的关键：游戏、VR、电影资产、环境映射和材质表达均依赖本模块。
+
+\section{模块15：计算机动画（第15章：计算机动画）}
+\subsection{核心定义}
+\begin{itemize}
+  \item \key{计算机动画}研究随时间变化的几何、材质、相机、光照和物理状态。
+  \item \key{动画变量 Avars}用于描述骨骼模型各段的位置、姿态或形变控制量。
+  \item 课件覆盖骨骼动画、人脸动画、表情捕捉、多相机/深度图拟合、布料/刚体/流体仿真等。
+\end{itemize}
+\subsection{数学基础}
+\begin{itemize}
+  \item 时间采样：关键帧、插值、速度与加速度。
+  \item 刚体变换：$p'=sRp+t$，其中 $s$ 为比例，$R$ 为旋转矩阵，$t$ 为平移。
+  \item 张量与 SVD：高维表情、动作或材质数据可用分解模型压缩与重建。
+\end{itemize}
+\subsection{核心算法}
+\begin{itemize}
+  \item \key{关键帧动画：}设置关键姿态并插值中间帧；适合可控动画。
+  \item \key{骨骼蒙皮：}顶点随若干骨骼变换加权移动，适合角色实时驱动。
+  \item \key{人脸动画拟合：}利用图像、深度图和特征点，迭代优化人脸模型以匹配观测。
+  \item \key{物理仿真：}布料、刚体、流体等通过动力学方程推进状态。
+\end{itemize}
+\subsection{原理推导}
+角色动画常以层级骨骼变换驱动网格，顶点位置可表示为
+\[
+  v'=\sum_j w_j T_j v,\quad \sum_j w_j=1,
+\]
+其中 $T_j$ 为骨骼变换，$w_j$ 为蒙皮权重。人脸拟合则通过最小化观测误差和正则项求解形状、表情、姿态参数。
+\subsection{重难点}
+\begin{itemize}
+  \item 动画同时要求时间连续性、空间合理性、真实感和可控性。
+  \item 人脸动画难点在于细微表情、个体差异、外力形变和实时输出。
+  \item 物理仿真难点在于稳定性、碰撞处理和计算效率。
+\end{itemize}
+\subsection{考点预测}
+\begin{itemize}
+  \item \exam{简答题：}说明 Avars、骨骼动画和蒙皮的关系。
+  \item \exam{综合题：}描述基于深度图与特征点的人脸动画重建流程。
+  \item \exam{论述题：}比较关键帧、捕捉驱动和物理仿真动画。
+\end{itemize}
+\subsection{实践关联}
+动画技术用于数字人、游戏角色、电影特效、VR 交互、在线表情驱动和物理仿真。
+
+\section{模块16：虚拟现实渲染与前沿表示（第16章：虚拟现实）}
+\subsection{核心定义}
+\begin{itemize}
+  \item 本章强调 VR 系统中的实时渲染、显示链路与前沿神经表示。
+  \item 课件提到渲染中使用 Z-buffer、矩阵变换、光照、混合等基础图形技术。
+  \item \key{FoV-NeRF} 是基于注视点的 3D 神经辐射场表示与视图合成方法，用于同时优化渲染性能和质量。
+\end{itemize}
+\subsection{数学基础}
+\begin{itemize}
+  \item VR 渲染需要双目投影矩阵、头部位姿矩阵、视口变换和畸变校正。
+  \item 注视点渲染利用人眼中心视野高分辨、周边视野低分辨的感知特性。
+\end{itemize}
+\subsection{核心算法}
+\begin{itemize}
+  \item 双目实时渲染：为左右眼分别生成图像并同步显示。
+  \item 注视点渲染：根据眼动/视线方向在 FoV 内分配更高采样率。
+  \item 神经视图合成：用场景表示预测新视角图像，结合 VR 性能约束进行优化。
+\end{itemize}
+\subsection{原理推导}
+VR 图像链路可写为
+\[
+  p_{\text{screen}}=T_{\text{viewport}}P_{\text{eye}}V_{\text{head}}M_{\text{object}}p_{\text{model}},
+\]
+其中任一矩阵延迟或误差都会表现为空间错位或眩晕风险。
+\subsection{重难点}
+\begin{itemize}
+  \item VR 必须在双目、高分辨率、低延迟、低功耗下保持稳定帧率。
+  \item 神经表示提升视图合成质量，但需要处理实时采样、缓存和动态场景问题。
+\end{itemize}
+\subsection{考点预测}
+\begin{itemize}
+  \item \exam{简答题：}说明基础图形管线技术在 VR 中的作用。
+  \item \exam{论述题：}分析注视点渲染为何能在 VR 中降低计算成本。
+\end{itemize}
+\subsection{实践关联}
+本模块连接课程基础算法与现代 VR、神经渲染、沉浸式数字人和实时交互系统。
+
+\newpage
+\section{高频知识补全与易混概念}
+\subsection{坐标空间与渲染管线完整链路}
+\begin{itemize}
+  \item \key{模型坐标系}：顶点在单个物体自身局部坐标中的位置。建模、蒙皮和局部编辑通常在此空间定义。
+  \item \key{世界坐标系}：所有物体放入同一个场景后的坐标。光源、相机、物体之间的空间关系在这里比较。
+  \item \key{相机坐标系}：以相机为参考的坐标。视图变换把世界坐标变为相机坐标。
+  \item \key{裁剪空间/齐次裁剪空间}：投影矩阵作用后的空间，透视投影会改变 $w$。裁剪通常检查 $-w\le x,y,z\le w$。
+  \item \key{标准设备坐标 NDC}：透视除法 $(x,y,z,w)\mapsto(x/w,y/w,z/w)$ 后的规范空间。
+  \item \key{屏幕坐标系}：视口变换把 NDC 映射到像素位置。
+\end{itemize}
+考试现场遇到管线题，可按
+\[
+  p_{\text{screen}}=T_{\text{viewport}}\Pi_{\text{divide}}P_{\text{projection}}V_{\text{view}}M_{\text{model}}p_{\text{local}}
+\]
+回答。注意透视除法不是矩阵乘法，而是投影后的归一化步骤。
+
+\subsection{采样、走样与反走样}
+\begin{itemize}
+  \item \key{走样}来自用离散像素表示连续图形：阶梯状边界、细节丢失、狭小图形消失、动画闪烁。
+  \item \key{超采样}通过每像素多个采样点估计覆盖率或颜色均值，质量好但代价高。
+  \item \key{自适应超采样}只在边界或颜色变化剧烈处增加采样，降低开销。
+  \item \key{纹理滤波}把纹理看作信号采样问题。缩小时若直接点采样会丢高频，Mipmapping 用预滤波图像金字塔降低高频。
+\end{itemize}
+易错点：反走样不是让图形边缘“模糊一下”这么简单，本质是对像素覆盖区域内的连续信号求积分或合理近似。
+
+\subsection{拓扑、流形与网格质量}
+\begin{itemize}
+  \item \key{亏格}描述表面孔洞数。球和立方体亏格为 0，环面亏格为 1。
+  \item \key{二维流形网格}局部拓扑处处等价于圆盘；内部边通常恰好被两个三角形共享，边界边只被一个三角形共享。
+  \item \key{非流形}会破坏法向传播、参数化、细分、简化和仿真算法的假设。
+  \item 网格质量指标包括三角形长宽比、法向一致性、边界闭合性、采样密度和是否存在退化面。
+\end{itemize}
+考试回答几何处理题时，先说明输入网格是否满足流形、边界和法向一致性假设，会显得非常稳。
+
+\subsection{局部光照、全局光照与 BRDF 的层级}
+\begin{itemize}
+  \item \key{Lambert/Phong 光照模型}通常用于局部光照，输入是光源、视线、法向和材质系数。
+  \item \key{BRDF}是更一般的反射函数，描述从任意入射方向到任意出射方向的反射比例。
+  \item \key{渲染方程}把 BRDF 放进半球积分，并把入射光递归地关联到其他表面出射光，从而描述全局光照。
+  \item 经验 BRDF 简洁但可能不守恒；物理 BRDF 参数有物理含义；数据驱动 BRDF 灵活但数据量大、插值复杂。
+\end{itemize}
+答题模板：若题目问真实感，应从“光照模型是否局部、BRDF 是否满足物理约束、是否考虑间接光和可见性”三个层次分析。
+
+\subsection{阴影、遮挡与可见性}
+\begin{itemize}
+  \item Z-buffer 解决从相机看物体的可见性；Shadow Map 解决从光源看物体的可见性。
+  \item Shadow Volume 用几何体和模板缓存判断点是否落在阴影体内；Shadow Map 用深度图比较判断遮挡。
+  \item 硬阴影对应点光源；软阴影对应面积光源，需要处理部分可见的半影区域。
+\end{itemize}
+易错点：阴影不是简单把颜色变暗，而是光源到表面点之间的可见性项。写渲染方程时可把它理解为 $V(x,\omega_i)$。
+
+\section{考试现场算法手算教程}
+\subsection{Phong 光照模型：一步步算颜色}
+\subsubsection*{输入}
+设单通道强度计算，$I_i=1$，$K_a=0.1$，$K_d=0.6$，$K_s=0.3$，反射指数 $n=4$。已知 $N\cdot L=0.8$，$R\cdot V=0.5$。
+\subsubsection*{步骤}
+\begin{enumerate}
+  \item 环境光：$I_a=I_iK_a=0.1$。
+  \item 漫反射：$I_d=I_iK_d(N\cdot L)=1\times0.6\times0.8=0.48$。
+  \item 镜面反射：$I_s=I_iK_s(R\cdot V)^n=1\times0.3\times0.5^4=0.01875$。
+  \item 总强度：$I=I_a+I_d+I_s=0.59875$。
+\end{enumerate}
+\subsubsection*{考试提醒}
+若 $N\cdot L<0$，漫反射通常截断为 0；若 $R\cdot V<0$，镜面项也应截断。RGB 情况下对每个通道分别乘 $K_d,K_s,K_a$。
+
+\subsection{齐次变换复合：先缩放再平移}
+\subsubsection*{输入}
+二维点 $p=(1,2,1)^T$，先缩放 $S=\mathrm{diag}(2,3,1)$，再平移 $T=\begin{bmatrix}1&0&4\\0&1&5\\0&0&1\end{bmatrix}$。
+\subsubsection*{步骤}
+\begin{enumerate}
+  \item 先缩放：$Sp=(2,6,1)^T$。
+  \item 再平移：$T(Sp)=(2+4,6+5,1)^T=(6,11,1)^T$。
+  \item 复合矩阵写作 $TS$，不是 $ST$：
+  \[
+    TS=\begin{bmatrix}2&0&4\\0&3&5\\0&0&1\end{bmatrix}.
+  \]
+\end{enumerate}
+\subsubsection*{考试提醒}
+列向量约定下，右边的矩阵先作用。题目若说“先 A 后 B”，通常写作 $BAp$。
+
+\subsection{法向量逆转置：非均匀缩放例题}
+\subsubsection*{输入}
+物体变换只含非均匀缩放 $M=\mathrm{diag}(2,1,1)$，原法向 $n=(1,1,0)^T/\sqrt2$。
+\subsubsection*{步骤}
+\begin{enumerate}
+  \item 求逆矩阵：$M^{-1}=\mathrm{diag}(1/2,1,1)$。
+  \item 求逆转置：$(M^{-1})^T=\mathrm{diag}(1/2,1,1)$。
+  \item 作用到法向：
+  \[
+    \tilde n=(M^{-1})^Tn=\left(\frac{1}{2\sqrt2},\frac{1}{\sqrt2},0\right)^T.
+  \]
+  \item 单位化：
+  \[
+    \norm{\tilde n}=\sqrt{\frac18+\frac12}=\sqrt{\frac58},\quad
+    n'=\left(\frac{1}{\sqrt5},\frac{2}{\sqrt5},0\right)^T.
+  \]
+\end{enumerate}
+\subsubsection*{考试提醒}
+不要直接用 $Mn$，否则切平面垂直关系会被破坏。相似变换下直接变换后归一化通常没问题，非均匀缩放和错切必须用逆转置。
+
+\subsection{DDA 直线扫描转换}
+\subsubsection*{输入}
+画线段 $(2,1)$ 到 $(7,4)$。
+\subsubsection*{步骤}
+$dx=5,\ dy=3,\ m=dy/dx=0.6$。从 $x=2$ 到 $7$，每步 $y\leftarrow y+0.6$ 并取整。
+\[
+\begin{array}{c|c|c}
+x & y\text{ 连续值} & \text{绘制像素}\\
+\hline
+2&1.0&(2,1)\\
+3&1.6&(3,2)\\
+4&2.2&(4,2)\\
+5&2.8&(5,3)\\
+6&3.4&(6,3)\\
+7&4.0&(7,4)
+\end{array}
+\]
+\subsubsection*{考试提醒}
+若 $|m|>1$，交换 $x,y$ 的角色，以 $y$ 为主步进变量。
+
+\subsection{Bresenham 直线算法}
+\subsubsection*{输入}
+仍画 $(2,1)$ 到 $(7,4)$，$dx=5,\ dy=3$，斜率 $0<m<1$。
+\subsubsection*{步骤}
+初始化 $x=2,y=1,e=-dx=-5$。每步先画当前点，再令 $e\leftarrow e+2dy=e+6$；若 $e>dx=5$，则 $y\leftarrow y+1,e\leftarrow e-2dx=e-10$；最后 $x\leftarrow x+1$。
+\[
+\begin{array}{c|c|c|c}
+\text{步} & \text{画点} & e+6 & \text{更新后}\\
+\hline
+0&(2,1)&1\le5&y=1,e=1\\
+1&(3,1)&7>5&y=2,e=-3\\
+2&(4,2)&3\le5&y=2,e=3\\
+3&(5,2)&9>5&y=3,e=-1\\
+4&(6,3)&5\le5&y=3,e=5\\
+5&(7,3)&11>5&y=4,e=1
+\end{array}
+\]
+若采用 $e\ge dx$ 的版本，边界点会略有差异；考试按课件的 $e>dx$ 写即可。
+\subsubsection*{考试提醒}
+Bresenham 的关键是整数误差递推，优点是快、连续、每点精确绘制一次。不同教材初始化和判定符号可能差半格，写清楚所用版本即可。
+
+\subsection{中点圆算法}
+\subsubsection*{输入}
+圆心在原点，半径 $r=5$，计算第一象限 $y=x$ 上方的八分之一圆弧。
+\subsubsection*{步骤}
+初始化 $x=0,y=5,d=1.25-r=-3.75$。若 $d<0$，下个点取 $(x+1,y)$，$d\leftarrow d+2x+3$；若 $d\ge0$，下个点取 $(x+1,y-1)$，$d\leftarrow d+2(x-y)+5$。每次先记录当前点。
+\[
+\begin{array}{c|c|c|c}
+\text{步} &(x,y)&d&\text{决策}\\
+\hline
+0&(0,5)&-3.75&d<0\Rightarrow (1,5),\ d=-0.75\\
+1&(1,5)&-0.75&d<0\Rightarrow (2,5),\ d=4.25\\
+2&(2,5)&4.25&d\ge0\Rightarrow (3,4),\ d=3.25\\
+3&(3,4)&3.25&d\ge0\Rightarrow (4,3),\ d=6.25
+\end{array}
+\]
+当 $x>y$ 退出。由八对称得到其余圆弧点。
+\subsubsection*{考试提醒}
+中点圆算法常考递推式和八对称性。注意 $d\ge0$ 时 $y$ 要减 1。
+
+\subsection{扫描线多边形填充}
+\subsubsection*{输入}
+三角形顶点 $A(2,1),B(6,1),C(4,4)$。求扫描线 $y=2$ 和 $y=3$ 的填充区间。
+\subsubsection*{步骤}
+边 $AC$：从 $(2,1)$ 到 $(4,4)$，斜率倒数 $\Delta x/\Delta y=2/3$，交点 $x=2+(y-1)\cdot2/3$。边 $BC$：从 $(6,1)$ 到 $(4,4)$，$\Delta x/\Delta y=-2/3$，交点 $x=6-(y-1)\cdot2/3$。
+\[
+\begin{array}{c|c|c|c}
+y & x_{AC} & x_{BC} & \text{填充区间}\\
+\hline
+2&2.67&5.33&x=3,4,5\\
+3&3.33&4.67&x=4
+\end{array}
+\]
+\subsubsection*{考试提醒}
+先求交、再排序、再两两配对。扫描线经过顶点时要处理奇异情况，保证交点数为偶数。
+
+\subsection{Z-buffer 消隐}
+\subsubsection*{输入}
+某像素初始背景色，$z_{\text{buffer}}=-\infty$。三个片元依次到达：红色 $z=0.3$，蓝色 $z=0.7$，绿色 $z=0.5$。课件约定 $z$ 越大离视点越近。
+\subsubsection*{步骤}
+\begin{center}
+\begin{tabular}{c|c|c|c}
+\key{片元} & \key{深度} & \key{比较} & \key{结果}\\
+\hline
+红色 & $0.3$ & $0.3>-\infty$ & 写红，$zbuf=0.3$\\
+蓝色 & $0.7$ & $0.7>0.3$ & 写蓝，$zbuf=0.7$\\
+绿色 & $0.5$ & $0.5<0.7$ & 丢弃，仍为蓝\\
+\end{tabular}
+\end{center}
+\subsubsection*{考试提醒}
+有些系统用 $z$ 越小越近，考试先看题目坐标约定。Z-buffer 无需物体排序，但透明物体要额外处理。
+
+\subsection{背面剔除}
+\subsubsection*{输入}
+视线方向 $V=(0,0,1)$，两个面法向 $N_1=(0,0,1)$，$N_2=(0,0,-1)$。按课件规则 $N\cdot V<0$ 不可见，$N\cdot V\ge0$ 可见。
+\subsubsection*{步骤}
+\[
+N_1\cdot V=1\Rightarrow \text{可见},\qquad
+N_2\cdot V=-1\Rightarrow \text{不可见}.
+\]
+\subsubsection*{考试提醒}
+背面剔除只能去掉显然背向的面，适用于凸多面体或作为其他消隐算法预处理，不能解决凹物体完整遮挡。
+
+\subsection{ICP 点到点配准：平移简例}
+\subsubsection*{输入}
+点集 $X=\{(0,0),(1,0),(0,1)\}$，对应点集 $Y=\{(2,3),(3,3),(2,4)\}$。显然只有平移。
+\subsubsection*{步骤}
+\begin{enumerate}
+  \item 计算均值：$\mu_X=(1/3,1/3)$，$\mu_Y=(7/3,10/3)$。
+  \item 若无旋转，$R=I$。
+  \item 平移 $t=\mu_Y-R\mu_X=(2,3)$。
+  \item 检查：$(0,0)+(2,3)=(2,3)$，$(1,0)+(2,3)=(3,3)$，$(0,1)+(2,3)=(2,4)$。
+\end{enumerate}
+\subsubsection*{考试提醒}
+完整 ICP 还要反复找最近点；这个例子只演示“对应已知后求最优变换”的最简单情况。若有旋转，用协方差矩阵 SVD 求 $R$。
+
+\subsection{PCA 点云法向估计}
+\subsubsection*{输入}
+点 $P=(0,0,0)$ 的邻域点为 $(1,0,0),(-1,0,0),(0,1,0),(0,-1,0)$，这些点在 $z=0$ 平面上。
+\subsubsection*{步骤}
+均值仍为 $\bar P=(0,0,0)$，协方差
+\[
+C=\sum p_ip_i^T=
+\begin{bmatrix}
+2&0&0\\
+0&2&0\\
+0&0&0
+\end{bmatrix}.
+\]
+特征值为 $2,2,0$。最小特征值 $0$ 对应特征向量 $(0,0,1)^T$，因此法向为 $n=(0,0,1)$ 或反向。
+\subsubsection*{考试提醒}
+PCA 只能给法向所在直线，正反方向需要额外一致定向。点越接近平面，最小特征值越小。
+
+\subsection{泊松表面重建：从法向到方程}
+\subsubsection*{现场写法}
+给定有向点云，法向表示物体边界处指示函数的梯度方向。理想情况下有
+\[
+  \nabla\chi=V.
+\]
+但 $V$ 通常不可积，直接求 $\chi$ 不稳定。对两边取散度：
+\[
+  \nabla\cdot\nabla\chi=\nabla\cdot V,\quad \Delta\chi=\nabla\cdot V.
+\]
+解泊松方程得到指示函数，再提取等值面。
+\subsubsection*{考试提醒}
+这类题不一定让数值求解，而是要求说明“为什么从梯度场变成泊松方程”。核心词：不可积、散度、指示函数、等值面。
+
+\subsection{Laplacian 光顺}
+\subsubsection*{输入}
+顶点 $p_i=(0,0,0)$，四个邻居 $(1,0,0),(-1,0,0),(0,1,0),(0,-1,0)$，$\lambda=0.5$。
+\subsubsection*{步骤}
+邻居均值为 $(0,0,0)$，因此
+\[
+\Delta p_i=(0,0,0)-p_i=(0,0,0),\quad p_i'=p_i+0.5\Delta p_i=(0,0,0).
+\]
+若 $p_i=(0,0,1)$，邻居不变，则
+\[
+\Delta p_i=(0,0,0)-(0,0,1)=(0,0,-1),\quad p_i'=(0,0,0.5).
+\]
+\subsubsection*{考试提醒}
+Laplacian 光顺会把凸起往邻域平均位置拉，反复迭代会收缩模型。
+
+\subsection{Loop 细分：边点和旧点更新}
+\subsubsection*{输入}
+三角形网格中一条内部边端点为 $p_i=(0,0)$，$p_j=(2,0)$，对边两侧相对顶点 $p_{i-1}=(0,2)$，$p_{i+1}=(2,2)$。计算该边新点。
+\subsubsection*{步骤}
+课件给出的边点规则可写作
+\[
+p_{\text{new}}=\frac{3p_i+3p_j+p_{i-1}+p_{i+1}}{8}.
+\]
+代入：
+\[
+p_{\text{new}}=\frac{3(0,0)+3(2,0)+(0,2)+(2,2)}{8}
+=\frac{(8,4)}{8}=(1,0.5).
+\]
+\subsubsection*{考试提醒}
+Loop 细分每条边产生一个新点，每个三角形分裂成四个小三角形。边界边与内部边规则可能不同，考试通常按课件模板给邻域。
+
+\subsection{Laplacian 变形：一维最小二乘小例子}
+\subsubsection*{输入}
+一维三点链 $v_1=0,v_2=1,v_3=2$。只变形中间点，保持 Laplacian 坐标；控制约束为 $v_1'=0,v_3'=4$。对中间点，$\delta_2=\frac{v_1+v_3}{2}-v_2=0$。
+\subsubsection*{步骤}
+保持 $\delta_2'=0$：
+\[
+\frac{v_1'+v_3'}{2}-v_2'=0.
+\]
+代入 $v_1'=0,v_3'=4$：
+\[
+2-v_2'=0\Rightarrow v_2'=2.
+\]
+\subsubsection*{考试提醒}
+实际网格变形是把所有顶点坐标放进稀疏最小二乘系统。这个例子展示的是“保持局部差分形状”的直觉。
+
+\subsection{光线与平面求交}
+\subsubsection*{输入}
+光线 $R_o=(0,0,0)$，$R_d=(0,0,1)$；平面 $z=5$，即 $n=(0,0,1),D=-5$。
+\subsubsection*{步骤}
+\[
+t=-\frac{D+n\cdot R_o}{n\cdot R_d}
+  =-\frac{-5+0}{1}=5.
+\]
+交点 $P(5)=R_o+5R_d=(0,0,5)$。
+\subsubsection*{考试提醒}
+若 $n\cdot R_d=0$，光线与平面平行；若 $t<0$，交点在射线反方向。
+
+\subsection{光线与球求交}
+\subsubsection*{输入}
+球心 $P_c=(0,0,5)$，半径 $r=1$；光线 $R_o=(0,0,0)$，$R_d=(0,0,1)$。
+\subsubsection*{步骤}
+令 $R_o-P_c=(0,0,-5)$。
+\[
+b=R_d\cdot(R_o-P_c)=-5,\quad
+c=\norm{R_o-P_c}^2-r^2=25-1=24.
+\]
+\[
+t=-b\pm\sqrt{b^2-c}=5\pm\sqrt{25-24}=5\pm1.
+\]
+两个交点参数为 $t=4,6$，最近交点是 $t=4$，点为 $(0,0,4)$。
+\subsubsection*{考试提醒}
+判别式 $b^2-c<0$ 表示不相交；取最小正根作为可见交点。
+
+\subsection{光线与三角形求交}
+\subsubsection*{输入}
+三角形 $p_0=(0,0,5),p_1=(1,0,5),p_2=(0,1,5)$。光线 $R_o=(0.2,0.2,0)$，$R_d=(0,0,1)$。
+\subsubsection*{步骤}
+先与平面 $z=5$ 求交，得 $t=5$，交点 $P=(0.2,0.2,5)$。由于三角形在 $xy$ 平面投影为直角三角形，重心条件为
+\[
+P=(1-\beta-\gamma)p_0+\beta p_1+\gamma p_2.
+\]
+由坐标可得 $\beta=0.2,\gamma=0.2$，且 $\beta\ge0,\gamma\ge0,\beta+\gamma=0.4\le1$，所以交点在三角形内部。
+\subsubsection*{考试提醒}
+完整算法可直接解线性方程或 Cramer 法则；手算题常先求平面交点，再用重心坐标/面积法判断内部。
+
+\subsection{AABB Slab 包围盒求交}
+\subsubsection*{输入}
+二维示例：矩形 $x\in[1,3],y\in[2,4]$。光线 $R_o=(0,3)$，$R_d=(1,0)$。
+\subsubsection*{步骤}
+\begin{itemize}
+  \item $x$ slab：$t_x^{min}=(1-0)/1=1$，$t_x^{max}=(3-0)/1=3$。
+  \item $y$ slab：光线 $y=3$，在 $[2,4]$ 内，因此 $t_y^{min}=-\infty,t_y^{max}=+\infty$。
+  \item 合并：$t_{min}=\max(1,-\infty)=1$，$t_{max}=\min(3,+\infty)=3$。
+  \item 因 $t_{min}<t_{max}$，相交，进入点 $t=1$。
+\end{itemize}
+\subsubsection*{考试提醒}
+三维就是多一个 $z$ slab。若某方向分量为 0，要判断光线是否落在该 slab 范围内。
+
+\subsection{蒙特卡洛积分估计}
+\subsubsection*{输入}
+估计 $\int_0^1 x^2\dd x$，均匀采样三点 $x_1=0.25,x_2=0.5,x_3=0.75$，$p(x)=1$。
+\subsubsection*{步骤}
+\[
+\int_0^1x^2\dd x\approx\frac{1}{3}\sum_{j=1}^{3}\frac{x_j^2}{p(x_j)}
+=\frac{0.0625+0.25+0.5625}{3}=0.2917.
+\]
+真实值为 $1/3$，采样点越多估计越稳定。
+\subsubsection*{考试提醒}
+渲染方程中的蒙特卡洛估计多一个 BRDF、入射辐射率和 $\cos\theta$，统一模板是
+\[
+\frac{1}{N}\sum_{j=1}^{N}\frac{f_r L_i\cos\theta_j}{p(\omega_j)}.
+\]
+
+\subsection{Shadow Map 判断}
+\subsubsection*{输入}
+某表面点从光源视角投影到阴影图像素 $(u,v)$。该点到光源深度 $z_P=8.0$，阴影图存储深度 $z_{\text{map}}(u,v)=6.5$。
+\subsubsection*{步骤}
+比较 $z_P$ 与 $z_{\text{map}}$。由于 $8.0>6.5$，说明光源到该方向上先遇到深度为 6.5 的遮挡物，点 $P$ 在其后方，因此在阴影中。
+\subsubsection*{考试提醒}
+实际实现会比较 $z_P-\epsilon>z_{\text{map}}$，其中 $\epsilon$ 是 depth bias，用于缓解 Z-fighting。
+
+\subsection{纹理坐标与双线性插值}
+\subsubsection*{输入}
+一条边端点纹理坐标 $u_0=0,u_1=1$，屏幕空间交点在边上比例 $\alpha=0.25$。
+\subsubsection*{步骤}
+线性插值得
+\[
+u=(1-\alpha)u_0+\alpha u_1=0.25.
+\]
+若像素纹理坐标落在四个纹素之间，四邻域颜色 $C_{00},C_{10},C_{01},C_{11}$，小数偏移为 $(s,t)$，双线性插值为
+\[
+C=(1-s)(1-t)C_{00}+s(1-t)C_{10}+(1-s)tC_{01}+stC_{11}.
+\]
+\subsubsection*{考试提醒}
+透视投影下直接线性插值纹理坐标会产生误差，工程中常做透视校正插值；课件强调纹理映射框架时，先掌握参数坐标、纹理坐标、世界坐标、屏幕坐标关系。
+
+\subsection{Mipmapping 层级选择}
+\subsubsection*{输入}
+屏幕上一个像素大约覆盖纹理中的 $4\times4$ 个纹素。
+\subsubsection*{步骤}
+覆盖宽度约为 4，选择缩小 $4$ 倍的 mip 层，即第 $\log_2 4=2$ 层。第 0 层为原图，第 1 层为 $1/2$，第 2 层为 $1/4$。
+\subsubsection*{考试提醒}
+Mipmapping 是预滤波加重采样，不是简单降低分辨率。它主要解决远处纹理闪烁和摩尔纹。
+
+\subsection{骨骼蒙皮计算}
+\subsubsection*{输入}
+顶点 $v=(1,0,0,1)^T$ 受两根骨骼影响，权重 $w_1=0.25,w_2=0.75$。骨骼 1 不动 $T_1v=(1,0,0,1)^T$；骨骼 2 平移到 $T_2v=(1,2,0,1)^T$。
+\subsubsection*{步骤}
+\[
+v'=w_1T_1v+w_2T_2v
+=0.25(1,0,0,1)+0.75(1,2,0,1)=(1,1.5,0,1).
+\]
+\subsubsection*{考试提醒}
+权重应归一化为和 1。骨骼动画计算常见错误是忘记父子层级变换或绑定姿态逆矩阵。
+
+\newpage
+\section{开卷考试速查表}
+\begin{longtable}{p{0.18\textwidth}p{0.36\textwidth}p{0.36\textwidth}}
+\toprule
+\key{主题} & \key{必背公式/步骤} & \key{易错点}\\
+\midrule
+Phong 光照 & $I=I_iK_a+I_iK_d(L\cdot N)+I_iK_s(R\cdot V)^n$ & Phong 光照模型不同于 Phong 明暗处理。\\
+法向变换 & $n'=(M^{-1})^Tn$ & 非均匀缩放/错切不能直接用 $M$ 变换法向。\\
+Bresenham & $e=-dx$，每步 $e+=2dy$，若 $e>dx$ 则 $y++$ 且 $e-=2dx$ & 只用整数误差符号，不是每步取整。\\
+扫描线填充 & 求交、排序、配对、填色 & 顶点交点必须保证偶数性。\\
+Z-buffer & 任意顺序扫描，近者更新颜色和深度 & 难处理透明，受深度精度影响。\\
+ICP & 最近点对应与最优 $R,t$ 交替 & 只保证局部收敛，初始化重要。\\
+PCA 法向 & $C=\sum(p_i-\bar P)(p_i-\bar P)^T$，取最小特征向量 & 邻域半径过大受曲率影响，过小受噪声影响。\\
+泊松重建 & $\nabla\chi\approx V\Rightarrow \Delta\chi=\nabla\cdot V$ & 需要一致定向法向。\\
+Laplacian 光顺 & $p_i^{t+1}=p_i^t+\lambda(\frac1{|N_i|}\sum p_j-p_i)$ & 会导致网格收缩。\\
+Loop 细分 & 每边插点，每三角形变四个 & 面片增长 $4^n$。\\
+Laplacian 变形 & 保持 $\delta=LV$ 并加入控制点约束 & 平移不变，但大旋转会失真。\\
+光线-平面 & $t=-(D+n\cdot R_o)/(n\cdot R_d)$ & 需检查 $t>0$ 与平行情况。\\
+光线-三角形 & 解 $t,\beta,\gamma$，检验 $\beta,\gamma\ge0,\beta+\gamma\le1$ & 重心坐标条件缺一不可。\\
+BVH & 包围盒树递归求交 & 包围盒不相交即可剪枝。\\
+BRDF & $f=\dd L_r/\dd E_i$ & 能量守恒积分不等式和可逆性常考。\\
+渲染方程 & $L=E+KL=(I+K+K^2+\cdots)E$ & 递归积分方程，难解析求解。\\
+Shadow Map & 光源视角深度图，二次渲染比较深度 & 分辨率锯齿和 depth bias。\\
+纹理滤波 & Mipmap 预滤波图像金字塔 & Bump mapping 不改变轮廓。\\
+\bottomrule
+\end{longtable}
+
+\section{按题型复习建议}
+\begin{itemize}
+  \item \key{简答题：}优先背定义、适用场景、优缺点。重点：图形管线、Gouraud/Phong、Z-buffer、ICP、Shadow Map/Volume、BRDF 性质。
+  \item \key{计算题：}优先练公式代入。重点：Phong 光照、齐次变换复合、法向逆转置、Bresenham、中点圆、光线求交、PCA 法向、Laplacian 更新。
+  \item \key{证明/推导题：}优先掌握推导链。重点：法向变换、PCA 法向特征值、泊松重建、渲染方程算子形式、蒙特卡洛估计。
+  \item \key{综合论述题：}按``定义 $\rightarrow$ 数学模型 $\rightarrow$ 算法步骤 $\rightarrow$ 复杂度/优缺点 $\rightarrow$ 应用''作答。
+\end{itemize}
+
+\section{资料来源说明}
+本清单依据工作区 \texttt{课件/} 下第1至第16章 PDF 抽取并整理出的 \texttt{cache/contents/} Markdown 内容编写，编译中间文件存放于 \texttt{cache/latex/}。未引入课件之外的扩展知识体系；少量公式排版采用等价数学记号以便开卷检索。
+
+\end{document}
