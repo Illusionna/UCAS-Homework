@@ -1,0 +1,55 @@
+\contentsline {section}{\numberline {1}小组成员分工}{1}{section.1}%
+\contentsline {section}{\numberline {2}引言}{1}{section.2}%
+\contentsline {subsection}{\numberline {2.1}研究背景}{1}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}传统 3DGS 的问题}{1}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}RayGS 的动机}{1}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}论文核心贡献}{2}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}报告结构}{2}{subsection.2.5}%
+\contentsline {section}{\numberline {3}相关工作}{2}{section.3}%
+\contentsline {subsection}{\numberline {3.1}3D Gaussian Splatting 的场景表示}{2}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}3DGS 的渲染公式与 alpha blending}{3}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Primitive support 与截断阈值}{3}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}传统 GS 的屏幕空间投影}{3}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}Ray-Based Gaussian Splatting}{4}{subsection.3.5}%
+\contentsline {section}{\numberline {4}传统 GS 的硬件光栅化流程}{4}{section.4}%
+\contentsline {subsection}{\numberline {4.1}传统 GS 容易硬件光栅化}{4}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Vertex shader：由二维椭圆构造 quad}{4}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Fragment shader：插值坐标与不透明度计算}{5}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}传统流程的局限}{5}{subsection.4.4}%
+\contentsline {section}{\numberline {5}论文方法：Hardware-Rasterized RayGS}{5}{section.5}%
+\contentsline {subsection}{\numberline {5.1}总体思想}{5}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}RayGS support 边界的几何分析}{5}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Vertex shader：三维 quad 构造}{6}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Fragment shader：快速计算 RayGS divergence}{7}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}方法小结}{7}{subsection.5.5}%
+\contentsline {section}{\numberline {6}RayGS 的 MIP 抗混叠方法}{8}{section.6}%
+\contentsline {subsection}{\numberline {6.1}MIP 问题来源：像素中心射线采样的不足}{8}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}从单射线采样到像素面积平均}{8}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}协方差平滑与近似 MIP 公式}{8}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Opacity modulation 的必要性}{9}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5}MIP-RayGS 与 MSAA 的区别}{9}{subsection.6.5}%
+\contentsline {section}{\numberline {7}论文实验设计与结果分析}{9}{section.7}%
+\contentsline {subsection}{\numberline {7.1}实验目标与评价问题}{9}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}数据集与评价协议}{9}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}对比方法}{10}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.4}定量结果：速度提升与质量保持}{10}{subsection.7.4}%
+\contentsline {subsection}{\numberline {7.5}定性结果：MIP 与近景伪影}{11}{subsection.7.5}%
+\contentsline {subsection}{\numberline {7.6}论文实验的局限性}{12}{subsection.7.6}%
+\contentsline {section}{\numberline {8}本地复现实验与补充分析}{13}{section.8}%
+\contentsline {subsection}{\numberline {8.1}复现目的}{13}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}VKRayGS 仓库结构与构建方式}{13}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}数据来源与相机控制}{14}{subsection.8.3}%
+\contentsline {subsection}{\numberline {8.4}渲染模式、实验参数与记录方式}{15}{subsection.8.4}%
+\contentsline {subsection}{\numberline {8.5}实验结果目录}{16}{subsection.8.5}%
+\contentsline {subsection}{\numberline {8.6}本地结果一：不同场景整体性能}{16}{subsection.8.6}%
+\contentsline {subsection}{\numberline {8.7}本地结果二：分辨率、MSAA 与 MIP 影响}{18}{subsection.8.7}%
+\contentsline {subsection}{\numberline {8.8}本地结果三：GS 与 RayGS 对比}{19}{subsection.8.8}%
+\contentsline {subsection}{\numberline {8.9}代表性截图与主观分析}{19}{subsection.8.9}%
+\contentsline {subsection}{\numberline {8.10}复现实验小结}{21}{subsection.8.10}%
+\contentsline {section}{\numberline {9}综合讨论}{21}{section.9}%
+\contentsline {subsection}{\numberline {9.1}本文方法的核心价值}{21}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}性能瓶颈分析：projection、rendering 与 fill-rate}{21}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}RayGS、MIP-RayGS 与 MSAA 的适用场景}{21}{subsection.9.3}%
+\contentsline {subsection}{\numberline {9.4}对 VR/MR 和实时交互应用的意义}{22}{subsection.9.4}%
+\contentsline {subsection}{\numberline {9.5}仍然存在的问题与未来方向}{22}{subsection.9.5}%
+\contentsline {section}{\numberline {10}结论}{22}{section.10}%

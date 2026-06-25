@@ -1,0 +1,143 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand*\HyPL@Entry[1]{}
+\HyPL@Entry{0<</S/D>>}
+\citation{3dgaussiansplatting}
+\citation{nerf}
+\citation{mipnerf360}
+\citation{hugs}
+\citation{dynamic3dgaussians}
+\citation{splatam}
+\citation{flashgs}
+\citation{lightgaussian}
+\citation{compressed3dgs}
+\citation{3dgaussiansplatting}
+\citation{stopthepop}
+\citation{gaussianopacityfields}
+\citation{gaussianopacityfields}
+\citation{gaussianopacityfields}
+\citation{hardwarerasterizedraybasedgaussiansplatting}
+\HyPL@Entry{3<</S/D>>}
+\@writefile{toc}{\contentsline {section}{\numberline {1}小组成员分工}{1}{section.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}引言}{1}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}研究背景}{1}{subsection.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}传统 3DGS 的问题}{1}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}RayGS 的动机}{1}{subsection.2.3}\protected@file@percent }
+\citation{mipnerf360}
+\citation{mipsplatting}
+\citation{3dgaussiansplatting}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}论文核心贡献}{2}{subsection.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}报告结构}{2}{subsection.2.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}相关工作}{2}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}3D Gaussian Splatting 的场景表示}{2}{subsection.3.1}\protected@file@percent }
+\citation{3dgaussiansplatting}
+\citation{gaussianopacityfields}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}3DGS 的渲染公式与 alpha blending}{3}{subsection.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Primitive support 与截断阈值}{3}{subsection.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}传统 GS 的屏幕空间投影}{3}{subsection.3.4}\protected@file@percent }
+\citation{3dgaussiansplatting}
+\citation{vkgs}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Ray-Based Gaussian Splatting}{4}{subsection.3.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}传统 GS 的硬件光栅化流程}{4}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}传统 GS 容易硬件光栅化}{4}{subsection.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Vertex shader：由二维椭圆构造 quad}{4}{subsection.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Fragment shader：插值坐标与不透明度计算}{5}{subsection.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}传统流程的局限}{5}{subsection.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}论文方法：Hardware-Rasterized RayGS}{5}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}总体思想}{5}{subsection.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}RayGS support 边界的几何分析}{5}{subsection.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Vertex shader：三维 quad 构造}{6}{subsection.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Fragment shader：快速计算 RayGS divergence}{7}{subsection.5.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}方法小结}{7}{subsection.5.5}\protected@file@percent }
+\citation{mipnerf360}
+\citation{mipsplatting}
+\@writefile{toc}{\contentsline {section}{\numberline {6}RayGS 的 MIP 抗混叠方法}{8}{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}MIP 问题来源：像素中心射线采样的不足}{8}{subsection.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}从单射线采样到像素面积平均}{8}{subsection.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}协方差平滑与近似 MIP 公式}{8}{subsection.6.3}\protected@file@percent }
+\citation{mipsplatting}
+\citation{mipnerf360}
+\citation{tanksandtemples}
+\citation{gaussianopacityfields}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Opacity modulation 的必要性}{9}{subsection.6.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.5}MIP-RayGS 与 MSAA 的区别}{9}{subsection.6.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}论文实验设计与结果分析}{9}{section.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}实验目标与评价问题}{9}{subsection.7.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}数据集与评价协议}{9}{subsection.7.2}\protected@file@percent }
+\citation{gaussianopacityfields}
+\citation{vkgs}
+\citation{3dgaussiansplatting}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}对比方法}{10}{subsection.7.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces 论文实验对象与对比方法}}{10}{table.caption.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}定量结果：速度提升与质量保持}{10}{subsection.7.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces 论文定量结果：FPS 与提升倍数}}{10}{table.caption.4}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{tab:paper_fps}{{2}{10}{论文定量结果：FPS 与提升倍数}{table.caption.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces 论文定量结果：质量指标差值（VKRayGS - GOF；LPIPS 越低越好）}}{11}{table.caption.5}\protected@file@percent }
+\newlabel{tab:paper_quality_delta}{{3}{11}{论文定量结果：质量指标差值（VKRayGS - GOF；LPIPS 越低越好）}{table.caption.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.5}定性结果：MIP 与近景伪影}{11}{subsection.7.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces RayGS MIP 抗锯齿效果对比（论文图 4）}}{12}{figure.caption.6}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces VKGS 与 VKRayGS 近距离伪影对比（论文图 5）}}{12}{figure.caption.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.6}论文实验的局限性}{12}{subsection.7.6}\protected@file@percent }
+\citation{inriags}
+\citation{vkgs}
+\@writefile{toc}{\contentsline {section}{\numberline {8}本地复现实验与补充分析}{13}{section.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}复现目的}{13}{subsection.8.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}VKRayGS 仓库结构与构建方式}{13}{subsection.8.2}\protected@file@percent }
+\citation{inriags}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces VKRayGS 仓库中与实验复现相关的主要文件}}{14}{table.caption.8}\protected@file@percent }
+\newlabel{tab:repo_structure}{{4}{14}{VKRayGS 仓库中与实验复现相关的主要文件}{table.caption.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3}数据来源与相机控制}{14}{subsection.8.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.4}渲染模式、实验参数与记录方式}{15}{subsection.8.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.5}实验结果目录}{16}{subsection.8.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.6}本地结果一：不同场景整体性能}{16}{subsection.8.6}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces 本地复现实验设置}}{16}{table.caption.9}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces 本地复现实验：整体性能概览}}{17}{table.caption.10}\protected@file@percent }
+\newlabel{tab:local_overall_perf}{{6}{17}{本地复现实验：整体性能概览}{table.caption.10}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces 本地复现实验：阶段耗时与可见比例}}{17}{table.caption.11}\protected@file@percent }
+\newlabel{tab:local_stage_perf}{{7}{17}{本地复现实验：阶段耗时与可见比例}{table.caption.11}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces 本地复现实验各场景平均 FPS}}{17}{figure.caption.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.7}本地结果二：分辨率、MSAA 与 MIP 影响}{18}{subsection.8.7}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces bicycle：分辨率、MSAA 与 MIP 影响}}{18}{table.caption.13}\protected@file@percent }
+\newlabel{tab:local_resolution_msaa_mip}{{8}{18}{bicycle：分辨率、MSAA 与 MIP 影响}{table.caption.13}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces bicycle 场景中分辨率、MSAA 与 MIP 对 FPS 的影响}}{18}{figure.caption.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.8}本地结果三：GS 与 RayGS 对比}{19}{subsection.8.8}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces truck 场景：GS 与 RayGS 对比}}{19}{table.caption.15}\protected@file@percent }
+\newlabel{tab:local_gs_raygs_truck}{{9}{19}{truck 场景：GS 与 RayGS 对比}{table.caption.15}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.9}代表性截图与主观分析}{19}{subsection.8.9}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces bicycle cam0：GS、RayGS、MIP-RayGS 与 MSAA 4x 对比}}{20}{figure.caption.16}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces bicycle 近景：GS 与 RayGS 对比}}{20}{figure.caption.17}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces truck cam0：GS 与 RayGS 对比}}{20}{figure.caption.18}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.10}复现实验小结}{21}{subsection.8.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {9}综合讨论}{21}{section.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.1}本文方法的核心价值}{21}{subsection.9.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.2}性能瓶颈分析：projection、rendering 与 fill-rate}{21}{subsection.9.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.3}RayGS、MIP-RayGS 与 MSAA 的适用场景}{21}{subsection.9.3}\protected@file@percent }
+\citation{mipnerf360}
+\citation{mipsplatting}
+\citation{lightgaussian}
+\citation{compressed3dgs}
+\citation{stopthepop}
+\citation{dynamic3dgaussians}
+\bibstyle{unsrt}
+\bibdata{reference}
+\bibcite{3dgaussiansplatting}{1}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.4}对 VR/MR 和实时交互应用的意义}{22}{subsection.9.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.5}仍然存在的问题与未来方向}{22}{subsection.9.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {10}结论}{22}{section.10}\protected@file@percent }
+\bibcite{nerf}{2}
+\bibcite{mipnerf360}{3}
+\bibcite{hugs}{4}
+\bibcite{dynamic3dgaussians}{5}
+\bibcite{splatam}{6}
+\bibcite{flashgs}{7}
+\bibcite{lightgaussian}{8}
+\bibcite{compressed3dgs}{9}
+\bibcite{stopthepop}{10}
+\bibcite{gaussianopacityfields}{11}
+\bibcite{hardwarerasterizedraybasedgaussiansplatting}{12}
+\bibcite{mipsplatting}{13}
+\bibcite{vkgs}{14}
+\bibcite{tanksandtemples}{15}
+\bibcite{inriags}{16}
+\gdef \@abspage@last{27}
